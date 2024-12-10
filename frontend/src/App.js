@@ -16,6 +16,10 @@ import Supplier from './Pages/Supplier/Supplier';
 import Rental from './Pages/Rental/Rental';
 import Login from './Pages/Login';
 import Header from './components/SideBar/Header';
+import SelectInvoice from './components/invoicePages/selectInvoice';
+import Colkan from './components/invoicePages/Colkan';
+import Haman from './components/invoicePages/Haman';
+import Terra from './components/invoicePages/Terra';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token');
@@ -51,6 +55,11 @@ function Layout() {
             <Route path="/sales-reports/*" element={<ProtectedRoute><SalesReports /></ProtectedRoute>} />
             <Route path="/stock-reports/*" element={<ProtectedRoute><StockReports /></ProtectedRoute>} />
             <Route path="/staff/*" element={<ProtectedRoute><Staff /></ProtectedRoute>} />
+            <Route path="/selectInvoice" element={<SelectInvoice />} />
+            <Route path="/selectInvoice" element={<SelectInvoice />} />
+            <Route path="/selected/colkan" element={<Colkan />} />
+            <Route path="/selected/haman" element={<Haman />} />
+            <Route path="/selected/terra" element={<Terra />} />
           </Routes>
         </div>
       </div>

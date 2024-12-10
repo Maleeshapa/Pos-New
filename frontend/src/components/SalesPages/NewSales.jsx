@@ -1,5 +1,6 @@
   import React, { useState, useEffect } from 'react';
   import { PlusCircle, ShoppingCart, User } from 'lucide-react';
+  import { useNavigate } from 'react-router-dom';
   import './NewSales.css';
   import Form from '../../Models/Form/Form';
   import Modal from 'react-modal';
@@ -21,6 +22,7 @@
       cusName: '',
       cusNic: '',
       cusCode: '',
+      cusAddress:'',
       productNo: '',
       productName: '',
       productPrice: '',
@@ -38,15 +40,20 @@
       dueAmount: '',
       note: '',
       invoiceDate: '',
+      invoiceNo:'',
       salesPerson: ''
     });
 
+    const navigate=useNavigate();
+    const SelectInvoice=()=>{
+      navigate('/selectInvoice')
+    }
 
     const handleChange = async (e) => {
       const { name, value } = e.target;
       setFormData({ ...formData, [name]: value });
 
-      if (name === 'cusNic') {
+     /*if (name === 'cusNic') {
         try {
           const response = await fetch(`${config.BASE_URL}/customer/cusNIC/${value}`);
           if (response.ok) {
@@ -54,24 +61,22 @@
             setCusId(customerData.cusId)
             setFormData(prevData => ({
               ...prevData,
-              cusNic: customerData.cusNIC || prevData.cusNic,
               cusName: customerData.cusName,
-              cusCode: customerData.cusCode
+              cusAddress: customerData.cusAddress
             }));
             setCustomerCreated(true);
           } else {
             setFormData(prevData => ({
               ...prevData,
               cusName: '',
-              cusCode: '',
+              cusAddress: '',
             }));
             console.log('Customer not found');
           }
         } catch (error) {
           console.error('Error fetching customer data:', error);
         }
-      }
-
+      }*/
 
       if (name === 'productNo' || name === 'productName') {
         try {
@@ -165,8 +170,7 @@
       setFormData(prevData => ({
         ...prevData,
         cusName: customerData.cusName,
-        cusNic: customerData.cusNIC,
-        cusCode: customerData.cusCode,
+        cusAddress: customerData.cusAddress,
       }));
       setCustomerCreated(true);
       closeModal();
@@ -181,9 +185,8 @@
       }
 
       const newRow = [
-        formData.cusCode,
         formData.cusName,
-        formData.cusNic,
+        formData.cusAddress,
         formData.productNo,
         formData.productName,
         formData.productPrice,
@@ -236,9 +239,9 @@
 
     };
 
-    const generateInvoiceCode = () => {
-      return "InvNO" + Date.now().toString().slice(-4);
-    };
+    // const generateInvoiceCode = () => {
+    //   return "InvNO" + Date.now().toString().slice(-4);
+    // };
 
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -254,7 +257,7 @@
         }
 
         const invoiceData = {
-          invoiceNo: generateInvoiceCode(),
+          invoiceNo: formData.invoiceNo,
           invoiceDate: formData.invoiceDate,
           cusId: cusId,
         };
@@ -368,6 +371,7 @@
         setTableData([]);
         resetForm();
         resetSalesPerson();
+        SelectInvoice();
       } catch (error) {
         console.error('Error:', error);
         alert(`${error.message}`);
@@ -503,30 +507,34 @@
                 <div className="subCaption">
 
                   <p><User />Customer Details</p>
-                  <button className='addCusBtn' type="button" onClick={openModal}><PlusCircle size={30} /></button>
+                  {/* <button className='addCusBtn' type="button" onClick={openModal}><PlusCircle size={30} /></button> */}
                 </div>
-                <Modal
+                {/* <Modal
                   isOpen={modalIsOpen}
                   onRequestClose={closeModal}
                   contentLabel="New Customer Form"
                 >
                   <Form closeModal={closeModal} onSave={handleCustomerCreated} />
-                </Modal>
+                </Modal> */}
 
-                <div className="customer-details">
+                {/* <div className="customer-details">
                   <label htmlFor="">Customer Nic</label>
                   <input onChange={handleChange} value={formData.cusNic} type="text" className="form-control" name="cusNic" id="cusNic" placeholder="Enter Nic" />
-                </div>
+                </div> */}
 
                 <div className="customer-details">
                   <label htmlFor="">Customer Name</label>
                   <input onChange={handleChange} value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Enter Name" />
                 </div>
-
                 <div className="customer-details">
+                  <label htmlFor="">Customer Address</label>
+                  <input onChange={handleChange} value={formData.cusAddress} type="text" className="form-control" name="cusAddress" id="cusAddress" placeholder="Enter Address" />
+                </div>
+
+                {/* <div className="customer-details">
                   <label htmlFor="">Customer Code</label>
                   <input onChange={handleChange} value={formData.cusCode} type="text" className="form-control" name="cusCode" id="refNo" placeholder="Enter No" />
-                </div>
+                </div> */}
               </div>
 
               <div className="product">
@@ -604,6 +612,10 @@
                   <label htmlFor="" id='label'>Invoice Date</label>
                   <input type="datetime-local" className="form-control" name="invoiceDate" onChange={handleChange} value={formData.invoiceDate} id="date" />
                 </div>
+                <div className="sales-person">
+                  <label htmlFor="" id='label'>Invoice No</label>
+                  <input type="text" className="form-control" name="invoiceNo" onChange={handleChange} value={formData.invoiceNo} id="date" />
+                </div>
                 {/* <div className="sales-person">
                   <label htmlFor="" id='label'>Invoice Due Date</label>
                   <input type="datetime-local" className="form-control" name="invoiceDueDate" id="date" />
@@ -620,10 +632,10 @@
                   <input type="number" className="form-control" value={formData.discountPrice} onChange={handleChange} id='readOnly' readOnly />
                 </div>
 
-                <div className="amount-group">
+                {/* <div className="amount-group">
                   <label htmlFor="" id='label'>Invoice Note</label>
                   <textarea className="form-control" onChange={handleChange} value={formData.note} name='note' id="invoiceNote" rows={3} />
-                </div>
+                </div> */}
               </div>
             </div>
 

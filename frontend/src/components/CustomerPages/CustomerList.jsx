@@ -11,7 +11,7 @@ const CustomerList = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedCus, setSelectedCus] = useState(null);
 
-  const columns = ['id', 'Customer', 'Customer Code', 'Address', 'Phone', 'Email', 'NIC', 'Job', 'Office', 'Office TP', 'Office Address', 'Points', 'Status'];
+  const columns = ['id', 'Customer', 'Address', 'Phone'];
   const btnName = 'New Customer';
 
   useEffect(() => {
@@ -28,24 +28,8 @@ const CustomerList = () => {
       const formattedData = cus.map(cus => [
         cus.cusId,
         cus.cusName,
-        cus.cusCode,
         cus.cusAddress,
-        cus.cusPhone,
-        cus.cusEmail,
-        cus.cusNIC,
-        cus.cusJob,
-        cus.cusCompany,
-        cus.cusWorkPlaceTP,
-        cus.cusWorkPlaceAddress,
-        cus.cusPoints,
-        <select
-          className='form-control'
-          value={cus.cusStatus}
-          onChange={(e) => handleStatusChange(cus.cusId, e.target.value)}
-        >
-          <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
-        </select>
+        cus.cusPhone
       ]);
       setData(formattedData);
       setIsLoading(false);
@@ -137,7 +121,8 @@ return (
         <Table
           data={data}
           columns={columns}
-          btnName={btnName}
+          // btnName={btnName}
+          showButton={false}
           onAdd={openModal}
           onDelete={handleDelete}
           onEdit={handleEdit}
