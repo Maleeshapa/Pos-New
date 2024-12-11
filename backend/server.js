@@ -7,7 +7,6 @@ const path = require('path');
 //Controllers
 const SupplierController = require("./controller/SupplerController");
 const UserController = require("./controller/UserController");
-const CustomerController = require("./controller/CustomerController");
 const CategoryController = require("./controller/CategoryController");
 const ProductController = require("./controller/ProductController");
 const StockController = require("./controller/StockController");
