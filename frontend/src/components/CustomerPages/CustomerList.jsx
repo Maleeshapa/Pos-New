@@ -12,7 +12,7 @@ const CustomerList = () => {
   const [selectedCus, setSelectedCus] = useState(null);
 
   const columns = ['id', 'Customer', 'Address', 'Phone'];
-  const btnName = 'New Customer';
+  // const btnName = 'New Customer';
 
   useEffect(() => {
     fetchCustomer();
@@ -39,25 +39,25 @@ const CustomerList = () => {
     }
   };
 
-  const handleStatusChange = async (cusId, newStatus) => {
-    try {
-      const response = await fetch(`${config.BASE_URL}/customer/${cusId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ cusStatus: newStatus }),
-      });
+  // const handleStatusChange = async (cusId, newStatus) => {
+  //   try {
+  //     const response = await fetch(`${config.BASE_URL}/customer/${cusId}`, {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ cusStatus: newStatus }),
+  //     });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`Failed to update customer status: ${response.status} ${response.statusText}. ${errorData.message || ''}`);
-      }
-      await fetchCustomer();
-    } catch (error) {
-      setError(`Error updating customer status: ${error.message}`);
-    }
-  };
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       throw new Error(`Failed to update customer status: ${response.status} ${response.statusText}. ${errorData.message || ''}`);
+  //     }
+  //     await fetchCustomer();
+  //   } catch (error) {
+  //     setError(`Error updating customer status: ${error.message}`);
+  //   }
+  // };
 
   const handleDelete = async (rowIndex) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this Customer?");

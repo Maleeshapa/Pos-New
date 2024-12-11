@@ -10,8 +10,8 @@ const CreateStore = () => {
     const [error, setError] = useState(null);
     const [selectedStore, setSelectedStore] = useState(null);
 
-    const columns = ['id', 'Department name', 'Address', 'Status'];
-    const btnName = 'Add Department';
+    const columns = ['id', 'Head name', 'Address', 'Status'];
+    const btnName = 'Add Head';
 
     useEffect(() => {
         fetchStores();
@@ -86,7 +86,7 @@ const CreateStore = () => {
             });
 
             if (!response.ok) {
-                alert('Failed to delete the department, it has an active staff member.')
+                alert('Failed to delete the Head, it has an active staff member.')
             }
             fetchStores();
         } catch (err) {
@@ -103,13 +103,13 @@ const CreateStore = () => {
         setShowModal(false);
     };
 
-    const title = 'Department';
-    const invoice = 'Department.pdf';
+    const title = 'Head';
+    const invoice = 'Head.pdf';
 
     return (
         <div>
             <div className="scrolling-container">
-                <h4>Department</h4>
+                <h4>Head</h4>
                     <Table
                         data={data}
                         columns={columns}

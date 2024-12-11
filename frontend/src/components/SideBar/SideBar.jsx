@@ -167,7 +167,7 @@ const Sidebar = () => {
             path: '/staff',
             submenus: [
                 { title: 'Create Staff', path: '/staff/create-staff' },
-                { title: 'Departments', path: '/staff/create-store' },
+                { title: 'Head ', path: '/staff/create-store' },
             ]
         },
     ];

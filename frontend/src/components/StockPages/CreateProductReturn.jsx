@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import Modal from 'react-modal';
-import Form from '../../Models/Form/Form';
-import { PlusSquareIcon } from 'lucide-react';
 import './Stock.css';
-import Table from '../Table/Table';
 import config from '../../config';
 
 const CreateProductReturn = () => {
-    const [modalIsOpen, setModalIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [productSearch, setProductSearch] = useState('');
-    const [customerSearch, setCustomerSearch] = useState('');
     const [stores, setStores] = useState([]);
     const [users, setUsers] = useState([]);
     const [productSuggestions, setProductSuggestions] = useState([]);
@@ -20,7 +14,7 @@ const CreateProductReturn = () => {
     const Columns = ["id", 'product', 'Type', 'qty', 'price'];
 
     const initialFormData = {
-        cusNic: '',
+        cusName: '',
         invoiceNo: '',
         returnType: '',
         user: '',
@@ -122,26 +116,6 @@ const CreateProductReturn = () => {
         }
     };
 
-
-    // Fetch customer by NIC
-    const fetchCustomerByNic = async (nic) => {
-        try {
-            const response = await fetch(`${config.BASE_URL}/customer/cusNIC/${nic}`);
-            if (response.ok) {
-                const customer = await response.json();
-                setFormData(prevData => ({
-                    ...prevData,
-                    customer: customer.cusId,
-                    cusNic: customer.cusNIC,
-                }));
-            } else {
-                console.error('Customer not found');
-            }
-        } catch (error) {
-            console.error('Error fetching customer:', error);
-        }
-    };
-
     const fetchStores = async () => {
         try {
             const response = await fetch(`${config.BASE_URL}/stores`);
@@ -214,23 +188,6 @@ const CreateProductReturn = () => {
         }
     };
 
-    // Handle customer search
-    const handleCustomerSearch = (e) => {
-        const { value } = e.target;
-        setCustomerSearch(value);
-        if (value.length > 2) {
-            fetchCustomerByNic(value);
-        }
-    };
-
-    // Open and close modal
-    const openModal = () => {
-        setModalIsOpen(true);
-    };
-
-    const closeModal = () => {
-        setModalIsOpen(false);
-    };
 
     return (
         <div>
@@ -250,20 +207,6 @@ const CreateProductReturn = () => {
                 <form onSubmit={handleSubmit}>
                     <div className="row">
                         <div className="customer px-4 col-md-4">
-                            <div className="row">
-                                <div className="Stock-details col-md-10 mb-2">
-                                    <label htmlFor="cusNic">Customer NIC</label>
-                                    <input type="text" className="form-control" name="cusNic" value={customerSearch} onChange={handleCustomerSearch} placeholder="Enter NIC" />
-                                </div>
-                                <button className="addCusBtn col-md-2 mt-3" type="button" onClick={openModal}><PlusSquareIcon size={30} /></button>
-                            </div>
-                            <Modal
-                                isOpen={modalIsOpen}
-                                onRequestClose={closeModal}
-                                contentLabel="New Customer Form"
-                            >
-                                <Form closeModal={closeModal} />
-                            </Modal>
                             <div className="Stock-details">
                                 <label htmlFor="invoiceNo">Invoice Number</label>
                                 <input type="number" className="form-control" name="invoiceNo" value={formData.invoiceNo} onChange={handleChange} onWheel={(e) => e.target.blur()} />
