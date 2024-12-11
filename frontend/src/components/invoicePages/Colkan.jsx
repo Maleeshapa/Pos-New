@@ -1,7 +1,6 @@
-import React from 'react'
-import './Colkan.css'
-import one from '../../assets/1.jpg'
-import { useState } from 'react'
+import React, { useState } from 'react';
+import './Colkan.css';
+import one from '../../assets/1.jpg';
 import config from '../../config';
 
 const Colkan = () => {
@@ -9,81 +8,151 @@ const Colkan = () => {
         invoiceNo: '',
         invoiceDate: '',
         PurchaseOrder: '',
-        cusName:'',
-    })
-    const [invoice,setInvoice]=useState([])
+        cusName: '',
+    });
+    const [invoice, setInvoice] = useState({});
+    const [invoiceProducts, setInvoiceProducts] = useState([]);
+    const [Transaction, setTransaction] = useState({
+        paid: '',
+        discount: '',
+    });
 
     const handleChange = async (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-    
+
         if (name === 'invoiceNo') {
             try {
                 const response = await fetch(`${config.BASE_URL}/invoice/invoiceNo/${value}`);
                 if (response.ok) {
                     const invoiceData = await response.json();
                     setInvoice(invoiceData.invoiceId);
-    
+
                     const invoiceDate = new Date(invoiceData.invoiceDate);
                     const formattedDate = invoiceDate.toISOString().slice(0, 16);
-                    
+
                     setFormData(prevData => ({
                         ...prevData,
                         invoiceNo: invoiceData.invoiceNo,
                         invoiceDate: formattedDate,
-                        cusName:invoiceData.cusName
+                        cusName: invoiceData.cusName,
                     }));
+
+                    if (invoiceData.invoiceId) {
+                        fetchInvoiceProducts(invoiceData.invoiceId);
+                        fetchTransaction(invoiceData.invoiceId)
+                    }
                 } else {
                     setFormData(prevData => ({
                         ...prevData,
-                        invoiceId: '',
                         invoiceDate: '',
+                        cusName: '',
                     }));
-                    alert('Invoice not found');
-                    console.log('Invoice not found');
                 }
-            
             } catch (error) {
                 console.error('Error fetching invoice data:', error);
                 alert('An error occurred while fetching invoice data');
             }
         }
     };
-    
-    
+
+    const fetchInvoiceProducts = async (invoiceId) => {
+        try {
+            const response = await fetch(`${config.BASE_URL}/invoiceProducts/${invoiceId}`);
+            if (response.ok) {
+                const data = await response.json();
+                setInvoiceProducts(data);
+            } else {
+                alert('No invoice products found');
+            }
+        } catch (error) {
+            console.error('Error fetching invoice products:', error);
+            alert('An error occurred while fetching invoice products');
+        }
+    };
+
+    const fetchTransaction = async (invoiceId) => {
+        try {
+            const response = await fetch(`${config.BASE_URL}/transaction/invoice/${invoiceId}`);
+            if (response.ok) {
+                const transactionData = await response.json();
+                setTransaction({
+                    paid: transactionData.Price || 0,
+                    discount: transactionData.discount || 0,
+                });
+                console.log(transactionData);
+                console.log("Transaction", Transaction);
+            } else {
+                alert('No Transaction found');
+                setTransaction({
+                    paid: '',
+                    discount: '',
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching Transaction:', error);
+            alert('An error occurred while fetching the transaction');
+        }
+    };
+
     return (
         <div>
             <div className="scrolling-container">
                 <h4>Colkan</h4>
                 <div className="invoice">
                     <section className="invoice-header">
-                        <img src={one} alt="" className='header-img' />
+                        <img src={one} alt="" className="header-img" />
                     </section>
 
                     <section className="billing-details">
                         <div className="invoice-info">
                             <h3>Billing Details</h3>
                             <div className="details mb-2">
-                                <input type="text" onChange={handleChange} className='form-input' name='cusName' value={formData.cusName} />
+                                <input
+                                    type="text"
+                                    onChange={handleChange}
+                                    className="form-input"
+                                    name="cusName"
+                                    value={formData.cusName}
+                                    placeholder='Customer Staff Name'
+                                />
                             </div>
                             <div className="details mb-2">
-                                <input type="text" className='form-input' name='cusJob' />
+                                <input type="text" className="form-input" name="cusJob" placeholder='Customer Staff Position' />
                             </div>
-                            <p className='details'>Capital Twin Speaks</p>
-                            <p className='details'>No 24 Staple Street Colombo 2 - ADDRESS MUST</p>
+                            <p className="details">Capital Twin Speaks</p>
+                            <p className="details">No 24 Staple Street Colombo 2 - ADDRESS MUST</p>
                         </div>
                         <div className="invoice-info">
                             <div className="details">
                                 <label htmlFor="">Invoice No</label>
-                                <input type="text" onChange={handleChange} className='form-input' name='invoiceNo' value={formData.invoiceNo} />
+                                <input
+                                    type="text"
+                                    onChange={handleChange}
+                                    className="form-input"
+                                    name="invoiceNo"
+                                    value={formData.invoiceNo}
+                                />
                             </div>
                             <div className="details">
                                 <label htmlFor="">Date</label>
-                                <input type="datetime-local" onChange={handleChange} className='form-input date' name='invoiceDate' value={formData.invoiceDate} />
+                                <input
+                                    type="datetime-local"
+                                    onChange={handleChange}
+                                    className="form-input date"
+                                    name="invoiceDate"
+                                    value={formData.invoiceDate}
+                                />
                             </div>
                             <div className="details">
                                 <label htmlFor="">Purchase Order</label>
-                                <input type="text" onChange={handleChange} className='form-input' name='PurchaseOrder' />
+                                <input
+                                    type="text"
+                                    onChange={handleChange}
+                                    className="form-input"
+                                    name="PurchaseOrder"
+                                    value={formData.PurchaseOrder}
+                                />
                             </div>
                         </div>
                     </section>
@@ -99,33 +168,60 @@ const Colkan = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>product</td>
-                                <td>17</td>
-                                <td>800.00</td>
-                                <td>13,600.00</td>
-                            </tr>
+                            {invoiceProducts.length === 0 ? (
+                                <tr>
+                                    <td colSpan={5}>No products found for this invoice.</td>
+                                </tr>
+                            ) : (
+                                invoiceProducts.map((invoiceProduct, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{invoiceProduct.product.productName}</td>
+                                        <td>{invoiceProduct.invoiceQty}</td>
+                                        <td>{invoiceProduct.product.productSellingPrice}</td>
+                                        <td>{(invoiceProduct.totalAmount)}</td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                         <tbody>
                             <tr>
-                                <td colSpan={3} ><div className='table-content' contenteditable='true'>Notes: Payment mode</div></td>
+                                <td colSpan={3}>
+                                    <div className="table-content" contentEditable="true">
+                                        Notes: Payment mode
+                                    </div>
+                                </td>
                                 <td>Subtotal</td>
-                                <td> 13,600.00</td>
+                                <td>
+                                    {invoiceProducts.reduce(
+                                        (total, product) => total + product.product.productSellingPrice * product.invoiceQty,
+                                        0
+                                    )}
+
+                                </td>
                             </tr>
                         </tbody>
                         <tbody>
                             <tr>
-                                <td colSpan={3} ><div className='table-content' contenteditable='true'>Sampath Bank | Account Number: 0117100010407 | Account Name: TERRA</div></td>
+                                <td colSpan={3}>
+                                    <div className="table-content" contentEditable="true">
+                                        Sampath Bank | Account Number: 0117100010407 | Account Name: TERRA
+                                    </div>
+                                </td>
                                 <td>Discount</td>
-                                <td>1,360.00</td>
+                                <td>{Transaction.discount}</td>
                             </tr>
                         </tbody>
                         <tbody>
                             <tr>
-                                <td colSpan={3}><div className='table-content' contenteditable='true'> Notes: [DELIVERY ADDRESS]</div></td>
+                                <td colSpan={3}>
+                                    <div className="table-content" contentEditable="true">
+                                        Notes: [DELIVERY ADDRESS]
+                                    </div>
+                                </td>
                                 <td>TOTAL</td>
-                                <td>12,240.00</td>
+                                <td>{Transaction.paid}
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -155,7 +251,7 @@ const Colkan = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Colkan
+export default Colkan;

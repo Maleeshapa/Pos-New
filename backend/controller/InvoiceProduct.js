@@ -105,6 +105,30 @@ const getAllInvoiceProducts = async (req, res) => {
   }
 };
 
+const getInvoiceById = async (req,res)=>{
+  try {
+    const { invoiceId } = req.params;
+
+    // Fetch invoice products along with associated product and stock details
+    const invoiceProducts = await InvoiceProduct.findAll({
+        where: { invoiceId },
+        include: [
+            { model: Product, as: 'product' },
+            { model: Stock, as: 'stock' }
+        ]
+    });
+
+    if (invoiceProducts.length === 0) {
+        return res.status(404).json({ message: 'No invoice products found' });
+    }
+
+    res.status(200).json(invoiceProducts);
+} catch (error) {
+    console.error('Error fetching invoice products:', error);
+    res.status(500).json({ error: `An error occurred: ${error.message}` });
+}
+}
+
 const deleteInvoiceProduct = async (req, res) => {
   try {
     const { invoiceId } = req.params;
@@ -140,4 +164,5 @@ module.exports = {
   createInvoiceProduct,
   getAllInvoiceProducts,
   deleteInvoiceProduct,
+  getInvoiceById
 };
