@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SelectInvoice.css';
-import one from '../../assets/1.jpg';
-import two from '../../assets/2.jpg';
-import three from '../../assets/3.jpg';
 
 const SelectInvoice = () => {
   const [selected, setSelected] = useState(null);
@@ -11,9 +8,9 @@ const SelectInvoice = () => {
 
   // Define meaningful IDs for navigation
   const invoices = [
-    { path: 'colkan', image: one },
-    { path: 'haman', image: two },
-    { path: 'terra', image: three },
+    { path: 'colkan', image: 'Colkan' },
+    { path: 'haman', image: 'Haman' },
+    { path: 'terra', image: 'Terra' },
   ];
 
   const handleSelect = (path, index) => {
@@ -32,7 +29,7 @@ const SelectInvoice = () => {
               className={`image-box ${selected === index ? 'selected' : ''}`}
               onClick={() => handleSelect(invoice.path, index)}
             >
-              <img src={invoice.image} alt={`Invoice ${index + 1}`} />
+              <h3>{invoice.image}</h3>
             </div>
           ))}
         </div>

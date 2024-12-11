@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 11, 2024 at 07:09 AM
+-- Generation Time: Dec 11, 2024 at 02:26 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -45,19 +45,6 @@ INSERT INTO `category` (`categoryId`, `categoryName`, `categoryType`, `categoryS
 -- --------------------------------------------------------
 
 --
--- Table structure for table `customer`
---
-
-CREATE TABLE `customer` (
-  `cusId` int(11) NOT NULL,
-  `cusName` varchar(255) NOT NULL,
-  `cusAddress` varchar(255) NOT NULL,
-  `cusPhone` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `expenses`
 --
 
@@ -94,8 +81,18 @@ CREATE TABLE `invoice` (
   `invoiceId` int(11) NOT NULL,
   `invoiceNo` varchar(45) NOT NULL,
   `invoiceDate` datetime NOT NULL,
-  `customer_cusId` int(11) NOT NULL
+  `cusName` varchar(255) NOT NULL,
+  `cusAddress` varchar(255) NOT NULL,
+  `cusPhone` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `invoice`
+--
+
+INSERT INTO `invoice` (`invoiceId`, `invoiceNo`, `invoiceDate`, `cusName`, `cusAddress`, `cusPhone`) VALUES
+(159, 'maleeshapa', '2024-12-11 07:19:00', 'Buddhika', 'kandy', ''),
+(160, '111', '2024-12-11 13:25:00', 'MY Business', 'No 2231 dadawdw', '');
 
 -- --------------------------------------------------------
 
@@ -111,6 +108,15 @@ CREATE TABLE `invoiceproduct` (
   `invoiceQty` varchar(255) NOT NULL,
   `totalAmount` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `invoiceproduct`
+--
+
+INSERT INTO `invoiceproduct` (`id`, `invoiceId`, `productId`, `stockId`, `invoiceQty`, `totalAmount`) VALUES
+(43, 159, 2, 3, '1', '120'),
+(44, 159, 2, 3, '10', '1200'),
+(45, 160, 1, 1, '1', '100');
 
 -- --------------------------------------------------------
 
@@ -143,22 +149,6 @@ INSERT INTO `products` (`productId`, `productName`, `productCode`, `productUnit`
 (1, 'product 1', 'p1', '10', NULL, 100, 100, '', 0, NULL, 'ss', NULL, 'In stock', 1),
 (2, 'product 2', 'p2', '10', NULL, 120, 120, '', 0, NULL, 'gg', NULL, 'In stock', 1),
 (3, 'product 3', 'p3', '10', NULL, 1002, 100, '10 Months', -902, NULL, '100', NULL, 'In stock', 2);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `rentalinvoice`
---
-
-CREATE TABLE `rentalinvoice` (
-  `rentalInvoiceId` int(11) NOT NULL,
-  `rentalInvoiceDate` varchar(45) NOT NULL,
-  `rentalInvoiceTotalAMount` varchar(100) NOT NULL,
-  `rentalInvoiceAdvancePayment` varchar(100) NOT NULL,
-  `rentalInvoiceNote` varchar(255) NOT NULL,
-  `customer_cusId` int(11) NOT NULL,
-  `products_productId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -212,8 +202,8 @@ CREATE TABLE `stock` (
 --
 
 INSERT INTO `stock` (`stockId`, `stockName`, `stockdate`, `billImage`, `stockPrice`, `due`, `vat`, `total`, `stockQty`, `mfd`, `exp`, `cashAmount`, `chequeAmount`, `stockDescription`, `stockStatus`, `products_productId`, `supplier_supplierId`, `store_storeId`, `category_categoryId`) VALUES
-(1, 'stock1', '2024-10-16 17:09:18', NULL, 100, 1, 1, 100, 2147483647, '2024-10-16', '2024-10-31', 500, NULL, 'note', '', 1, 1, 1, 1),
-(3, 'stock 2', '2024-10-17 01:28:56', NULL, 100, 1, 1, 1, 2147483647, '2024-10-17', '2024-10-31', 500, 211, 'booo', '', 2, 1, 1, 1),
+(1, 'stock1', '2024-10-16 17:09:18', NULL, 100, 1, 1, 100, 2147483646, '2024-10-16', '2024-10-31', 500, NULL, 'note', '', 1, 1, 1, 1),
+(3, 'stock 2', '2024-10-17 01:28:56', NULL, 100, 1, 1, 1, 2147483636, '2024-10-17', '2024-10-31', 500, 211, 'booo', '', 2, 1, 1, 1),
 (4, '5', '2024-10-18 09:01:00', NULL, 10000, 0, 0, 0, 83, '2024-10-18', '2024-10-17', 98, NULL, NULL, 'In stock', 3, 1, 1, 1),
 (5, '1', '2024-12-19 07:42:00', 'http://localhost:5000/uploads/stock/1_1733663580933.png', 500, 0, 0, 0, 5, '2024-12-26', '2024-12-18', 120, NULL, '5', 'In stock', 3, 1, 1, 1),
 (6, '5', '2024-12-10 07:09:00', 'http://localhost:5000/uploads/stock/5_1733747989746.png', 200, 0, 0, 0, 2, '2024-12-10', '2024-12-16', 112, 121, NULL, 'In stock', 1, 2, 1, 1),
@@ -324,6 +314,14 @@ CREATE TABLE `transaction` (
   `user_userId` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `transaction`
+--
+
+INSERT INTO `transaction` (`transactionId`, `transactionType`, `price`, `discount`, `dateTime`, `note`, `paid`, `due`, `invoice_invoiceId`, `user_userId`) VALUES
+(85, 'cash', '1320', 0, '2024-12-11 07:19:00', '', 1320, 0, 159, 2),
+(86, 'cash', '100', 0, '2024-12-11 13:25:00', '', 100, 0, 160, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -368,12 +366,6 @@ ALTER TABLE `category`
   ADD PRIMARY KEY (`categoryId`);
 
 --
--- Indexes for table `customer`
---
-ALTER TABLE `customer`
-  ADD PRIMARY KEY (`cusId`);
-
---
 -- Indexes for table `expenses`
 --
 ALTER TABLE `expenses`
@@ -391,8 +383,7 @@ ALTER TABLE `expensescat`
 -- Indexes for table `invoice`
 --
 ALTER TABLE `invoice`
-  ADD PRIMARY KEY (`invoiceId`),
-  ADD KEY `fk_invoice_customer1_idx` (`customer_cusId`);
+  ADD PRIMARY KEY (`invoiceId`);
 
 --
 -- Indexes for table `invoiceproduct`
@@ -409,14 +400,6 @@ ALTER TABLE `invoiceproduct`
 ALTER TABLE `products`
   ADD PRIMARY KEY (`productId`),
   ADD KEY `fk_products_category_idx` (`category_categoryId`);
-
---
--- Indexes for table `rentalinvoice`
---
-ALTER TABLE `rentalinvoice`
-  ADD PRIMARY KEY (`rentalInvoiceId`),
-  ADD KEY `fk_rentalInvoice_customer1_idx` (`customer_cusId`),
-  ADD KEY `fk_rentalInvoice_products1_idx` (`products_productId`);
 
 --
 -- Indexes for table `returnitems`
@@ -492,12 +475,6 @@ ALTER TABLE `category`
   MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `customer`
---
-ALTER TABLE `customer`
-  MODIFY `cusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
@@ -513,25 +490,19 @@ ALTER TABLE `expensescat`
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `invoiceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
+  MODIFY `invoiceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=161;
 
 --
 -- AUTO_INCREMENT for table `invoiceproduct`
 --
 ALTER TABLE `invoiceproduct`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
   MODIFY `productId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `rentalinvoice`
---
-ALTER TABLE `rentalinvoice`
-  MODIFY `rentalInvoiceId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `returnitems`
@@ -573,7 +544,7 @@ ALTER TABLE `switch`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transactionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
+  MODIFY `transactionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -593,12 +564,6 @@ ALTER TABLE `expenses`
   ADD CONSTRAINT `fk_Expenses_user1` FOREIGN KEY (`user_userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `invoice`
---
-ALTER TABLE `invoice`
-  ADD CONSTRAINT `fk_invoice_customer1` FOREIGN KEY (`customer_cusId`) REFERENCES `customer` (`cusId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
 -- Constraints for table `invoiceproduct`
 --
 ALTER TABLE `invoiceproduct`
@@ -611,13 +576,6 @@ ALTER TABLE `invoiceproduct`
 --
 ALTER TABLE `products`
   ADD CONSTRAINT `fk_products_category` FOREIGN KEY (`category_categoryId`) REFERENCES `category` (`categoryId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `rentalinvoice`
---
-ALTER TABLE `rentalinvoice`
-  ADD CONSTRAINT `fk_rentalInvoice_customer1` FOREIGN KEY (`customer_cusId`) REFERENCES `customer` (`cusId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_rentalInvoice_products1` FOREIGN KEY (`products_productId`) REFERENCES `products` (`productId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `returnitems`
