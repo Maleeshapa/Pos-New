@@ -1,4 +1,3 @@
-const Customer = require("../model/Customers");
 const Product = require("../model/Products");
 const RentalInvoice = require("../model/RentalInvoice");
 

@@ -4,7 +4,6 @@ const Product = require("./Products");
 const Store = require("./Store");
 const User = require("./User");
 const Invoice = require("./Invoice");
-const Customer = require("./Customers");
 
 const Return = sequelize.define(
     "Return",
@@ -62,14 +61,6 @@ const Return = sequelize.define(
             },
             allowNull: false,
         },
-        customer_cusId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: Customer,
-                key: "cusId",
-            },
-            allowNull: false,
-        },
     },
     {
         tableName: "returnItems",
@@ -91,10 +82,6 @@ Return.belongsTo(User, {
 Return.belongsTo(Invoice, {
     foreignKey: "invoice_invoiceId",
     as: "invoice",
-});
-Return.belongsTo(Customer, {
-    foreignKey: "customer_cusId",
-    as: "customer",
 });
 
 module.exports = Return;

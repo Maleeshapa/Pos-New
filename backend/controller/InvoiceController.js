@@ -1,5 +1,4 @@
 const Invoice = require("../model/Invoice");
-const Customer = require("../model/Customers");
 const Product = require("../model/Products");
 const Stock = require("../model/Stock");
 
