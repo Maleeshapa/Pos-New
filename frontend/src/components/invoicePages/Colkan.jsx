@@ -1,8 +1,56 @@
 import React from 'react'
 import './Colkan.css'
 import one from '../../assets/1.jpg'
+import { useState } from 'react'
+import config from '../../config';
 
 const Colkan = () => {
+    const [formData, setFormData] = useState({
+        invoiceNo: '',
+        invoiceDate: '',
+        PurchaseOrder: '',
+        cusName:'',
+    })
+    const [invoice,setInvoice]=useState([])
+
+    const handleChange = async (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    
+        if (name === 'invoiceNo') {
+            try {
+                const response = await fetch(`${config.BASE_URL}/invoice/invoiceNo/${value}`);
+                if (response.ok) {
+                    const invoiceData = await response.json();
+                    setInvoice(invoiceData.invoiceId);
+    
+                    const invoiceDate = new Date(invoiceData.invoiceDate);
+                    const formattedDate = invoiceDate.toISOString().slice(0, 16);
+                    
+                    setFormData(prevData => ({
+                        ...prevData,
+                        invoiceNo: invoiceData.invoiceNo,
+                        invoiceDate: formattedDate,
+                        cusName:invoiceData.cusName
+                    }));
+                } else {
+                    setFormData(prevData => ({
+                        ...prevData,
+                        invoiceId: '',
+                        invoiceDate: '',
+                    }));
+                    alert('Invoice not found');
+                    console.log('Invoice not found');
+                }
+            
+            } catch (error) {
+                console.error('Error fetching invoice data:', error);
+                alert('An error occurred while fetching invoice data');
+            }
+        }
+    };
+    
+    
     return (
         <div>
             <div className="scrolling-container">
@@ -15,21 +63,27 @@ const Colkan = () => {
                     <section className="billing-details">
                         <div className="invoice-info">
                             <h3>Billing Details</h3>
+                            <div className="details mb-2">
+                                <input type="text" onChange={handleChange} className='form-input' name='cusName' value={formData.cusName} />
+                            </div>
+                            <div className="details mb-2">
+                                <input type="text" className='form-input' name='cusJob' />
+                            </div>
                             <p className='details'>Capital Twin Speaks</p>
                             <p className='details'>No 24 Staple Street Colombo 2 - ADDRESS MUST</p>
                         </div>
                         <div className="invoice-info">
                             <div className="details">
                                 <label htmlFor="">Invoice No</label>
-                                <input type="text" className='form-input' name='invoiceNo' />
+                                <input type="text" onChange={handleChange} className='form-input' name='invoiceNo' value={formData.invoiceNo} />
                             </div>
                             <div className="details">
                                 <label htmlFor="">Date</label>
-                                <input type="datetime-local" className='form-input date' name='date' />
+                                <input type="datetime-local" onChange={handleChange} className='form-input date' name='invoiceDate' value={formData.invoiceDate} />
                             </div>
                             <div className="details">
                                 <label htmlFor="">Purchase Order</label>
-                                <input type="text" className='form-input' name='PurchaseOrder' />
+                                <input type="text" onChange={handleChange} className='form-input' name='PurchaseOrder' />
                             </div>
                         </div>
                     </section>
@@ -78,7 +132,7 @@ const Colkan = () => {
 
                     <footer className="invoice-footer">
                         <p>We hereby acknowledge the receipt of the above goods are received in damages.</p>
-                       
+
                         <div className="signature">
                             <table className="signature-table">
                                 <thead>
