@@ -22,11 +22,10 @@
         width:40%;
     }
 }
-.scroll-table {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
 .table {
     min-width: 600px; 
 }
+.scroll-table {
+    overflow-x: auto;
+}
+

@@ -46,7 +46,7 @@ const Header = () => {
   const formattedTime = currentTime.toLocaleTimeString();
 
   return (
-    <header className="d-flex align-items-center justify-content-between p-3 bg-secondary text-light">
+    <header className="d-flex align-items-center justify-content-between p-3  text-light">
       <div className="d-flex align-items-center">
         {isMaster && <Switch />} 
       </div>

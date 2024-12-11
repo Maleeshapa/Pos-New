@@ -1,6 +1,7 @@
 .bg-color {
   
-  background-color: #BCCCDC;
+  background-color: #222;
+  color: aliceblue;
 }
 
 .sidebar {
@@ -23,12 +24,12 @@
 
 .nav-link {
   font-weight: 200;
-  color: #222;
+  color: rgb(255, 255, 255);
 }
 
 .nav-link:hover {
   font-weight: 200;
-  color: rgb(64, 64, 64);
+  color: rgb(255, 255, 255);
 }
 
 .sidebar {
