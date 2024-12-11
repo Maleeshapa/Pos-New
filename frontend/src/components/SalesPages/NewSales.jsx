@@ -10,10 +10,7 @@
   const NewSales = ({ invoice }) => {
 
     const [tableData, setTableData] = useState([]);
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [customerCreated, setCustomerCreated] = useState(false);
     const [users, setUsers] = useState([]);
-    const [cusId, setCusId] = useState('');
     const [productId, setProductId] = useState('');
     const [stockId, setStockId] = useState('');
 
@@ -140,17 +137,6 @@
       setFormData(prevData => ({ ...prevData, totalPrice: newTotalPrice }));
     }, [formData.productPrice, formData.discount, formData.qty]);
 
-
-    const handleCustomerCreated = (customerData) => {
-      setFormData(prevData => ({
-        ...prevData,
-        cusName: customerData.cusName,
-        cusAddress: customerData.cusAddress,
-      }));
-      setCustomerCreated(true);
-      closeModal();
-    };
-
     const handleAddProduct = (e) => {
       e.preventDefault();
 
@@ -220,10 +206,7 @@
 
     const handleSubmit = async (e) => {
       e.preventDefault();
-      try {
-        if (!formData.cusCode) {
-          throw new Error('Add Customer .');
-        }
+      try{
         if (!formData.invoiceDate) {
           throw new Error('select invoice Date.');
         }
@@ -234,7 +217,8 @@
         const invoiceData = {
           invoiceNo: formData.invoiceNo,
           invoiceDate: formData.invoiceDate,
-          cusId: cusId,
+          cusName:formData.cusName,
+          cusAddress:formData.cusAddress
         };
 
         console.log('Sending invoice data:', invoiceData);
@@ -386,14 +370,6 @@
         ...prevData,
         salesPerson: 'select',
       }));
-    };
-
-    const openModal = () => {
-      setModalIsOpen(true);
-    };
-
-    const closeModal = () => {
-      setModalIsOpen(false);
     };
 
     const [Emi, setEmi] = useState(false);
