@@ -45,14 +45,6 @@ app.delete("/user/:id", UserController.deleteUser);
 app.post("/userLogin", UserController.userLogin);
 app.get("/users/hidden/:is_hidden", UserController.getUsersByHiddenStatus);
 
-//customer routes
-app.post("/customer", CustomerController.createCustomer);
-app.get("/customers", CustomerController.getAllCustomers);
-app.get("/customer/:id", CustomerController.getCustomerById);
-app.put("/customer/:id", CustomerController.updateCustomer);
-app.delete("/customer/:id", CustomerController.deleteCustomer);
-app.get("/customer/cusName/:name", CustomerController.getCustomerByName);
-
 //supplier routes
 app.post("/supplier", SupplierController.createSupplier);
 app.get("/suppliers", SupplierController.getAllSuppliers);

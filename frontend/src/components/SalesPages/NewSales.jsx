@@ -53,31 +53,6 @@
       const { name, value } = e.target;
       setFormData({ ...formData, [name]: value });
 
-     /*if (name === 'cusNic') {
-        try {
-          const response = await fetch(`${config.BASE_URL}/customer/cusNIC/${value}`);
-          if (response.ok) {
-            const customerData = await response.json();
-            setCusId(customerData.cusId)
-            setFormData(prevData => ({
-              ...prevData,
-              cusName: customerData.cusName,
-              cusAddress: customerData.cusAddress
-            }));
-            setCustomerCreated(true);
-          } else {
-            setFormData(prevData => ({
-              ...prevData,
-              cusName: '',
-              cusAddress: '',
-            }));
-            console.log('Customer not found');
-          }
-        } catch (error) {
-          console.error('Error fetching customer data:', error);
-        }
-      }*/
-
       if (name === 'productNo' || name === 'productName') {
         try {
           const response = await fetch(`${config.BASE_URL}/product/codeOrName/${value}`);

@@ -28,14 +28,6 @@ const RentalInvoice = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        customer_cusId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: "customer",
-                key: "cusId",
-            },
-            allowNull: false,
-        },
         products_productId: {
             type: DataTypes.INTEGER,
             references: {
@@ -51,10 +43,6 @@ const RentalInvoice = sequelize.define(
     }
 );
 
-RentalInvoice.belongsTo(Customer, {
-    foreignKey: "customer_cusId",
-    as: "customer",
-});
 RentalInvoice.belongsTo(Product, {
     foreignKey: "products_productId",
     as: "product",
