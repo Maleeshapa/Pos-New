@@ -14,7 +14,7 @@
     const [productId, setProductId] = useState('');
     const [stockId, setStockId] = useState('');
 
-    const Columns = ["Customer Code", 'Customer Name', 'Customer Nic','Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty','Product ID','Stock ID'];
+    const Columns = ["Customer Code", 'Customer Name','Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty','Product ID','Stock ID'];
     const [formData, setFormData] = useState({
       cusName: '',
       cusNic: '',
@@ -181,10 +181,10 @@
       let payableAmount = 0;
 
       updatedTableData.forEach((row) => {
-        const price = parseFloat(row[5]) || 0;
-        const qty = parseFloat(row[6]) || 0;
-        const discount = parseFloat(row[7]) || 0;
-        const totalPrice = parseFloat(row[8]) || 0;
+        const price = parseFloat(row[4]) || 0;
+        const qty = parseFloat(row[5]) || 0;
+        const discount = parseFloat(row[6]) || 0;
+        const totalPrice = parseFloat(row[7]) || 0;
 
         totalAmount += price * qty;
         totalDiscount += discount;
@@ -284,11 +284,11 @@
         }
 
         const productInvoice = tableData.map(row => ({
-          productId: row[10], // Ensure this maps correctly to the `productId`
-          stockId: row[11],
+          productId: row[9],
+          stockId: row[10],
           invoiceId: invoiceResult.invoiceId,
-          totalAmount:row[5]*row[6],
-          invoiceQty:row[6],
+          totalAmount:row[4]*row[5],
+          invoiceQty:row[5],
         }));
 
         const productResponse = await fetch(`${config.BASE_URL}/invoiceProduct`, {

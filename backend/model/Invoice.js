@@ -19,6 +19,14 @@ const Invoice = sequelize.define(
             type: DataTypes.DATE,
             allowNull: false,
         },
+        cusName: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        cusAddress: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        }
     },
     {
         tableName: "invoice",

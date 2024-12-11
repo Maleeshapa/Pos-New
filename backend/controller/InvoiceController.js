@@ -8,7 +8,8 @@ const createInvoice = async (req, res) => {
         const {
             invoiceNo,
             invoiceDate,
-            cusId,
+            cusName,
+            cusAddress,
         } = req.body;
 
         // Validate required fields
@@ -16,27 +17,15 @@ const createInvoice = async (req, res) => {
             return res.status(400).json({ error: "All fields are required." });
         }
 
-        // Check if customer exists
-        const customer = await Customer.findByPk(cusId);
-        if (!customer) {
-            return res.status(400).json({ message: 'Invalid customer ID' });
-        }
-
         // Create a new invoice
         const newInvoice = await Invoice.create({
             invoiceNo,
             invoiceDate,
-            customer_cusId: cusId,
+            cusName,
+            cusAddress,
         });
 
-        // Fetch newly created invoice information
-        const invoiceDetails = await Invoice.findByPk(newInvoice.invoiceId, {
-            include: [
-                { model: Customer, as: 'customer' },
-            ],
-        });
-
-        res.status(201).json(invoiceDetails);
+        res.status(201).json(newInvoice);
     } catch (error) {
         if (error.name === "SequelizeValidationError") {
             console.error('Validation errors:', error.errors);
@@ -48,11 +37,7 @@ const createInvoice = async (req, res) => {
 
 const getAllInvoice = async (req, res) => {
     try {
-        const invoices = await Invoice.findAll({
-            include: [
-                { model: Customer, as: 'customer' },
-            ],
-        });
+        const invoices = await Invoice.findAll({});
 
         if (invoices.length === 0) {
             return res.status(404).json({ message: "No invoices found" });
@@ -71,7 +56,6 @@ const getInvoiceById = async (req, res) => {
         const invoice = await Invoice.findByPk(id, {
             include: [
                 { model: Product, as: 'product' },
-                { model: Customer, as: 'customer' },
                 { model: Stock, as: 'stock' },
             ],
         });
