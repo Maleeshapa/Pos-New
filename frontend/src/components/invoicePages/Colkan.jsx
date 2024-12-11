@@ -55,39 +55,21 @@ const Colkan = () => {
                         </tbody>
                         <tbody>
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                        <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                        <tbody>
-                            <tr>
-                                <td colSpan={3} >Notes: Payment mode:</td>
+                                <td colSpan={3} ><div className='table-content' contenteditable='true'>Notes: Payment mode</div></td>
                                 <td>Subtotal</td>
                                 <td> 13,600.00</td>
                             </tr>
                         </tbody>
                         <tbody>
                             <tr>
-                                <td colSpan={3} >Sampath Bank | Account Number: 0117100010407 | Account Name: TERRA</td>
+                                <td colSpan={3} ><div className='table-content' contenteditable='true'>Sampath Bank | Account Number: 0117100010407 | Account Name: TERRA</div></td>
                                 <td>Discount</td>
                                 <td>1,360.00</td>
                             </tr>
                         </tbody>
                         <tbody>
                             <tr>
-                                <td colSpan={3}> Notes: [DELIVERY ADDRESS]</td>
+                                <td colSpan={3}><div className='table-content' contenteditable='true'> Notes: [DELIVERY ADDRESS]</div></td>
                                 <td>TOTAL</td>
                                 <td>12,240.00</td>
                             </tr>
