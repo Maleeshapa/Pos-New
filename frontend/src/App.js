@@ -56,7 +56,6 @@ function Layout() {
             <Route path="/stock-reports/*" element={<ProtectedRoute><StockReports /></ProtectedRoute>} />
             <Route path="/staff/*" element={<ProtectedRoute><Staff /></ProtectedRoute>} />
             <Route path="/selectInvoice" element={<SelectInvoice />} />
-            <Route path="/selectInvoice" element={<SelectInvoice />} />
             <Route path="/selected/colkan" element={<Colkan />} />
             <Route path="/selected/haman" element={<Haman />} />
             <Route path="/selected/terra" element={<Terra />} />

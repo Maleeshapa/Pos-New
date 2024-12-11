@@ -3,10 +3,10 @@
   background-color: #BCCCDC;
 }
 
-.sidebar {   
+.sidebar {
   top: 0;
   left: 0;
-  height: 100%;
+  height: 120vh;
   width: 250px;
   overflow-y: auto;
   scrollbar-width: none;
