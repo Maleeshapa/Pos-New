@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2024 at 06:34 PM
+-- Generation Time: Dec 11, 2024 at 07:09 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -50,28 +50,10 @@ INSERT INTO `category` (`categoryId`, `categoryName`, `categoryType`, `categoryS
 
 CREATE TABLE `customer` (
   `cusId` int(11) NOT NULL,
-  `cusTitle` varchar(45) NOT NULL,
   `cusName` varchar(255) NOT NULL,
-  `cusCode` varchar(45) DEFAULT NULL,
   `cusAddress` varchar(255) NOT NULL,
-  `cusPhone` varchar(255) NOT NULL,
-  `cusEmail` varchar(255) NOT NULL,
-  `cusNIC` varchar(45) NOT NULL,
-  `cusCity` varchar(45) NOT NULL,
-  `cusJob` varchar(45) NOT NULL,
-  `cusCompany` varchar(100) NOT NULL,
-  `cusWorkPlaceTP` varchar(45) NOT NULL,
-  `cusWorkPlaceAddress` varchar(45) NOT NULL,
-  `cusPoints` varchar(45) NOT NULL,
-  `cusStatus` varchar(45) NOT NULL
+  `cusPhone` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `customer`
---
-
-INSERT INTO `customer` (`cusId`, `cusTitle`, `cusName`, `cusCode`, `cusAddress`, `cusPhone`, `cusEmail`, `cusNIC`, `cusCity`, `cusJob`, `cusCompany`, `cusWorkPlaceTP`, `cusWorkPlaceAddress`, `cusPoints`, `cusStatus`) VALUES
-(3, 'Mr.', 'MY Business', 'MY 7058', 'new', '1234567890', 'kunage0@gmail.com', '222222222222', 'Unknown', 'bhalla', 'Abc', '1234567890', 'xx', '10', 'Active');
 
 -- --------------------------------------------------------
 
@@ -641,7 +623,6 @@ ALTER TABLE `rentalinvoice`
 -- Constraints for table `returnitems`
 --
 ALTER TABLE `returnitems`
-  ADD CONSTRAINT `fk_returnItems_customer1` FOREIGN KEY (`customer_cusId`) REFERENCES `customer` (`cusId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_return_invoice1` FOREIGN KEY (`invoice_invoiceId`) REFERENCES `invoice` (`invoiceId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_return_products1` FOREIGN KEY (`products_productId`) REFERENCES `products` (`productId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_return_store1` FOREIGN KEY (`store_storeId`) REFERENCES `store` (`storeId`) ON DELETE NO ACTION ON UPDATE NO ACTION,

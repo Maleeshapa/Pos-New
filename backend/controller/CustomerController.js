@@ -3,27 +3,15 @@ const Customer = require("../model/Customers");
 const createCustomer = async (req, res) => {
     try {
         const {
-            cusTitle,
             cusName,
-            cusCode,
             cusAddress,
-            cusPhone,
-            cusEmail,
-            cusNIC,
-            cusCity,
-            cusJob,
-            cusCompany,
-            cusWorkPlaceTP,
-            cusWorkPlaceAddress
+            cusPhone
         } = req.body;
 
         if (
-            !cusTitle ||
             !cusName ||
-            !cusCode ||
             !cusAddress ||
-            !cusPhone ||
-            !cusNIC
+            !cusPhone
         ) {
             return res.status(400).json({ error: "All fields are required." });
         }
@@ -34,20 +22,9 @@ const createCustomer = async (req, res) => {
                 .json({ error: "A Customer with this NIC already exists." });
         }
         const newCustomer = await Customer.create({
-            cusTitle,
             cusName,
-            cusCode,
             cusAddress,
-            cusPhone,
-            cusEmail,
-            cusNIC,
-            cusCity,
-            cusJob,
-            cusCompany,
-            cusWorkPlaceTP,
-            cusWorkPlaceAddress,
-            cusPoints: "10",
-            cusStatus: "Active",
+            cusPhone
         });
         res.status(201).json(newCustomer);
     } catch (error) {
@@ -115,20 +92,9 @@ const updateCustomer = async (req, res) => {
     try {
         const { id } = req.params;
         const {
-            cusTitle,
             cusName,
-            cusCode,
             cusAddress,
             cusPhone,
-            cusEmail,
-            cusNIC,
-            cusCity,
-            cusJob,
-            cusCompany,
-            cusWorkPlaceTP,
-            cusWorkPlaceAddress,
-            cusPoints,
-            cusStatus,
         } = req.body;
 
         const customer = await Customer.findByPk(id);
@@ -137,20 +103,9 @@ const updateCustomer = async (req, res) => {
         }
 
         await customer.update({
-            cusTitle,
             cusName,
-            cusCode,
             cusAddress,
-            cusPhone,
-            cusEmail,
-            cusNIC,
-            cusCity,
-            cusJob,
-            cusCompany,
-            cusWorkPlaceTP,
-            cusWorkPlaceAddress,
-            cusPoints,
-            cusStatus,
+            cusPhone
         });
 
         res.status(200).json(customer);
