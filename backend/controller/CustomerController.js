@@ -92,12 +92,12 @@ const getCustomerById = async (req, res) => {
     }
 };
 
-const getCustomerByNic = async (req, res) => {
+const getCustomerByName = async (req, res) => {
     try {
-        const { nic } = req.params; 
+        const { name } = req.params;
 
         const customer = await Customer.findOne({
-            where: { cusNIC: nic }
+            where: { cusName: name }
         });
 
         if (!customer) {
@@ -180,5 +180,5 @@ module.exports = {
     getCustomerById,
     updateCustomer,
     deleteCustomer,
-    getCustomerByNic
+    getCustomerByName
 }
