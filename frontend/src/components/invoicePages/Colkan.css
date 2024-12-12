@@ -116,3 +116,15 @@
   outline: none;
   width: 500px;
 }
+.pointer{
+  cursor: pointer;
+}
+.table-row:hover {
+  background-color: #f8d7da; /* Light red or preferred color */
+}
+
+.remove-mesg {
+  color: red;
+  font-weight: bold;
+  padding-left: 10px;
+}

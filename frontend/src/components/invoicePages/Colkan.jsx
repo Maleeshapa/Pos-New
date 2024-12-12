@@ -14,6 +14,8 @@ const Colkan = () => {
     const [invoiceProducts, setInvoiceProducts] = useState([]);
     const [Transaction, setTransaction] = useState([]);
 
+    const [ShowRemove, setShowRemove] = useState(null);
+
     const handleChange = async (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -83,7 +85,9 @@ const Colkan = () => {
             alert('An error occurred while fetching the transaction');
         }
     };
-
+    const removeProduct = (index) => {
+        setInvoiceProducts(prevProducts => prevProducts.filter((_, i) => i !== index));
+    };
     return (
         <div>
             <div className="scrolling-container">
@@ -163,12 +167,21 @@ const Colkan = () => {
                                 </tr>
                             ) : (
                                 invoiceProducts.map((invoiceProduct, index) => (
-                                    <tr key={index}>
+                                    <tr key={index}
+                                        onMouseEnter={() => setShowRemove(index)}
+                                        onMouseLeave={() => setShowRemove(null)}
+                                        onClick={() => removeProduct(index)}
+                                        className='pointer'
+                                    >
+                                        {ShowRemove === index && (
+                                            <td className="remove-mesg">Remove</td>
+                                        )}
                                         <td>{index + 1}</td>
                                         <td>{invoiceProduct.product.productName}</td>
                                         <td>{invoiceProduct.invoiceQty}</td>
                                         <td>{invoiceProduct.product.productSellingPrice}</td>
                                         <td>{(invoiceProduct.totalAmount)}</td>
+                                        
                                     </tr>
                                 ))
                             )}
@@ -177,7 +190,7 @@ const Colkan = () => {
                             <tr>
                                 <td id="table-content" colSpan={3} rowSpan={3}>
                                     <div className="table-content" contentEditable="true">
-                                        Notes: 
+                                        Notes:
                                     </div>
                                 </td>
                                 <td>Subtotal</td>
