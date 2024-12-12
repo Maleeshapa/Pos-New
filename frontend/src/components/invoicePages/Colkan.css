@@ -4,6 +4,7 @@
   border: 1px solid #ddd;
   padding: 20px;
   font-family: Arial, sans-serif;
+  /* height: 1131px; */
 }
 
 .invoice-header {
@@ -113,4 +114,19 @@
 
 .table-content{
   outline: none;
+  width: 500px;
+}
+
+.table-row {
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.row-hover {
+  background-color: #f8d7da;
+}
+
+.row-hover td {
+  color: #b52b38;
+  font-weight: bold;
 }

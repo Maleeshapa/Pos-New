@@ -10,12 +10,10 @@ const Colkan = () => {
         PurchaseOrder: '',
         cusName: '',
     });
-    const [invoice, setInvoice] = useState({});
     const [invoiceProducts, setInvoiceProducts] = useState([]);
-    const [Transaction, setTransaction] = useState({
-        paid: '',
-        discount: '',
-    });
+    const [Transaction, setTransaction] = useState([]);
+
+    const [ShowRemove, setShowRemove] = useState(null);
 
     const handleChange = async (e) => {
         const { name, value } = e.target;
@@ -26,7 +24,6 @@ const Colkan = () => {
                 const response = await fetch(`${config.BASE_URL}/invoice/invoiceNo/${value}`);
                 if (response.ok) {
                     const invoiceData = await response.json();
-                    setInvoice(invoiceData.invoiceId);
 
                     const invoiceDate = new Date(invoiceData.invoiceDate);
                     const formattedDate = invoiceDate.toISOString().slice(0, 16);
@@ -76,25 +73,19 @@ const Colkan = () => {
             const response = await fetch(`${config.BASE_URL}/transaction/invoice/${invoiceId}`);
             if (response.ok) {
                 const transactionData = await response.json();
-                setTransaction({
-                    paid: transactionData.Price || 0,
-                    discount: transactionData.discount || 0,
-                });
+                setTransaction(transactionData);
                 console.log(transactionData);
-                console.log("Transaction", Transaction);
             } else {
                 alert('No Transaction found');
-                setTransaction({
-                    paid: '',
-                    discount: '',
-                });
             }
         } catch (error) {
             console.error('Error fetching Transaction:', error);
             alert('An error occurred while fetching the transaction');
         }
     };
-
+    const removeProduct = (index) => {
+        setInvoiceProducts(prevProducts => prevProducts.filter((_, i) => i !== index));
+    };
     return (
         <div>
             <div className="scrolling-container">
@@ -114,11 +105,10 @@ const Colkan = () => {
                                     className="form-input"
                                     name="cusName"
                                     value={formData.cusName}
-                                    placeholder='Customer Staff Name'
                                 />
                             </div>
                             <div className="details mb-2">
-                                <input type="text" className="form-input" name="cusJob" placeholder='Customer Staff Position' />
+                                <input type="text" className="form-input" name="cusJob" />
                             </div>
                             <p className="details">Capital Twin Speaks</p>
                             <p className="details">No 24 Staple Street Colombo 2 - ADDRESS MUST</p>
@@ -174,7 +164,12 @@ const Colkan = () => {
                                 </tr>
                             ) : (
                                 invoiceProducts.map((invoiceProduct, index) => (
-                                    <tr key={index}>
+                                    <tr key={index}
+                                        onMouseEnter={() => setShowRemove(index)}
+                                        onMouseLeave={() => setShowRemove(null)}
+                                        onClick={() => removeProduct(index)}
+                                        className={`table-row ${ShowRemove === index ? 'row-hover' : ''}`}
+                                    >
                                         <td>{index + 1}</td>
                                         <td>{invoiceProduct.product.productName}</td>
                                         <td>{invoiceProduct.invoiceQty}</td>
@@ -186,9 +181,9 @@ const Colkan = () => {
                         </tbody>
                         <tbody>
                             <tr>
-                                <td colSpan={3}>
+                                <td id="table-content" colSpan={3} rowSpan={3}>
                                     <div className="table-content" contentEditable="true">
-                                        Notes: Payment mode
+                                        Notes:
                                     </div>
                                 </td>
                                 <td>Subtotal</td>
@@ -197,37 +192,25 @@ const Colkan = () => {
                                         (total, product) => total + product.product.productSellingPrice * product.invoiceQty,
                                         0
                                     )}
-
                                 </td>
                             </tr>
-                        </tbody>
-                        <tbody>
                             <tr>
-                                <td colSpan={3}>
-                                    <div className="table-content" contentEditable="true">
-                                        Sampath Bank | Account Number: 0117100010407 | Account Name: TERRA
-                                    </div>
-                                </td>
                                 <td>Discount</td>
-                                <td>{Transaction.discount}</td>
+                                {Transaction.map((Transaction) => (
+                                    < td>{Transaction.discount}</td>
+                                ))}
                             </tr>
-                        </tbody>
-                        <tbody>
                             <tr>
-                                <td colSpan={3}>
-                                    <div className="table-content" contentEditable="true">
-                                        Notes: [DELIVERY ADDRESS]
-                                    </div>
-                                </td>
                                 <td>TOTAL</td>
-                                <td>{Transaction.paid}
-                                </td>
+                                {Transaction.map((Transaction) => (
+                                    < td>{Transaction.paid}</td>
+                                ))}
                             </tr>
                         </tbody>
                     </table>
 
-                    <footer className="invoice-footer">
-                        <p>We hereby acknowledge the receipt of the above goods are received in damages.</p>
+                    <footer className="invoice-footer ">
+                        <p className='text-danger'>We hereby acknowledge the receipt of the above goods are received in damages.</p>
 
                         <div className="signature">
                             <table className="signature-table">
@@ -250,7 +233,7 @@ const Colkan = () => {
                     </footer>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

@@ -287,9 +287,11 @@
           productId: row[9],
           stockId: row[10],
           invoiceId: invoiceResult.invoiceId,
+          invoiceNo: invoiceResult.invoiceNo,
           totalAmount:row[4]*row[5],
           invoiceQty:row[5],
         }));
+        console.log('Invoice No before sending:', formData.invoiceNo);
 
         const productResponse = await fetch(`${config.BASE_URL}/invoiceProduct`, {
           method: 'POST',

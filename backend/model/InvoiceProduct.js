@@ -36,6 +36,10 @@ const InvoiceProduct = sequelize.define(
             },
             allowNull: false,
         },
+        invoiceNo: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
         totalAmount: {
             type: DataTypes.FLOAT,
             allowNull: false,

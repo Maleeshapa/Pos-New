@@ -16,7 +16,6 @@ const StoreController = require("./controller/StoreController");
 const ReturnController = require("./controller/ReturnController");
 const ExpenseController = require("./controller/ExpensesController");
 const ExpensesCatController = require("./controller/ExpensesCatController");
-const RentalInvoiceController = require("./controller/RentalInvoiceController");
 const ReportController = require("./controller/Reports/ReportController");
 const ProductNStockController = require("./controller/Reports/ProductStockController");
 const StockHistoryController = require('./controller/StockHistoryController');
@@ -94,13 +93,6 @@ app.get('/invoiceProducts', InvoiceProductController.getAllInvoiceProducts);
 app.get('/invoiceProducts/:invoiceId', InvoiceProductController.getInvoiceById)
 app.delete('/invoiceProduct/:invoiceId', InvoiceProductController.deleteInvoiceProduct)
 app.get('/invoiceProduct/:num', InvoiceProductController.getInvoiceProductsByNo);
-
-//rental invoice routes
-app.post("/rentalInvoice", RentalInvoiceController.createRentalInvoice);
-app.get("/rentalInvoices", RentalInvoiceController.getAllRentalInvoices);
-app.get("/rentalInvoice/:id", RentalInvoiceController.getRentalInvoiceById);
-app.put("/rentalInvoice/:id", RentalInvoiceController.updateRentalInvoice);
-app.delete("/rentalInvoice/:id", RentalInvoiceController.deleteRentalInvoice);
 
 //transaction routes
 app.post("/transaction", TransactionController.createTransaction);
