@@ -287,9 +287,11 @@
           productId: row[9],
           stockId: row[10],
           invoiceId: invoiceResult.invoiceId,
+          invoiceNo: invoiceResult.invoiceNo,
           totalAmount:row[4]*row[5],
           invoiceQty:row[5],
         }));
+        console.log('Invoice No before sending:', formData.invoiceNo);
 
         const productResponse = await fetch(`${config.BASE_URL}/invoiceProduct`, {
           method: 'POST',
@@ -298,6 +300,9 @@
           },
           body: JSON.stringify(productInvoice),
         });
+
+        const invoiceProductResult = await productResponse.json();
+        console.log('Transaction created:', invoiceProductResult);
 
         if (!productResponse.ok) {
           const errorData = await productResponse.json();

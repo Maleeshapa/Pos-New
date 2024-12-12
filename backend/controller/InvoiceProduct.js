@@ -15,7 +15,7 @@ const createInvoiceProduct = async (req, res) => {
     const insufficientStockProducts = [];
 
     for (const invoiceProduct of invoiceProducts) {
-      const { productId, stockId, invoiceId, totalAmount, invoiceQty } = invoiceProduct;
+      const { productId, stockId, invoiceId,invoiceNo, totalAmount, invoiceQty } = invoiceProduct;
 
       // Check if the product exists
       const product = await Product.findByPk(productId);
@@ -56,7 +56,7 @@ const createInvoiceProduct = async (req, res) => {
     // Process invoice products if all stock is sufficient
     const createdInvoiceProducts = [];
     for (const invoiceProduct of invoiceProducts) {
-      const { productId, stockId, invoiceId, totalAmount, invoiceQty } = invoiceProduct;
+      const { productId, stockId, invoiceId,invoiceNo, totalAmount, invoiceQty } = invoiceProduct;
 
       // Find stock and update quantity
       const stock = await Stock.findByPk(stockId);
@@ -68,6 +68,7 @@ const createInvoiceProduct = async (req, res) => {
         productId,
         stockId,
         invoiceId,
+        invoiceNo,
         totalAmount,
         invoiceQty,
       });
