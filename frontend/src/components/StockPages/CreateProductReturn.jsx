@@ -72,24 +72,32 @@ const CreateProductReturn = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
-            // Fetch invoice ID based on the invoice number entered
-            const invoiceResponse = await fetch(`${config.BASE_URL}/invoice/invoiceNo/${formData.invoiceNo}`);
-            if (!invoiceResponse.ok) {
-                throw new Error('Invoice not found.');
-            }
+            const invoiceResponse = await fetch(`${config.BASE_URL}/invoiceProduct/${formData.invoiceNo}`);
+            if (!invoiceResponse.ok) throw new Error('Invoice not found.');
             const invoiceData = await invoiceResponse.json();
 
-            const currentTime = new Date().toLocaleTimeString('en-GB', { hour12: false });
+            // Ensure the return date is valid
+            if (!formData.returnDate) {
+                throw new Error('Return date is required.');
+            }
+
             const selectedDate = new Date(formData.returnDate);
+            if (isNaN(selectedDate)) {
+                throw new Error('Invalid return date.');
+            }
+
+            // Get the current time
+            const currentTime = new Date().toLocaleTimeString('en-GB', { hour12: false });
+            // Combine date and time
             const fullReturnDate = new Date(`${selectedDate.toISOString().split('T')[0]}T${currentTime}`);
+            if (isNaN(fullReturnDate)) {
+                throw new Error('Invalid date or time value.');
+            }
 
             const response = await fetch(`${config.BASE_URL}/return`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     returnItemType: formData.returnType,
                     returnItemDate: fullReturnDate,
@@ -98,21 +106,19 @@ const CreateProductReturn = () => {
                     productId: formData.product,
                     storeId: formData.store,
                     userId: formData.user,
-                    invoiceId: invoiceData.invoiceId,
-                    cusId: formData.customer,
+                    invoiceId: invoiceData[0]?.invoiceId,
                 }),
             });
 
-            if (response.ok) {
-                const result = await response.json();
-                setSuccessMessage('Return created successfully:', result);
-                setFormData(initialFormData);
-            } else {
+            if (!response.ok) {
                 const errorData = await response.json();
-                setError(`Failed to create return: ${errorData.message || response.statusText}`);
+                throw new Error(errorData.message || 'Failed to create return.');
             }
+            const result = await response.json();
+            setSuccessMessage('Return created successfully.');
+            setFormData(initialFormData);
         } catch (error) {
-            setError(`Error during return creation: ${error.message}`);
+            setError(`Error: ${error.message}`);
         }
     };
 

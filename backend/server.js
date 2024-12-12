@@ -90,8 +90,9 @@ app.get('/invoice/invoiceNo/:num', InvoiceController.getInvoiceByNo);
 //invoiceProduct Route
 app.post('/invoiceProduct', InvoiceProductController.createInvoiceProduct);
 app.get('/invoiceProducts', InvoiceProductController.getAllInvoiceProducts);
-app.get('/invoiceProducts/:invoiceId',InvoiceProductController.getInvoiceById)
+app.get('/invoiceProducts/:invoiceId', InvoiceProductController.getInvoiceById)
 app.delete('/invoiceProduct/:invoiceId', InvoiceProductController.deleteInvoiceProduct)
+app.get('/invoiceProduct/:num', InvoiceProductController.getInvoiceProductsByNo);
 
 //transaction routes
 app.post("/transaction", TransactionController.createTransaction);
