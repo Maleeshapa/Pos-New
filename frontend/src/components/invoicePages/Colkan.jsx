@@ -107,11 +107,10 @@ const Colkan = () => {
                                     className="form-input"
                                     name="cusName"
                                     value={formData.cusName}
-                                    placeholder='Customer Staff Name'
                                 />
                             </div>
                             <div className="details mb-2">
-                                <input type="text" className="form-input" name="cusJob" placeholder='Customer Staff Position' />
+                                <input type="text" className="form-input" name="cusJob" />
                             </div>
                             <p className="details">Capital Twin Speaks</p>
                             <p className="details">No 24 Staple Street Colombo 2 - ADDRESS MUST</p>
@@ -171,17 +170,13 @@ const Colkan = () => {
                                         onMouseEnter={() => setShowRemove(index)}
                                         onMouseLeave={() => setShowRemove(null)}
                                         onClick={() => removeProduct(index)}
-                                        className='pointer'
+                                        className={`table-row ${ShowRemove === index ? 'row-hover' : ''}`}
                                     >
-                                        {ShowRemove === index && (
-                                            <td className="remove-mesg">Remove</td>
-                                        )}
                                         <td>{index + 1}</td>
                                         <td>{invoiceProduct.product.productName}</td>
                                         <td>{invoiceProduct.invoiceQty}</td>
                                         <td>{invoiceProduct.product.productSellingPrice}</td>
                                         <td>{(invoiceProduct.totalAmount)}</td>
-                                        
                                     </tr>
                                 ))
                             )}
