@@ -12,10 +12,7 @@ const Colkan = () => {
     });
     const [invoice, setInvoice] = useState({});
     const [invoiceProducts, setInvoiceProducts] = useState([]);
-    const [Transaction, setTransaction] = useState({
-        paid: '',
-        discount: '',
-    });
+    const [Transaction, setTransaction] = useState([]);
 
     const handleChange = async (e) => {
         const { name, value } = e.target;
@@ -76,18 +73,10 @@ const Colkan = () => {
             const response = await fetch(`${config.BASE_URL}/transaction/invoice/${invoiceId}`);
             if (response.ok) {
                 const transactionData = await response.json();
-                setTransaction({
-                    paid: transactionData.Price || 0,
-                    discount: transactionData.discount || 0,
-                });
+                setTransaction(transactionData);
                 console.log(transactionData);
-                console.log("Transaction", Transaction);
             } else {
                 alert('No Transaction found');
-                setTransaction({
-                    paid: '',
-                    discount: '',
-                });
             }
         } catch (error) {
             console.error('Error fetching Transaction:', error);
@@ -209,7 +198,10 @@ const Colkan = () => {
                                     </div>
                                 </td>
                                 <td>Discount</td>
-                                <td>{Transaction.discount}</td>
+                                {Transaction.map((Transaction, index) => (
+                                    < td>{Transaction.discount}</td>
+                                ))
+                                }
                             </tr>
                         </tbody>
                         <tbody>
@@ -220,8 +212,10 @@ const Colkan = () => {
                                     </div>
                                 </td>
                                 <td>TOTAL</td>
-                                <td>{Transaction.paid}
-                                </td>
+                                {Transaction.map((Transaction, index) => (
+                                    < td>{Transaction.paid}</td>
+                                ))
+                                }
                             </tr>
                         </tbody>
                     </table>
@@ -250,7 +244,7 @@ const Colkan = () => {
                     </footer>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
