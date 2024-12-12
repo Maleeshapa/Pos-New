@@ -14,6 +14,11 @@ const Colkan = () => {
     const [Transaction, setTransaction] = useState([]);
 
     const [ShowRemove, setShowRemove] = useState(null);
+    const [isInvoice, setIsInvoice] = useState(false); // State to track radio button selection
+
+    const handleRadioChange = (e) => {
+        setIsInvoice(e.target.value === 'invoice');
+    };
 
     const handleChange = async (e) => {
         const { name, value } = e.target;
@@ -90,147 +95,201 @@ const Colkan = () => {
         <div>
             <div className="scrolling-container">
                 <h4>Colkan</h4>
-                <div className="invoice">
-                    <section className="invoice-header">
-                        <img src={one} alt="" className="header-img" />
-                    </section>
+                <div className="invoice-page">
+                    <div className="invoice">
+                        <section className="invoice-header">
+                            <img src={one} alt="" className="header-img" />
+                        </section>
 
-                    <section className="billing-details">
-                        <div className="invoice-info">
-                            <h3>Billing Details</h3>
-                            <div className="details mb-2">
-                                <input
-                                    type="text"
-                                    onChange={handleChange}
-                                    className="form-input"
-                                    name="cusName"
-                                    value={formData.cusName}
-                                />
-                            </div>
-                            <div className="details mb-2">
-                                <input type="text" className="form-input" name="cusJob" />
-                            </div>
-                            <p className="details">Capital Twin Speaks</p>
-                            <p className="details">No 24 Staple Street Colombo 2 - ADDRESS MUST</p>
-                        </div>
-                        <div className="invoice-info">
-                            <div className="details">
-                                <label htmlFor="">Invoice No</label>
-                                <input
-                                    type="text"
-                                    onChange={handleChange}
-                                    className="form-input"
-                                    name="invoiceNo"
-                                    value={formData.invoiceNo}
-                                />
-                            </div>
-                            <div className="details">
-                                <label htmlFor="">Date</label>
-                                <input
-                                    type="datetime-local"
-                                    onChange={handleChange}
-                                    className="form-input date"
-                                    name="invoiceDate"
-                                    value={formData.invoiceDate}
-                                />
-                            </div>
-                            <div className="details">
-                                <label htmlFor="">Purchase Order</label>
-                                <input
-                                    type="text"
-                                    onChange={handleChange}
-                                    className="form-input"
-                                    name="PurchaseOrder"
-                                    value={formData.PurchaseOrder}
-                                />
-                            </div>
-                        </div>
-                    </section>
-
-                    <table className="invoice-table">
-                        <thead>
-                            <tr>
-                                <th>S/N</th>
-                                <th>Description</th>
-                                <th>Qty</th>
-                                <th>Unit Price</th>
-                                <th>Total LKR</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {invoiceProducts.length === 0 ? (
-                                <tr>
-                                    <td colSpan={5}>No products found for this invoice.</td>
-                                </tr>
-                            ) : (
-                                invoiceProducts.map((invoiceProduct, index) => (
-                                    <tr key={index}
-                                        onMouseEnter={() => setShowRemove(index)}
-                                        onMouseLeave={() => setShowRemove(null)}
-                                        onClick={() => removeProduct(index)}
-                                        className={`table-row ${ShowRemove === index ? 'row-hover' : ''}`}
-                                    >
-                                        <td>{index + 1}</td>
-                                        <td>{invoiceProduct.product.productName}</td>
-                                        <td>{invoiceProduct.invoiceQty}</td>
-                                        <td>{invoiceProduct.product.productSellingPrice}</td>
-                                        <td>{(invoiceProduct.totalAmount)}</td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                        <tbody>
-                            <tr>
-                                <td id="table-content" colSpan={3} rowSpan={3}>
-                                    <div className="table-content" contentEditable="true">
-                                        Notes:
-                                    </div>
-                                </td>
-                                <td>Subtotal</td>
-                                <td>
-                                    {invoiceProducts.reduce(
-                                        (total, product) => total + product.product.productSellingPrice * product.invoiceQty,
-                                        0
+                        <section className="billing-details">
+                            <div className="invoice-info">
+                                <h3>Billing Details</h3>
+                                <div className="details mb-2">
+                                    <input
+                                        type="text"
+                                        onChange={handleChange}
+                                        className="form-input"
+                                        name="cusName"
+                                        value={formData.cusName}
+                                    />
+                                </div>
+                                <div className="details mb-2">
+                                    <input type="text" className="form-input" name="cusJob" />
+                                </div>
+                                <div className="details mb-2">
+                                    {!isInvoice && (
+                                        <div className="row">
+                                            <div className="details-box col-md-6">
+                                                <label htmlFor="">Pickup from</label>
+                                                <input type="text" className="form-input" name="cusAddress" />
+                                            </div>
+                                            <div className="details-box col-md-6">
+                                                <label htmlFor="">Pickup point</label>
+                                                <input type="text" className="form-input" name="cusAddress" />
+                                            </div>
+                                        </div>
                                     )}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Discount</td>
-                                {Transaction.map((Transaction) => (
-                                    < td>{Transaction.discount}</td>
-                                ))}
-                            </tr>
-                            <tr>
-                                <td>TOTAL</td>
-                                {Transaction.map((Transaction) => (
-                                    < td>{Transaction.paid}</td>
-                                ))}
-                            </tr>
-                        </tbody>
-                    </table>
+                                </div>
+                                <p className="details">Capital Twin Speaks</p>
+                                <p className="details">No 24 Staple Street Colombo 2 - ADDRESS MUST</p>
+                            </div>
+                            <div className="invoice-info">
+                                <div className="details">
+                                    <label htmlFor="">Invoice No</label>
+                                    <input
+                                        type="text"
+                                        onChange={handleChange}
+                                        className="form-input"
+                                        name="invoiceNo"
+                                        value={formData.invoiceNo}
+                                    />
+                                </div>
+                                <div className="details">
+                                    <label htmlFor="">Date</label>
+                                    <input
+                                        type="datetime-local"
+                                        onChange={handleChange}
+                                        className="form-input date"
+                                        name="invoiceDate"
+                                        value={formData.invoiceDate}
+                                    />
+                                </div>
+                                <div className="details">
+                                    <label htmlFor="">Purchase Order</label>
+                                    <input
+                                        type="text"
+                                        onChange={handleChange}
+                                        className="form-input"
+                                        name="PurchaseOrder"
+                                        value={formData.PurchaseOrder}
+                                    />
+                                </div>
+                            </div>
+                        </section>
 
-                    <footer className="invoice-footer ">
-                        <p className='text-danger'>We hereby acknowledge the receipt of the above goods are received in damages.</p>
+                        <table className="invoice-table">
+                            <thead>
+                                <tr>
+                                    <th>S/N</th>
+                                    <th>Description</th>
+                                    <th>Qty</th>
+                                    {!isInvoice && (
+                                        <th>Unit Price</th>)}
+                                    {!isInvoice && (
+                                        <th>Total LKR</th>)}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {invoiceProducts.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={5}>No products found for this invoice.</td>
+                                    </tr>
+                                ) : (
+                                    invoiceProducts.map((invoiceProduct, index) => (
+                                        <tr key={index}
+                                            onMouseEnter={() => setShowRemove(index)}
+                                            onMouseLeave={() => setShowRemove(null)}
+                                            onClick={() => removeProduct(index)}
+                                            className={`table-row ${ShowRemove === index ? 'row-hover' : ''}`}
+                                        >
+                                            <td>{index + 1}</td>
+                                            <td>{invoiceProduct.product.productName}</td>
+                                            <td>{invoiceProduct.invoiceQty}</td>
+                                            {!isInvoice && (
+                                                <td>{invoiceProduct.product.productSellingPrice}</td>)}
+                                            {!isInvoice && (
+                                                <td>{(invoiceProduct.totalAmount)}</td>)}
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                            <tbody>
+                                <tr>
+                                    <td id="table-content" colSpan={3} rowSpan={3}>
+                                        <div className="table-content" contentEditable="true">
+                                            Notes:
+                                        </div>
+                                    </td>
+                                    {!isInvoice && (
+                                        <td>Subtotal</td>
+                                    )}
+                                    {!isInvoice && (
+                                        <td>
+                                            {invoiceProducts.reduce(
+                                                (total, product) => total + product.product.productSellingPrice * product.invoiceQty,
+                                                0
+                                            )}
+                                        </td>
+                                    )}
+                                </tr>
+                                {!isInvoice && (
+                                    <tr>
+                                        <td>Discount</td>
+                                        {Transaction.map((Transaction) => (
+                                            < td>{Transaction.discount}</td>
+                                        ))}
+                                    </tr>
+                                )}
+                                {!isInvoice && (
+                                    <tr>
+                                        <td>TOTAL</td>
+                                        {Transaction.map((Transaction) => (
+                                            < td>{Transaction.paid}</td>
+                                        ))}
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
 
-                        <div className="signature">
-                            <table className="signature-table">
-                                <thead>
-                                    <tr>
-                                        <th>Prepared by</th>
-                                        <th>Issued by</th>
-                                        <th>Company seal & sign</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <footer className="invoice-footer ">
+                            <p className='text-danger font-weight-bold'>We hereby acknowledge the receipt of the above goods are received in damages.</p>
+
+                            <div className="signature">
+                                <table className="signature-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Prepared by</th>
+                                            <th>Issued by</th>
+                                            <th>Company seal & sign</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </footer>
+                    </div>
+
+                    <div className="options">
+                        <div className="invoice-type">
+                        <form action="">
+                                <label className='invoice-type-label' htmlFor="">Delivary</label>
+                                <input
+                                    type="radio"
+                                    name="formType"
+                                    value="invoice"
+                                    checked={isInvoice}
+                                    onChange={handleRadioChange}
+                                />
+                            <br></br>
+                                <label className='invoice-type-label' htmlFor="">Invoice</label>
+                                <input
+                                    type="radio"
+                                    name="formType"
+                                    value="other"
+                                    checked={!isInvoice}
+                                    onChange={handleRadioChange}
+                                />
+                            </form>
                         </div>
-                    </footer>
+
+                    </div>
+
                 </div>
             </div>
         </div >

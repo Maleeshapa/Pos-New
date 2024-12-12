@@ -1,3 +1,9 @@
+.invoice-page{
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+/*invoice style---------------------------------------------------------*/
 .invoice {
   width: 800px;
   margin: 0 auto;
@@ -88,7 +94,7 @@
 .signature {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 0px;
 }
 
 .signature p {
@@ -129,4 +135,15 @@
 .row-hover td {
   color: #b52b38;
   font-weight: bold;
+}
+
+/*option style---------------------------------------------------------*/
+.options{
+  display: block;
+  margin: 0 auto;
+}
+.invoice-type-label{
+  font-weight: bold;
+  font-size: 17px;
+  width: 80px;
 }
