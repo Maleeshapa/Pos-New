@@ -10,7 +10,6 @@ const Colkan = () => {
         PurchaseOrder: '',
         cusName: '',
     });
-    const [invoice, setInvoice] = useState({});
     const [invoiceProducts, setInvoiceProducts] = useState([]);
     const [Transaction, setTransaction] = useState([]);
 
@@ -25,7 +24,6 @@ const Colkan = () => {
                 const response = await fetch(`${config.BASE_URL}/invoice/invoiceNo/${value}`);
                 if (response.ok) {
                     const invoiceData = await response.json();
-                    setInvoice(invoiceData.invoiceId);
 
                     const invoiceDate = new Date(invoiceData.invoiceDate);
                     const formattedDate = invoiceDate.toISOString().slice(0, 16);
