@@ -4,6 +4,7 @@
   border: 1px solid #ddd;
   padding: 20px;
   font-family: Arial, sans-serif;
+  /* height: 1131px; */
 }
 
 .invoice-header {
@@ -113,4 +114,5 @@
 
 .table-content{
   outline: none;
+  width: 500px;
 }

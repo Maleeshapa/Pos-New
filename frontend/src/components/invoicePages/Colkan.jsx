@@ -175,9 +175,9 @@ const Colkan = () => {
                         </tbody>
                         <tbody>
                             <tr>
-                                <td colSpan={3}>
+                                <td id="table-content" colSpan={3} rowSpan={3}>
                                     <div className="table-content" contentEditable="true">
-                                        Notes: Payment mode
+                                        Notes: 
                                     </div>
                                 </td>
                                 <td>Subtotal</td>
@@ -186,42 +186,25 @@ const Colkan = () => {
                                         (total, product) => total + product.product.productSellingPrice * product.invoiceQty,
                                         0
                                     )}
-
                                 </td>
                             </tr>
-                        </tbody>
-                        <tbody>
                             <tr>
-                                <td colSpan={3}>
-                                    <div className="table-content" contentEditable="true">
-                                        Sampath Bank | Account Number: 0117100010407 | Account Name: TERRA
-                                    </div>
-                                </td>
                                 <td>Discount</td>
-                                {Transaction.map((Transaction, index) => (
+                                {Transaction.map((Transaction) => (
                                     < td>{Transaction.discount}</td>
-                                ))
-                                }
+                                ))}
                             </tr>
-                        </tbody>
-                        <tbody>
                             <tr>
-                                <td colSpan={3}>
-                                    <div className="table-content" contentEditable="true">
-                                        Notes: [DELIVERY ADDRESS]
-                                    </div>
-                                </td>
                                 <td>TOTAL</td>
-                                {Transaction.map((Transaction, index) => (
+                                {Transaction.map((Transaction) => (
                                     < td>{Transaction.paid}</td>
-                                ))
-                                }
+                                ))}
                             </tr>
                         </tbody>
                     </table>
 
-                    <footer className="invoice-footer">
-                        <p>We hereby acknowledge the receipt of the above goods are received in damages.</p>
+                    <footer className="invoice-footer ">
+                        <p className='text-danger'>We hereby acknowledge the receipt of the above goods are received in damages.</p>
 
                         <div className="signature">
                             <table className="signature-table">

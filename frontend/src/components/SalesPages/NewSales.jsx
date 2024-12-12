@@ -301,9 +301,6 @@
           body: JSON.stringify(productInvoice),
         });
 
-        const invoiceProductResult = await productResponse.json();
-        console.log('Transaction created:', invoiceProductResult);
-
         if (!productResponse.ok) {
           const errorData = await productResponse.json();
           
