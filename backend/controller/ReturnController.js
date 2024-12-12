@@ -15,11 +15,10 @@ const createReturn = async (req, res) => {
             storeId,
             userId,
             invoiceId,
-            cusId,
         } = req.body;
 
         // Ensure all required fields are present
-        if (!returnItemType || !returnItemDate || !productId || !storeId || !userId || !invoiceId || !cusId) {
+        if (!returnItemType || !returnItemDate || !productId || !storeId || !userId || !invoiceId) {
             return res.status(400).json({ error: "All fields are required." });
         }
 
@@ -41,12 +40,6 @@ const createReturn = async (req, res) => {
             return res.status(400).json({ message: 'Invalid user ID' });
         }
 
-        // Check if customer exists
-        const customer = await Customer.findByPk(cusId);
-        if (!customer) {
-            return res.status(400).json({ message: 'Invalid customer ID' });
-        }
-
         // Check if invoice exists
         const invoice = await Invoice.findByPk(invoiceId);
         if (!invoice) {
@@ -63,7 +56,6 @@ const createReturn = async (req, res) => {
             store_storeId: storeId,
             user_userId: userId,
             invoice_invoiceId: invoiceId,
-            customer_cusId: cusId,
         });
 
         // Fetch the newly created return with associated product, store, user, and invoice information
@@ -73,7 +65,6 @@ const createReturn = async (req, res) => {
                 { model: Store, as: 'store' },
                 { model: User, as: 'user' },
                 { model: Invoice, as: 'invoice' },
-                { model: Customer, as: 'customer' }, 
             ],
         });
 

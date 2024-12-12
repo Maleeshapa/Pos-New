@@ -5,7 +5,7 @@ const InvoiceProduct = require('../model/InvoiceProduct')
 
 const createInvoiceProduct = async (req, res) => {
   try {
-    const invoiceProducts = req.body; 
+    const invoiceProducts = req.body;
 
     // Validate input
     if (!Array.isArray(invoiceProducts) || invoiceProducts.length === 0) {
@@ -105,29 +105,54 @@ const getAllInvoiceProducts = async (req, res) => {
   }
 };
 
-const getInvoiceById = async (req,res)=>{
+const getInvoiceById = async (req, res) => {
   try {
     const { invoiceId } = req.params;
 
     // Fetch invoice products along with associated product and stock details
     const invoiceProducts = await InvoiceProduct.findAll({
-        where: { invoiceId },
-        include: [
-            { model: Product, as: 'product' },
-            { model: Stock, as: 'stock' }
-        ]
+      where: { invoiceId },
+      include: [
+        { model: Product, as: 'product' },
+        { model: Stock, as: 'stock' }
+      ]
     });
 
     if (invoiceProducts.length === 0) {
-        return res.status(404).json({ message: 'No invoice products found' });
+      return res.status(404).json({ message: 'No invoice products found' });
     }
 
     res.status(200).json(invoiceProducts);
-} catch (error) {
+  } catch (error) {
     console.error('Error fetching invoice products:', error);
     res.status(500).json({ error: `An error occurred: ${error.message}` });
+  }
 }
-}
+
+const getInvoiceProductsByNo = async (req, res) => {
+  try {
+    const { num } = req.params;
+
+    // Find invoice products by the invoice number
+    const invoiceProducts = await InvoiceProduct.findAll({
+      where: { invoiceNo: num },
+      include: [
+        { model: Product, as: 'product' },
+        { model: Stock, as: 'stock' }
+      ]
+    });
+
+    if (!invoiceProducts || invoiceProducts.length === 0) {
+      return res.status(404).json({ message: "Invoice products not found for the given number" });
+    }
+
+    res.status(200).json(invoiceProducts);
+  } catch (error) {
+    console.error('Error fetching invoice products by number:', error);
+    res.status(500).json({ error: `An error occurred: ${error.message}` });
+  }
+};
+
 
 const deleteInvoiceProduct = async (req, res) => {
   try {
@@ -164,5 +189,6 @@ module.exports = {
   createInvoiceProduct,
   getAllInvoiceProducts,
   deleteInvoiceProduct,
-  getInvoiceById
+  getInvoiceById,
+  getInvoiceProductsByNo 
 };
