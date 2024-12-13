@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, ShoppingCart, Package, Users, Boxes, Truck, FileText, Menu, FileUp } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Package, Users, Boxes, Truck, FileText, Menu, FileUp, Sheet } from 'lucide-react';
 import './SideBar.css';
 
 const Sidebar = () => {
@@ -90,6 +90,14 @@ const Sidebar = () => {
             path: '/upload',
             submenus: [
                 { title: 'Upload Purchase Orders', path: '/upload' },
+            ]
+        },
+        {
+            title: 'Costing Table',
+            icon: <Sheet size={20} />,
+            path: '/costing',
+            submenus: [
+                { title: 'Costing Table', path: '/costing-table' },
             ]
         },
         {

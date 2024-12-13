@@ -22,6 +22,7 @@ import Haman from './components/invoicePages/Haman';
 import Terra from './components/invoicePages/Terra';
 import Upload from './Pages/Upload/Upload';
 import SalesDetails from './components/SalesPages/SalesDetails';
+import CostingTable from './Pages/Cost Table/CostingTable';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token');
@@ -63,6 +64,7 @@ function Layout() {
             <Route path="/selected/terra" element={<ProtectedRoute><Terra /></ProtectedRoute>} />
             <Route path="/salesDetails/:invoiceNo" element={<ProtectedRoute><SalesDetails /></ProtectedRoute>} />
             <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
+            <Route path="/costing-table" element={<ProtectedRoute><CostingTable /></ProtectedRoute>} />
           </Routes>
         </div>
       </div>
