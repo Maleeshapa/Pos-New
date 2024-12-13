@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Table from '../Table/Table'
+import Table from '../Table/Table';
 import config from '../../config';
 
 const ReturnedProductList = () => {
@@ -8,7 +8,16 @@ const ReturnedProductList = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const Columns = ["id", 'Return Type', 'Return Date', 'Product', 'Store', 'handle by', 'Invoice id'];
+    const Columns = [
+        "id",
+        'Invoice id',
+        'Return Type',
+        'Return Date',
+        'Product',
+        'Store',
+        'Handle By',
+        'Credit Note'
+    ];
     const btnName = 'Create Return item';
 
     const navigate = useNavigate();
@@ -29,17 +38,26 @@ const ReturnedProductList = () => {
             }
             const returns = await response.json();
 
-            const formattedData = returns.map(returns => {
-                const returnDate = new Date(returns.returnItemDate).toLocaleString();
+            const formattedData = returns.map(returnItem => {
+                const returnDate = new Date(returnItem.returnItemDate).toLocaleString();
 
                 return [
-                    returns.returnItemId,
-                    returns.returnItemType,
+                    returnItem.returnItemId,
+                    returnItem.invoice?.invoiceNo,
+                    returnItem.returnItemType,
                     returnDate,
-                    returns.products?.productName,
-                    returns.store?.storeName,
-                    returns.user?.userName,
-                    returns.invoice?.invoiceNo,
+                    returnItem.products?.productName,
+                    returnItem.store?.storeName,
+                    returnItem.user?.userName,
+                    // Adding the Proforma Invoice button
+                    (
+                        <button
+                            className="btn btn-warning"
+                            onClick={() => navigate(`/CreditNote/${returnItem.returnItemId}`)}
+                        >
+                            Credit Note
+                        </button>
+                    )
                 ];
             });
 
@@ -50,7 +68,6 @@ const ReturnedProductList = () => {
             setIsLoading(false);
         }
     };
-
 
     const title = 'Returned Product List';
     const invoice = 'Returned Product List.pdf';
@@ -78,7 +95,7 @@ const ReturnedProductList = () => {
                 )}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default ReturnedProductList
+export default ReturnedProductList;
