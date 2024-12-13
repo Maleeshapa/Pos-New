@@ -205,13 +205,7 @@
     // const generateInvoiceCode = () => {
     //   return "InvNO" + Date.now().toString().slice(-4);
     // };
-    const [currentInvoiceNo, setCurrentInvoiceNo] = useState(1500);  // Track the last invoice number
 
-    const generateInvoiceCode = () => {
-      const nextInvoiceNo = currentInvoiceNo + 1;
-      setCurrentInvoiceNo(nextInvoiceNo); // Update the invoice number after generating the new one
-      return `${nextInvoiceNo}`;
-    };
     
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -224,7 +218,7 @@
         }
 
         const invoiceData = {
-          invoiceNo:generateInvoiceCode(),
+          invoiceNo:formData.invoiceNo,
           invoiceDate: formData.invoiceDate,
           cusName:formData.cusName,
           cusAddress:formData.cusAddress,
@@ -584,10 +578,10 @@
                   <label htmlFor="" id='label'>Invoice Date</label>
                   <input type="datetime-local" className="form-control" name="invoiceDate" onChange={handleChange} value={formData.invoiceDate} id="date" />
                 </div>
-                {/* <div className="sales-person">
+                <div className="sales-person">
                   <label htmlFor="" id='label'>Invoice No</label>
                   <input type="text" className="form-control" name="invoiceNo" onChange={handleChange} value={formData.invoiceNo} id="date" />
-                </div> */}
+                </div>
                 {/* <div className="sales-person">
                   <label htmlFor="" id='label'>Invoice Due Date</label>
                   <input type="datetime-local" className="form-control" name="invoiceDueDate" id="date" />
