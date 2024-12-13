@@ -44,16 +44,14 @@ const SalesHistory = () => {
         return [
           invoice.invoiceId,
           invoice.cusName,
-          invoice.cusAddress,
+          invoice.cusAddress, 
           formattedInvoiceDate,
           transactionTypes,
           transactionPrice,
           transactiondue,
           <div>
             <Link to={'/selectInvoice'}><button className="btn btn-primary">Invoice</button></Link>
-            <Link to={'/selectInvoice'}><button className="btn btn-success">Delivery</button></Link>
           </div>
-
         ];
       });
 

@@ -38,7 +38,9 @@
       note: '',
       invoiceDate: '',
       invoiceNo:'',
-      salesPerson: ''
+      salesPerson: '',
+      cusJob:'',
+      cusOffice:''
     });
 
     const navigate=useNavigate();
@@ -218,7 +220,9 @@
           invoiceNo: formData.invoiceNo,
           invoiceDate: formData.invoiceDate,
           cusName:formData.cusName,
-          cusAddress:formData.cusAddress
+          cusAddress:formData.cusAddress,
+          cusJob:formData.cusJob,
+          cusOffice:formData.cusOffice
         };
 
         console.log('Sending invoice data:', invoiceData);
@@ -363,6 +367,8 @@
       invoiceDate: '',
       totalAmount: '',
       discountPrice: '',
+      cusJob:'',
+      cusOffice:'',
       });
     };
     
@@ -445,6 +451,8 @@
         invoiceDate: '',
         totalAmount: '',
         discountPrice: '',
+        cusJob:'',
+        cusOffice:'',
       });
       resetSalesPerson();
     }
@@ -476,12 +484,16 @@
                 </div> */}
 
                 <div className="customer-details">
-                  <label htmlFor="">Customer Name</label>
-                  <input onChange={handleChange} value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Enter Name" />
+                  <input onChange={handleChange} value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" />
                 </div>
                 <div className="customer-details">
-                  <label htmlFor="">Customer Address</label>
-                  <input onChange={handleChange} value={formData.cusAddress} type="text" className="form-control" name="cusAddress" id="cusAddress" placeholder="Enter Address" />
+                  <input onChange={handleChange} value={formData.cusAddress} type="text" className="form-control" name="cusAddress" id="cusAddress" placeholder="CustomerAddress" />
+                </div>
+                <div className="customer-details">
+                  <input onChange={handleChange} value={formData.cusJob} type="text" className="form-control" name="cusJob" id="cusJob" placeholder="Customer Job Position" />
+                </div>
+                <div className="customer-details">
+                  <input onChange={handleChange} value={formData.cusOffice} type="text" className="form-control" name="cusOffice" id="cusOffice" placeholder="Customer Company" />
                 </div>
 
                 {/* <div className="customer-details">
