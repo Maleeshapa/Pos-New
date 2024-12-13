@@ -206,6 +206,7 @@
     //   return "InvNO" + Date.now().toString().slice(-4);
     // };
 
+    
     const handleSubmit = async (e) => {
       e.preventDefault();
       try{
@@ -217,7 +218,7 @@
         }
 
         const invoiceData = {
-          // invoiceNo: formData.invoiceNo,
+          invoiceNo:formData.invoiceNo,
           invoiceDate: formData.invoiceDate,
           cusName:formData.cusName,
           cusAddress:formData.cusAddress,
@@ -577,10 +578,10 @@
                   <label htmlFor="" id='label'>Invoice Date</label>
                   <input type="datetime-local" className="form-control" name="invoiceDate" onChange={handleChange} value={formData.invoiceDate} id="date" />
                 </div>
-                {/* <div className="sales-person">
+                <div className="sales-person">
                   <label htmlFor="" id='label'>Invoice No</label>
                   <input type="text" className="form-control" name="invoiceNo" onChange={handleChange} value={formData.invoiceNo} id="date" />
-                </div> */}
+                </div>
                 {/* <div className="sales-person">
                   <label htmlFor="" id='label'>Invoice Due Date</label>
                   <input type="datetime-local" className="form-control" name="invoiceDueDate" id="date" />
