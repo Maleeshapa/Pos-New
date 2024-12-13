@@ -106,7 +106,7 @@ const handlePrint = () => {
                 },
                 x: 10,
                 y: 10,
-                width: 190,
+                width: 220,
                 windowWidth: 800,
             });
         } else {
