@@ -10,6 +10,8 @@ const createInvoice = async (req, res) => {
             invoiceDate,
             cusName,
             cusAddress,
+            cusJob,
+            cusOffice
         } = req.body;
 
         // Validate required fields
@@ -23,6 +25,8 @@ const createInvoice = async (req, res) => {
             invoiceDate,
             cusName,
             cusAddress,
+            cusJob,
+            cusOffice
         });
 
         res.status(201).json(newInvoice);
