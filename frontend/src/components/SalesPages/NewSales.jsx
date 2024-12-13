@@ -205,7 +205,14 @@
     // const generateInvoiceCode = () => {
     //   return "InvNO" + Date.now().toString().slice(-4);
     // };
+    const [currentInvoiceNo, setCurrentInvoiceNo] = useState(1500);  // Track the last invoice number
 
+    const generateInvoiceCode = () => {
+      const nextInvoiceNo = currentInvoiceNo + 1;
+      setCurrentInvoiceNo(nextInvoiceNo); // Update the invoice number after generating the new one
+      return `${nextInvoiceNo}`;
+    };
+    
     const handleSubmit = async (e) => {
       e.preventDefault();
       try{
@@ -217,7 +224,7 @@
         }
 
         const invoiceData = {
-          // invoiceNo: formData.invoiceNo,
+          invoiceNo:generateInvoiceCode(),
           invoiceDate: formData.invoiceDate,
           cusName:formData.cusName,
           cusAddress:formData.cusAddress,
