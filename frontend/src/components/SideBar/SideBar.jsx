@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, ShoppingCart, Package, Users, Boxes, Truck, FileText, Menu } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Package, Users, Boxes, Truck, FileText, Menu, FileUp } from 'lucide-react';
 import './SideBar.css';
 
 const Sidebar = () => {
@@ -84,6 +84,14 @@ const Sidebar = () => {
                 { title: 'Sales History', path: '/Rental/history' },
             ]
         },*/
+        {
+            title: 'Upload',
+            icon: <FileUp size={20} />,
+            path: '/upload',
+            submenus: [
+                { title: 'Upload Purchase Orders', path: '/upload' },
+            ]
+        },
         {
             title: 'Customer',
             icon: <Users size={20} />,

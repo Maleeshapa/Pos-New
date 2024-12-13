@@ -20,6 +20,7 @@ import SelectInvoice from './components/invoicePages/selectInvoice';
 import Colkan from './components/invoicePages/Colkan';
 import Haman from './components/invoicePages/Haman';
 import Terra from './components/invoicePages/Terra';
+import Upload from './Pages/Upload/Upload';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token');
@@ -59,6 +60,7 @@ function Layout() {
             <Route path="/selected/colkan" element={<Colkan />} />
             <Route path="/selected/haman" element={<Haman />} />
             <Route path="/selected/terra" element={<Terra />} />
+            <Route path="/upload" element={<Upload />} />
           </Routes>
         </div>
       </div>
