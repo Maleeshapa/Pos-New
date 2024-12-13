@@ -94,25 +94,21 @@ const Haman = () => {
     };
     
 const handlePrint = () => {
-        const printContent = document.getElementById('invoice-card'); // Select the invoice card section
+        const printContent = document.getElementById('invoice-card');
     
         if (printContent) {
             const doc = new jsPDF();
     
-            // Convert the invoice content into HTML and add it to the PDF document
             doc.html(printContent, {
                 callback: function (doc) {
-                    // After the content is added, trigger the print dialog
-                    doc.autoPrint();  // Automatically opens the print dialog after PDF generation
-                    window.open(doc.output('bloburl'), '_blank'); // Opens the PDF in a new tab (for review before printing)
-    
-                    // Automatically download the generated PDF
-                    doc.save('invoice.pdf'); // This will download the PDF with the name "invoice.pdf"
+                    doc.autoPrint();
+                    window.open(doc.output('bloburl'), '_blank');
+                    doc.save('invoice.pdf');
                 },
-                x: 10,  // Adjust x position of the content
-                y: 10,  // Adjust y position of the content
-                width: 190, // Width of the content area
-                windowWidth: 800,  // Window width for better scaling
+                x: 10,
+                y: 10,
+                width: 190,
+                windowWidth: 800,
             });
         } else {
             console.error('Invoice card not found!');
@@ -318,8 +314,7 @@ const handlePrint = () => {
                                 />
                             </form>
                         </div>
-                        <button onClick={handlePrint}>Print Invoice</button>
-
+                        <button onClick={handlePrint} className='btn btn-success'>Print Invoice</button>
                     </div>
 
                 </div>
