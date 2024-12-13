@@ -8,7 +8,7 @@ const SalesHistory = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const columns = ["ID", "Customer", 'address', "Date/time", "Transaction Type", "Total Amount", "Due", "invoice"];
+  const columns = ["ID","Invoice No" ,"Customer", 'address', "Date/time", "Transaction Type", "Total Amount", "Due", "invoice"];
 
   useEffect(() => {
     fetchSalesHistory();
@@ -43,6 +43,7 @@ const SalesHistory = () => {
 
         return [
           invoice.invoiceId,
+          invoice.invoiceNo,
           invoice.cusName,
           invoice.cusAddress, 
           formattedInvoiceDate,
