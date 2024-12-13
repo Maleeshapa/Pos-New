@@ -295,7 +295,7 @@ const handlePrint = () => {
                     <div className="options">
                         <div className="invoice-type">
                         <form action="">
-                                <label className='invoice-type-label' htmlFor="">Delivary</label>
+                                <label className='invoice-type-label' htmlFor="">Invoice</label>
                                 <input
                                     type="radio"
                                     name="formType"
@@ -304,7 +304,7 @@ const handlePrint = () => {
                                     onChange={handleRadioChange}
                                 />
                             <br></br>
-                                <label className='invoice-type-label' htmlFor="">Invoice</label>
+                                <label className='invoice-type-label' htmlFor="">Delivary</label>
                                 <input
                                     type="radio"
                                     name="formType"
