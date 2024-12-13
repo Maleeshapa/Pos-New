@@ -21,6 +21,7 @@ import Colkan from './components/invoicePages/Colkan';
 import Haman from './components/invoicePages/Haman';
 import Terra from './components/invoicePages/Terra';
 import Upload from './Pages/Upload/Upload';
+import SalesDetails from './components/SalesPages/SalesDetails';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token');
@@ -56,11 +57,12 @@ function Layout() {
             <Route path="/sales-reports/*" element={<ProtectedRoute><SalesReports /></ProtectedRoute>} />
             <Route path="/stock-reports/*" element={<ProtectedRoute><StockReports /></ProtectedRoute>} />
             <Route path="/staff/*" element={<ProtectedRoute><Staff /></ProtectedRoute>} />
-            <Route path="/selectInvoice" element={<SelectInvoice />} />
-            <Route path="/selected/colkan" element={<Colkan />} />
-            <Route path="/selected/haman" element={<Haman />} />
-            <Route path="/selected/terra" element={<Terra />} />
-            <Route path="/upload" element={<Upload />} />
+            <Route path="/selectInvoice" element={<ProtectedRoute><SelectInvoice /></ProtectedRoute>} />
+            <Route path="/selected/colkan" element={<ProtectedRoute><Colkan /></ProtectedRoute>} />
+            <Route path="/selected/haman" element={<ProtectedRoute><Haman /></ProtectedRoute>} />
+            <Route path="/selected/terra" element={<ProtectedRoute><Terra /></ProtectedRoute>} />
+            <Route path="/salesDetails/:invoiceNo" element={<ProtectedRoute><SalesDetails /></ProtectedRoute>} />
+            <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
           </Routes>
         </div>
       </div>

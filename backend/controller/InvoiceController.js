@@ -6,7 +6,7 @@ const Stock = require("../model/Stock");
 const createInvoice = async (req, res) => {
     try {
         const {
-            invoiceNo,
+            // invoiceNo,
             invoiceDate,
             cusName,
             cusAddress,
@@ -15,13 +15,13 @@ const createInvoice = async (req, res) => {
         } = req.body;
 
         // Validate required fields
-        if (!invoiceDate) {
+        if (!invoiceDate|| !cusName || !cusAddress || !cusJob) {
             return res.status(400).json({ error: "All fields are required." });
         }
 
         // Create a new invoice
         const newInvoice = await Invoice.create({
-            invoiceNo,
+            // invoiceNo,
             invoiceDate,
             cusName,
             cusAddress,
@@ -97,7 +97,7 @@ const updateInvoice = async (req, res) => {
     try {
         const { id } = req.params;
         const {
-            invoiceNo,
+            // invoiceNo,
             invoiceDate,
             totalAmount,
             invoiceQty,

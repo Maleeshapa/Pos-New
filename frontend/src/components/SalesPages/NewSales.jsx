@@ -217,7 +217,7 @@
         }
 
         const invoiceData = {
-          invoiceNo: formData.invoiceNo,
+          // invoiceNo: formData.invoiceNo,
           invoiceDate: formData.invoiceDate,
           cusName:formData.cusName,
           cusAddress:formData.cusAddress,
@@ -471,7 +471,7 @@
                   {/* <button className='addCusBtn' type="button" onClick={openModal}><PlusCircle size={30} /></button> */}
                 </div>
                 {/* <Modal
-                  isOpen={modalIsOpen}
+                  isOpen={modalIsOpen}  
                   onRequestClose={closeModal}
                   contentLabel="New Customer Form"
                 >
@@ -577,10 +577,10 @@
                   <label htmlFor="" id='label'>Invoice Date</label>
                   <input type="datetime-local" className="form-control" name="invoiceDate" onChange={handleChange} value={formData.invoiceDate} id="date" />
                 </div>
-                <div className="sales-person">
+                {/* <div className="sales-person">
                   <label htmlFor="" id='label'>Invoice No</label>
                   <input type="text" className="form-control" name="invoiceNo" onChange={handleChange} value={formData.invoiceNo} id="date" />
-                </div>
+                </div> */}
                 {/* <div className="sales-person">
                   <label htmlFor="" id='label'>Invoice Due Date</label>
                   <input type="datetime-local" className="form-control" name="invoiceDueDate" id="date" />
