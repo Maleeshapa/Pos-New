@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 12, 2024 at 03:34 PM
+-- Generation Time: Dec 13, 2024 at 06:33 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -83,17 +83,21 @@ CREATE TABLE `invoice` (
   `invoiceDate` datetime NOT NULL,
   `cusName` varchar(255) NOT NULL,
   `cusAddress` varchar(255) NOT NULL,
-  `cusPhone` varchar(255) NOT NULL
+  `cusPhone` varchar(255) NOT NULL,
+  `cusJob` varchar(255) NOT NULL,
+  `cusOffice` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `invoice`
 --
 
-INSERT INTO `invoice` (`invoiceId`, `invoiceNo`, `invoiceDate`, `cusName`, `cusAddress`, `cusPhone`) VALUES
-(159, 'maleeshapa', '2024-12-11 07:19:00', 'Buddhika', 'kandy', ''),
-(170, '111', '2024-12-12 10:08:00', 'kavindu', 'kuliyapitiya', ''),
-(173, '999', '2024-12-12 10:17:00', 'Buddhika', 'No 2231 dadawdw', '');
+INSERT INTO `invoice` (`invoiceId`, `invoiceNo`, `invoiceDate`, `cusName`, `cusAddress`, `cusPhone`, `cusJob`, `cusOffice`) VALUES
+(159, 'maleeshapa', '2024-12-11 07:19:00', 'Buddhika', 'kandy', '', '', '0'),
+(170, '111', '2024-12-12 10:08:00', 'kavindu', 'kuliyapitiya', '', '', '0'),
+(173, '999', '2024-12-12 10:17:00', 'Buddhika', 'No 2231 dadawdw', '', '', '0'),
+(174, '456', '2024-12-12 15:03:00', 'MY Business', 'kandy', '', '', '0'),
+(175, '123', '2024-12-13 15:51:00', 'maleeshaPa', 'gg', '', 'accounting ex', 'delma ');
 
 -- --------------------------------------------------------
 
@@ -128,7 +132,11 @@ INSERT INTO `invoiceproduct` (`id`, `invoiceId`, `invoiceNo`, `productId`, `stoc
 (62, 173, '999', 2, 3, '1', '120'),
 (63, 173, '999', 3, 4, '1', '100'),
 (64, 173, '999', 1, 1, '1', '100'),
-(65, 173, '999', 2, 3, '1', '120');
+(65, 173, '999', 2, 3, '1', '120'),
+(66, 174, '456', 1, 1, '1', '100'),
+(67, 175, '123', 2, 3, '1', '120'),
+(68, 175, '123', 1, 1, '1', '100'),
+(69, 175, '123', 3, 4, '1', '100');
 
 -- --------------------------------------------------------
 
@@ -213,9 +221,9 @@ CREATE TABLE `stock` (
 --
 
 INSERT INTO `stock` (`stockId`, `stockName`, `stockdate`, `billImage`, `stockPrice`, `due`, `vat`, `total`, `stockQty`, `mfd`, `exp`, `cashAmount`, `chequeAmount`, `stockDescription`, `stockStatus`, `products_productId`, `supplier_supplierId`, `store_storeId`, `category_categoryId`) VALUES
-(1, 'stock1', '2024-10-16 17:09:18', NULL, 100, 1, 1, 100, 2147483590, '2024-10-16', '2024-10-31', 500, NULL, 'note', '', 1, 1, 1, 1),
-(3, 'stock 2', '2024-10-17 01:28:56', NULL, 100, 1, 1, 1, 2147483545, '2024-10-17', '2024-10-31', 500, 211, 'booo', '', 2, 1, 1, 1),
-(4, '5', '2024-10-18 09:01:00', NULL, 10000, 0, 0, 0, 81, '2024-10-18', '2024-10-17', 98, NULL, NULL, 'In stock', 3, 1, 1, 1),
+(1, 'stock1', '2024-10-16 17:09:18', NULL, 100, 1, 1, 100, 2147483588, '2024-10-16', '2024-10-31', 500, NULL, 'note', '', 1, 1, 1, 1),
+(3, 'stock 2', '2024-10-17 01:28:56', NULL, 100, 1, 1, 1, 2147483544, '2024-10-17', '2024-10-31', 500, 211, 'booo', '', 2, 1, 1, 1),
+(4, '5', '2024-10-18 09:01:00', NULL, 10000, 0, 0, 0, 80, '2024-10-18', '2024-10-17', 98, NULL, NULL, 'In stock', 3, 1, 1, 1),
 (5, '1', '2024-12-19 07:42:00', 'http://localhost:5000/uploads/stock/1_1733663580933.png', 500, 0, 0, 0, 5, '2024-12-26', '2024-12-18', 120, NULL, '5', 'In stock', 3, 1, 1, 1),
 (6, '5', '2024-12-10 07:09:00', 'http://localhost:5000/uploads/stock/5_1733747989746.png', 200, 0, 0, 0, 2, '2024-12-10', '2024-12-16', 112, 121, NULL, 'In stock', 1, 2, 1, 1),
 (7, 'ww', '2024-12-10 07:14:00', NULL, 500, 0, 0, 0, 5, '2024-12-12', '2024-12-11', 122, NULL, NULL, 'In stock', 1, 1, 1, 1);
@@ -332,7 +340,9 @@ CREATE TABLE `transaction` (
 INSERT INTO `transaction` (`transactionId`, `transactionType`, `price`, `discount`, `dateTime`, `note`, `paid`, `due`, `invoice_invoiceId`, `user_userId`) VALUES
 (85, 'cash', '1320', 0, '2024-12-11 07:19:00', '', 1320, 0, 159, 2),
 (96, 'cash', '5760', 0, '2024-12-12 10:08:00', '', 576, 5184, 170, 1),
-(99, 'cash', '860', 0, '2024-12-12 10:17:00', '', 860, 0, 173, 2);
+(99, 'cash', '860', 0, '2024-12-12 10:17:00', '', 860, 0, 173, 2),
+(100, 'cash', '100', 0, '2024-12-12 15:03:00', '', 100, 0, 174, 2),
+(101, 'cash', '320', 0, '2024-12-13 15:51:00', '', 320, 0, 175, 2);
 
 -- --------------------------------------------------------
 
@@ -501,13 +511,13 @@ ALTER TABLE `expensescat`
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `invoiceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=174;
+  MODIFY `invoiceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
 
 --
 -- AUTO_INCREMENT for table `invoiceproduct`
 --
 ALTER TABLE `invoiceproduct`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -555,7 +565,7 @@ ALTER TABLE `switch`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transactionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `transactionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 
 --
 -- AUTO_INCREMENT for table `user`
