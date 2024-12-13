@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Colkan.css';
 import one from '../../assets/1.jpg';
 import config from '../../config';
+import { jsPDF } from "jspdf";
 
 const Colkan = () => {
     const [formData, setFormData] = useState({
@@ -91,12 +92,41 @@ const Colkan = () => {
     const removeProduct = (index) => {
         setInvoiceProducts(prevProducts => prevProducts.filter((_, i) => i !== index));
     };
+    
+const handlePrint = () => {
+        const printContent = document.getElementById('invoice-card'); // Select the invoice card section
+    
+        if (printContent) {
+            const doc = new jsPDF();
+    
+            // Convert the invoice content into HTML and add it to the PDF document
+            doc.html(printContent, {
+                callback: function (doc) {
+                    // After the content is added, trigger the print dialog
+                    doc.autoPrint();  // Automatically opens the print dialog after PDF generation
+                    window.open(doc.output('bloburl'), '_blank'); // Opens the PDF in a new tab (for review before printing)
+    
+                    // Automatically download the generated PDF
+                    doc.save('invoice.pdf'); // This will download the PDF with the name "invoice.pdf"
+                },
+                x: 10,  // Adjust x position of the content
+                y: 10,  // Adjust y position of the content
+                width: 190, // Width of the content area
+                windowWidth: 800,  // Window width for better scaling
+            });
+        } else {
+            console.error('Invoice card not found!');
+        }
+    };
+    
     return (
         <div>
             <div className="scrolling-container">
                 <h4>Colkan</h4>
                 <div className="invoice-page">
                     <div className="invoice">
+                    <div id="invoice-card">
+
                         <section className="invoice-header">
                             <img src={one} alt="" className="header-img" />
                         </section>
@@ -264,6 +294,7 @@ const Colkan = () => {
                             </div>
                         </footer>
                     </div>
+                    </div>
 
                     <div className="options">
                         <div className="invoice-type">
@@ -287,6 +318,7 @@ const Colkan = () => {
                                 />
                             </form>
                         </div>
+                        <button onClick={handlePrint}>Print Invoice</button>
 
                     </div>
 
