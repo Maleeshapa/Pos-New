@@ -12,6 +12,7 @@ const ColkanCR = () => {
         PurchaseOrder: '',
         cusName: '',
         cusJob: '',
+        cusOffice:'',
         delivaryNo: ''
     });
     const [invoiceProducts, setInvoiceProducts] = useState([]);
@@ -43,6 +44,7 @@ const ColkanCR = () => {
                         invoiceDate: formattedDate,
                         cusName: invoiceData.cusName,
                         cusJob: invoiceData.cusJob,
+                        cusOffice: invoiceData.cusOffice,
                     }));
 
                     if (invoiceData.invoiceId) {
@@ -55,6 +57,8 @@ const ColkanCR = () => {
                         invoiceDate: '',
                         cusName: '',
                         cusJob: '',
+                        cusOffice:''
+
                     }));
                 }
             } catch (error) {
@@ -122,7 +126,7 @@ const ColkanCR = () => {
     return (
         <div>
             <div className="scrolling-container">
-                <h4>Colkan</h4>
+                <h4>Credit Note</h4>
                 <div className="invoice-page">
                     <div className="invoice">
                         <div id="invoice-card">
@@ -133,7 +137,7 @@ const ColkanCR = () => {
 
                             <section className="billing-details">
                                 <div className="invoice-info">
-                                    <h3>Billing Details</h3>
+                                    <h5>Customer Details</h5>
                                     <div className="details mb-2">
                                         <input
                                             type="text"
@@ -147,6 +151,9 @@ const ColkanCR = () => {
                                         <input type="text" className="form-input" onChange={handleChange} name="cusJob" value={formData.cusJob} />
                                     </div>
                                     <div className="details mb-2">
+                                        <input type="text" className="form-input" onChange={handleChange} name="cusOffice" value={formData.cusOffice} />
+                                    </div>
+                                    {/* <div className="details mb-2">
                                         {!isInvoice && (
                                             <div className="row">
                                                 <div className="details-box col-md-6">
@@ -159,20 +166,20 @@ const ColkanCR = () => {
                                                 </div>
                                             </div>
                                         )}
-                                    </div>
-                                    <p className="details">Capital Twin Speaks</p>
-                                    <p className="details">No 24 Staple Street Colombo 2 - ADDRESS MUST</p>
+                                    </div> */}
+                                    <p className="details">Port Of Colombo, 120/20, Marine Drive Road</p>
+                                    <p className="details">Colombo 1</p>
                                 </div>
                                 <div className="invoice-info">
                                     {!isInvoice && (
                                         <div className="details">
-                                            <label htmlFor="">Delivary No</label>
+                                            <label htmlFor="">Credit Note No</label>
                                             <input
                                                 type="text"
                                                 onChange={handleChange}
                                                 className="form-input"
-                                                name="delivaryNo"
-                                                value={formData.delivaryNo}
+                                                name=" "
+                                                
                                             />
                                         </div>)}
                                     <div className="details">
@@ -283,7 +290,8 @@ const ColkanCR = () => {
                             </table>
 
                             <footer className="invoice-footer ">
-                                <p className='text-danger font-weight-bold'>We hereby acknowledge the receipt of the above goods are received in damages.</p>
+                                <p className='text-danger font-weight-bold text-start'>Credit Advice <br />Kindly deduct this amount from the payment of the invoice {formData.invoiceNo}</p>
+                                 
 
                                 <div className="signature">
                                     <table className="signature-table">
@@ -329,7 +337,7 @@ const ColkanCR = () => {
                                 />
                             </form>
                         </div> */}
-                        <button onClick={handlePrint} className='btn btn-success'>Print Invoice</button>
+                        <button onClick={handlePrint} className='btn btn-success'>Print Credit Note </button>
                     </div>
 
                 </div>

@@ -3,3 +3,5 @@ const config = {
 };
 
 export default config;
+
+//BASE_URL: "https://colkanpos-b-production.up.railway.app",
