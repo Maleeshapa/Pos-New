@@ -197,6 +197,38 @@ app.delete('/customer/:id', async (req, res) => {
     }
 });
 
+// Fetch customer details by name
+app.get('/customer/name/:customerName', async (req, res) => {
+    const { customerName } = req.params;
+
+    try {
+        const query = `
+            SELECT cusName AS customerName, 
+                   cusJob AS customerJob, 
+                   cusOffice AS customerCompany, 
+                   cusAddress AS customerAddress 
+            FROM invoice 
+            WHERE cusName = :customerName
+            LIMIT 1
+        `;
+        const results = await sequelize.query(query, {
+            replacements: { customerName },
+            type: QueryTypes.SELECT
+        });
+
+        if (results.length > 0) {
+            res.json(results[0]); // Return the first matching result
+        } else {
+            res.status(404).json({ message: 'Customer not found' });
+        }
+    } catch (err) {
+        console.error('Error fetching customer details:', err);
+        res.status(500).json({ message: 'Error fetching customer details' });
+    }
+});
+
+
+
 
 // status endpoint
 app.get('/api/switch', SwitchController.getStatus);
