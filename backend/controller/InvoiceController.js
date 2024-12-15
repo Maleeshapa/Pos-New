@@ -6,7 +6,7 @@ const Stock = require("../model/Stock");
 const createInvoice = async (req, res) => {
     try {
         const {
-            // invoiceNo,
+            invoiceNo,
             invoiceDate,
             cusName,
             cusAddress,
@@ -21,7 +21,7 @@ const createInvoice = async (req, res) => {
 
         // Create a new invoice
         const newInvoice = await Invoice.create({
-            // invoiceNo,
+            invoiceNo,
             invoiceDate,
             cusName,
             cusAddress,
@@ -36,6 +36,25 @@ const createInvoice = async (req, res) => {
             return res.status(400).json({ error: "Validation error: Please check the provided data." });
         }
         return res.status(500).json({ error: `An internal error occurred: ${error.message}` });
+    }
+};
+
+const getLastInvoiceNumber = async (req, res) => {
+    try {
+        // Fetch the most recent invoice sorted by invoiceNo in descending order
+        const lastInvoice = await Invoice.findOne({
+            order: [['invoiceNo', 'DESC']], // Sort by invoiceNo in descending order
+        });
+
+        if (!lastInvoice) {
+            // If no invoices exist, return a default starting invoice number
+            return res.status(200).json({ lastInvoiceNo: 1500 });
+        }
+
+        // Return the last invoice number
+        res.status(200).json({ lastInvoiceNo: lastInvoice.invoiceNo });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
 

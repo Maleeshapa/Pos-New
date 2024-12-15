@@ -45,7 +45,23 @@ function Login() {
 
       // If switch is off and the user is not 'master', deny login
       if (switchStatus === false && user.userName !== 'master') {
-        setError('NM Digital Solutions Kandy එකට කෝල් කරන්න');
+        setError(
+          <>
+            Deposit Monthly Subscription to access 
+            <br />
+            නැවත පිවිසීමට මාසික ගාස්තුව ගෙවන්න     
+            <br /><br />
+            74571076
+            <br />
+            BOC
+            <br />
+            Katugasthota
+            <br />
+            W.P.K.M.M.Pathirana
+            <br /><br />
+            Call - 0764980664
+          </>
+        );setError('NM Digital Solutions Kandy එකට කෝල් කරන්න');
         return;
       }
 

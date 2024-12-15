@@ -1,5 +1,5 @@
   import React, { useState, useEffect } from 'react';
-  import { PlusCircle, ShoppingCart, User } from 'lucide-react';
+  import { CirclePlus, Plus, PlusCircle, ShoppingCart, User } from 'lucide-react';
   import { useNavigate } from 'react-router-dom';
   import './NewSales.css';
   import Form from '../../Models/Form/Form';
@@ -13,6 +13,25 @@
     const [users, setUsers] = useState([]);
     const [productId, setProductId] = useState('');
     const [stockId, setStockId] = useState('');
+    const [customers, setCustomers] = useState([]);
+
+    const fetchCustomerData = async (customerName) => {
+      try {
+        const response = await fetch(`${config.BASE_URL}/customer/name/${customerName}`);
+        if (response.ok) {
+          const customerData = await response.json();
+          setFormData(prevData => ({
+            ...prevData,
+            cusName: customerData.customerName,
+            cusJob: customerData.customerJob,
+            cusOffice: customerData.customerCompany,
+            cusAddress: customerData.customerAddress
+          }));
+        }
+      } catch (error) {
+        console.error('Error fetching customer data:', error);
+      }
+    };
 
     const Columns = ["Customer Code", 'Customer Name','Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty','Product ID','Stock ID'];
     const [formData, setFormData] = useState({
@@ -52,6 +71,10 @@
       const { name, value } = e.target;
       setFormData({ ...formData, [name]: value });
 
+      if (name === 'cusName') {
+        fetchCustomerData(value);
+      }
+      
       if (name === 'productNo' || name === 'productName') {
         try {
           const response = await fetch(`${config.BASE_URL}/product/codeOrName/${value}`);
@@ -206,6 +229,7 @@
     //   return "InvNO" + Date.now().toString().slice(-4);
     // };
 
+    
     const handleSubmit = async (e) => {
       e.preventDefault();
       try{
@@ -217,7 +241,7 @@
         }
 
         const invoiceData = {
-          // invoiceNo: formData.invoiceNo,
+          invoiceNo:formData.invoiceNo,
           invoiceDate: formData.invoiceDate,
           cusName:formData.cusName,
           cusAddress:formData.cusAddress,
@@ -487,14 +511,15 @@
                   <input onChange={handleChange} value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" />
                 </div>
                 <div className="customer-details">
-                  <input onChange={handleChange} value={formData.cusAddress} type="text" className="form-control" name="cusAddress" id="cusAddress" placeholder="CustomerAddress" />
-                </div>
-                <div className="customer-details">
                   <input onChange={handleChange} value={formData.cusJob} type="text" className="form-control" name="cusJob" id="cusJob" placeholder="Customer Job Position" />
                 </div>
                 <div className="customer-details">
                   <input onChange={handleChange} value={formData.cusOffice} type="text" className="form-control" name="cusOffice" id="cusOffice" placeholder="Customer Company" />
                 </div>
+                <div className="customer-details">
+                  <input onChange={handleChange} value={formData.cusAddress} type="text" className="form-control" name="cusAddress" id="cusAddress" placeholder="Customer Address" />
+                </div>
+                
 
                 {/* <div className="customer-details">
                   <label htmlFor="">Customer Code</label>
@@ -503,9 +528,18 @@
               </div>
 
               <div className="product">
-                <div className="subCaption">
-                  <p><ShoppingCart /> Product Details</p>
-                </div>
+              <div className="subCaption d-flex justify-content-between align-items-center">
+  <p className="mb-0 d-flex align-items-center">
+    <ShoppingCart className="me-2" /> Product Details
+  </p>
+  <CirclePlus
+    className=" me-2"
+    onClick={() => navigate('/product/create')}
+    size={24} // Optional: Adjust the size of the icon
+  />
+ 
+</div>
+
                 <div className="row">
                   <div className="product-details col-md-4 mb-2">
                     <input onChange={handleChange} value={formData.productNo} type="text" name="productNo" className="form-control" id="productNo" placeholder="Product Code" />
@@ -577,10 +611,10 @@
                   <label htmlFor="" id='label'>Invoice Date</label>
                   <input type="datetime-local" className="form-control" name="invoiceDate" onChange={handleChange} value={formData.invoiceDate} id="date" />
                 </div>
-                {/* <div className="sales-person">
+                <div className="sales-person">
                   <label htmlFor="" id='label'>Invoice No</label>
                   <input type="text" className="form-control" name="invoiceNo" onChange={handleChange} value={formData.invoiceNo} id="date" />
-                </div> */}
+                </div>
                 {/* <div className="sales-person">
                   <label htmlFor="" id='label'>Invoice Due Date</label>
                   <input type="datetime-local" className="form-control" name="invoiceDueDate" id="date" />

@@ -22,6 +22,11 @@ import Haman from './components/invoicePages/Haman';
 import Terra from './components/invoicePages/Terra';
 import Upload from './Pages/Upload/Upload';
 import SalesDetails from './components/SalesPages/SalesDetails';
+import CostingTable from './Pages/Cost Table/CostingTable';
+import CreditNote from './components/StockPages/Credit Note/CreditNote';
+import ColkanCR from './components/StockPages/Credit Note/ColkanCR';
+import HamanCR from './components/StockPages/Credit Note/HamanCR';
+import TerraCR from './components/StockPages/Credit Note/Terra';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token');
@@ -63,6 +68,13 @@ function Layout() {
             <Route path="/selected/terra" element={<ProtectedRoute><Terra /></ProtectedRoute>} />
             <Route path="/salesDetails/:invoiceNo" element={<ProtectedRoute><SalesDetails /></ProtectedRoute>} />
             <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
+            <Route path="/costing-table" element={<ProtectedRoute><CostingTable /></ProtectedRoute>} />
+
+            <Route path="/CreditNote/:id" element={<CreditNote />} />
+            <Route path="/CreditNote/colkan/:id" element={<ColkanCR />} />
+            <Route path="/CreditNote/haman/:id" element={<HamanCR />} />
+            <Route path="/CreditNote/terra/:id" element={<TerraCR />} />
+      
           </Routes>
         </div>
       </div>

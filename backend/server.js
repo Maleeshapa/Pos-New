@@ -130,6 +130,106 @@ app.use((err, req, res, next) => {
     next();
 });
 
+// Import the sequelize instance
+const { QueryTypes } = require("sequelize");
+
+// Fetch all customers
+app.get('/customers', async (req, res) => {
+    try {
+        const query = `SELECT cusName, cusJob, cusOffice, cusAddress FROM invoice`;
+        const results = await sequelize.query(query, { type: QueryTypes.SELECT });
+        res.json(results);
+    } catch (err) {
+        console.error('Error fetching customers:', err);
+        res.status(500).json({ message: 'Error fetching customers' });
+    }
+});
+
+// Add or update a customer
+app.post('/customer', async (req, res) => {
+    const { cusId, cusName, cusJob, cusOffice, cusAddress } = req.body;
+
+    try {
+        if (cusId) {
+            // Update existing customer
+            const query = `
+                UPDATE invoice 
+                SET cusName = :cusName, cusJob = :cusJob, cusOffice = :cusOffice, cusAddress = :cusAddress
+                WHERE id = :cusId
+            `;
+            await sequelize.query(query, {
+                replacements: { cusId, cusName, cusJob, cusOffice, cusAddress },
+                type: QueryTypes.UPDATE
+            });
+            res.json({ message: 'Customer updated successfully' });
+        } else {
+            // Add new customer
+            const query = `
+                INSERT INTO invoice (cusName, cusJob, cusOffice, cusAddress) 
+                VALUES (:cusName, :cusJob, :cusOffice, :cusAddress)
+            `;
+            await sequelize.query(query, {
+                replacements: { cusName, cusJob, cusOffice, cusAddress },
+                type: QueryTypes.INSERT
+            });
+            res.json({ message: 'Customer added successfully' });
+        }
+    } catch (err) {
+        console.error('Error adding/updating customer:', err);
+        res.status(500).json({ message: 'Error adding/updating customer' });
+    }
+});
+
+// Delete a customer
+app.delete('/customer/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const query = `DELETE FROM invoice WHERE id = :id`;
+        await sequelize.query(query, {
+            replacements: { id },
+            type: QueryTypes.DELETE
+        });
+        res.json({ message: 'Customer deleted successfully' });
+    } catch (err) {
+        console.error('Error deleting customer:', err);
+        res.status(500).json({ message: 'Error deleting customer' });
+    }
+});
+
+// Fetch customer details by name
+app.get('/customer/name/:customerName', async (req, res) => {
+    const { customerName } = req.params;
+
+    try {
+        const query = `
+            SELECT cusName AS customerName, 
+                   cusJob AS customerJob, 
+                   cusOffice AS customerCompany, 
+                   cusAddress AS customerAddress 
+            FROM invoice 
+            WHERE cusName = :customerName
+            LIMIT 1
+        `;
+        const results = await sequelize.query(query, {
+            replacements: { customerName },
+            type: QueryTypes.SELECT
+        });
+
+        if (results.length > 0) {
+            res.json(results[0]); // Return the first matching result
+        } else {
+            res.status(404).json({ message: 'Customer not found' });
+        }
+    } catch (err) {
+        console.error('Error fetching customer details:', err);
+        res.status(500).json({ message: 'Error fetching customer details' });
+    }
+});
+
+
+
+
 // status endpoint
 app.get('/api/switch', SwitchController.getStatus);
 app.post('/api/switch', SwitchController.updateStatus);
