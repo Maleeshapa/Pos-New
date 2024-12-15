@@ -1,44 +1,234 @@
-  import React, { useState, useEffect } from 'react';
-  import { CirclePlus, Plus, PlusCircle, ShoppingCart, User } from 'lucide-react';
-  import { useNavigate } from 'react-router-dom';
-  import './NewSales.css';
-  import Form from '../../Models/Form/Form';
-  import Modal from 'react-modal';
-  import Table from '../Table/Table'
-  import config from '../../config';
+import React, { useState, useEffect } from 'react';
+import { CirclePlus, Plus, PlusCircle, ShoppingCart, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import './NewSales.css';
+import Form from '../../Models/Form/Form';
+import Modal from 'react-modal';
+import Table from '../Table/Table'
+import config from '../../config';
 
-  const NewSales = ({ invoice }) => {
+const NewSales = ({ invoice }) => {
 
-    const [tableData, setTableData] = useState([]);
-    const [users, setUsers] = useState([]);
-    const [productId, setProductId] = useState('');
-    const [stockId, setStockId] = useState('');
-    const [customers, setCustomers] = useState([]);
+  const [tableData, setTableData] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [productId, setProductId] = useState('');
+  const [stockId, setStockId] = useState('');
+  const [customers, setCustomers] = useState([]);
+  const [cusId, setCusId] = useState('');
 
-    const fetchCustomerData = async (customerName) => {
+  const DateTime = () => {
+    const now = new Date();
+    const NewTime = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Colombo',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }).format(now);
+  
+    const [date, time] = NewTime.split(', ');
+    return { date: date.split('/').reverse().join('-'), time };
+  };   
+
+  const Columns = ["Customer Code", 'Customer Name','Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty','Product ID','Stock ID'];
+  const [formData, setFormData] = useState({
+    cusName: '',
+    cusNic: '',
+    cusCode: '',
+    cusAddress:'',
+    productNo: '',
+    productName: '',
+    productPrice: '',
+    qty: '',
+    discount: '',
+    totalPrice: '',
+    productNote: '',
+    emi: '',
+    amount: '',
+    card: '',
+    cheque: '',
+    bank: '',
+    cash: '',
+    paidAmount: '',
+    dueAmount: '',
+    note: '',
+    invoiceDate: DateTime().date+" "+DateTime().time ,
+    invoiceNo:'',
+    salesPerson: '',
+    cusJob:'',
+    cusOffice:''
+  });
+
+  const navigate = useNavigate();
+  const SelectInvoice = () => {
+    navigate('/selectInvoice')
+  }
+
+  useEffect(() => {
+    const fetchLastInvoiceNumber = async () => {
       try {
-        const response = await fetch(`${config.BASE_URL}/customer/name/${customerName}`);
+        const response = await fetch(`${config.BASE_URL}/invoice/last`);
         if (response.ok) {
-          const customerData = await response.json();
+          const data = await response.json();
+          const nextInvoiceNo = data.lastInvoiceNo + 1;
           setFormData(prevData => ({
             ...prevData,
-            cusName: customerData.customerName,
-            cusJob: customerData.customerJob,
-            cusOffice: customerData.customerCompany,
-            cusAddress: customerData.customerAddress
+            invoiceNo: nextInvoiceNo.toString()
           }));
+          console.log(nextInvoiceNo.toString());
+        console.log(data);
         }
+        
       } catch (error) {
-        console.error('Error fetching customer data:', error);
+        console.error('Error fetching last invoice number:', error);
       }
     };
 
-    const Columns = ["Customer Code", 'Customer Name','Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty','Product ID','Stock ID'];
-    const [formData, setFormData] = useState({
-      cusName: '',
-      cusNic: '',
-      cusCode: '',
-      cusAddress:'',
+    fetchLastInvoiceNumber();
+  }, []);
+
+  const fetchCustomerData = async (cusName) => {
+    try {
+      const response = await fetch(`${config.BASE_URL}/customer/cusName/${cusName}`);
+      if (response.ok) {
+        const customerData = await response.json();
+        setCusId(customerData.cusId)
+        setFormData(prevData => ({
+          ...prevData,
+          cusName: customerData.cusName,
+          cusJob: customerData.cusJob,
+          cusOffice: customerData.cusOffice,
+          cusAddress: customerData.cusAddress
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching customer data:', error);
+    }
+  };
+
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    if (name === 'cusName') {
+      fetchCustomerData(value);
+    }
+
+    if (name === 'productNo' || name === 'productName') {
+      try {
+        const response = await fetch(`${config.BASE_URL}/product/codeOrName/${value}`);
+        if (response.ok) {
+          const productData = await response.json();
+          setProductId(productData.productId)
+          setFormData(prevData => ({
+            ...prevData,
+            productNo: productData.productCode,
+            productName: productData.productName || prevData.productName,
+            productPrice: productData.productSellingPrice,
+            qty: 1,
+            discount: productData.productDiscount,
+            totalPrice: productData.productSellingPrice,
+            productNote: productData.productWarranty + ' ' + productData.productDescription,
+            emi: productData.productEmi
+          }));
+          if (productData.productId) {
+            fetchStockData(productData.productId);
+          }
+        } else {
+          setFormData(prevData => ({
+            ...prevData,
+            productPrice: '',
+            qty: '',
+            totalPrice: '',
+            productNote: ''
+          }));
+          console.log('Product not found');
+        }
+      } catch (error) {
+        console.error('Error fetching product data:', error);
+      }
+    }
+
+    // When updating the formData for salesPerson
+    if (name === 'salesPerson') {
+      const selectedUserId = value; // Assuming value contains the user ID
+      setFormData(prevData => ({
+        ...prevData,
+        salesPerson: selectedUserId
+      }));
+    }
+
+  };
+
+  // Function to fetch stock data based on product ID
+  const fetchStockData = async (productId) => {
+    try {
+      const response = await fetch(`${config.BASE_URL}/stock/product/${productId}`);
+      if (response.ok) {
+        const stockData = await response.json();
+        setStockId(stockData.stockId)
+      } else {
+        const errorBody = await response.json(); // Log the response body
+        console.log('Error fetching stock:', errorBody);
+        setFormData(prevData => ({
+          ...prevData,
+          stockId: ''
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching stock data:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(`${config.BASE_URL}/users`);
+        if (response.ok) {
+          const userData = await response.json();
+          setUsers(userData);  // Populate users in state
+        } else {
+          console.error('Failed to fetch users');
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+    fetchUsers();
+
+    const discountedPrice = (formData.productPrice || 0) * (1 - (formData.discount || 0) / 100);
+    const newTotalPrice = discountedPrice * (formData.qty || 1);
+    setFormData(prevData => ({ ...prevData, totalPrice: newTotalPrice }));
+  }, [formData.productPrice, formData.discount, formData.qty]);
+
+  const handleAddProduct = (e) => {
+    e.preventDefault();
+
+    // if (!formData.productNo || !formData.productName || !formData.productPrice || !formData.qty) {
+    //   alert("Please fill in all the product details.");
+    //   return;
+    // }
+
+    const newRow = [
+      formData.cusName,
+      formData.cusAddress,
+      formData.productNo,
+      formData.productName,
+      formData.productPrice,
+      formData.qty,
+      formData.discount,
+      formData.totalPrice,
+      formData.productNote,
+      productId,
+      stockId,
+    ];
+
+    setTableData(prevData => [...prevData, newRow]);
+    setFormData(prevData => ({
+      ...prevData,
       productNo: '',
       productName: '',
       productPrice: '',
@@ -46,330 +236,178 @@
       discount: '',
       totalPrice: '',
       productNote: '',
-      emi: '',
-      amount: '',
-      card: '',
-      cheque: '',
-      bank: '',
-      cash: '',
-      paidAmount: '',
-      dueAmount: '',
-      note: '',
-      invoiceDate: '',
-      invoiceNo:'',
-      salesPerson: '',
-      cusJob:'',
-      cusOffice:''
+      emi: ''
+    }));
+    resetSalesPerson();
+    console.log("Added new row:", newRow);
+    console.log("Updated table data:", [...tableData, newRow]);
+
+    const updatedTableData = [...tableData, newRow];
+    let totalAmount = 0;
+    let totalDiscount = 0;
+    let payableAmount = 0;
+
+    updatedTableData.forEach((row) => {
+      const price = parseFloat(row[4]) || 0;
+      const qty = parseFloat(row[5]) || 0;
+      const discount = parseFloat(row[6]) || 0;
+      const totalPrice = parseFloat(row[7]) || 0;
+
+      totalAmount += price * qty;
+      totalDiscount += discount;
+      payableAmount += totalPrice;
     });
 
-    const navigate=useNavigate();
-    const SelectInvoice=()=>{
-      navigate('/selectInvoice')
-    }
+    setFormData((prevData) => ({
+      ...prevData,
+      totalAmount: totalAmount.toFixed(2),
+      discountPrice: totalDiscount.toFixed(2),
+      amount: payableAmount.toFixed(2),
+    }));
 
-    const handleChange = async (e) => {
-      const { name, value } = e.target;
-      setFormData({ ...formData, [name]: value });
+  };
 
-      if (name === 'cusName') {
-        fetchCustomerData(value);
+  // const generateInvoiceCode = () => {
+  //   return "InvNO" + Date.now().toString().slice(-4);
+  // };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (!formData.invoiceDate) {
+        throw new Error('select invoice Date.');
       }
-      
-      if (name === 'productNo' || name === 'productName') {
-        try {
-          const response = await fetch(`${config.BASE_URL}/product/codeOrName/${value}`);
-          if (response.ok) {
-            const productData = await response.json();
-            setProductId(productData.productId)
-            setFormData(prevData => ({
-              ...prevData,
-              productNo: productData.productCode,
-              productName: productData.productName || prevData.productName,
-              productPrice: productData.productSellingPrice,
-              qty: 1,
-              discount: productData.productDiscount,
-              totalPrice: productData.productSellingPrice,
-              productNote: productData.productWarranty + ' ' + productData.productDescription,
-              emi: productData.productEmi
-            }));
-            if (productData.productId) {
-              fetchStockData(productData.productId);
-            }
-          } else {
-            setFormData(prevData => ({
-              ...prevData,
-              productPrice: '',
-              qty: '',
-              totalPrice: '',
-              productNote: ''
-            }));
-            console.log('Product not found');
-          }
-        } catch (error) {
-          console.error('Error fetching product data:', error);
-        }
+      if (tableData.length === 0) {
+        throw new Error('Add Product to table');
       }
 
-      // When updating the formData for salesPerson
-      if (name === 'salesPerson') {
-        const selectedUserId = value; // Assuming value contains the user ID
-        setFormData(prevData => ({
-          ...prevData,
-          salesPerson: selectedUserId
-        }));
-      }
-
-    };
-
-    // Function to fetch stock data based on product ID
-    const fetchStockData = async (productId) => {
-      try {
-        const response = await fetch(`${config.BASE_URL}/stock/product/${productId}`);
-        if (response.ok) {
-          const stockData = await response.json();
-          setStockId(stockData.stockId)
-        } else {
-          const errorBody = await response.json(); // Log the response body
-          console.log('Error fetching stock:', errorBody);
-          setFormData(prevData => ({
-            ...prevData,
-            stockId: ''
-          }));
-        }
-      } catch (error) {
-        console.error('Error fetching stock data:', error);
-      }
-    };
-
-    useEffect(() => {
-      const fetchUsers = async () => {
-        try {
-          const response = await fetch(`${config.BASE_URL}/users`);
-          if (response.ok) {
-            const userData = await response.json();
-            setUsers(userData);  // Populate users in state
-          } else {
-            console.error('Failed to fetch users');
-          }
-        } catch (error) {
-          console.error('Error fetching users:', error);
-        }
+      const invoiceData = {
+        invoiceDate: formData.invoiceDate,
+        cusId:cusId
       };
-      fetchUsers();
 
-      const discountedPrice = (formData.productPrice || 0) * (1 - (formData.discount || 0) / 100);
-      const newTotalPrice = discountedPrice * (formData.qty || 1);
-      setFormData(prevData => ({ ...prevData, totalPrice: newTotalPrice }));
-    }, [formData.productPrice, formData.discount, formData.qty]);
+      console.log('Sending invoice data:', invoiceData);
 
-    const handleAddProduct = (e) => {
-      e.preventDefault();
-
-      if (!formData.productNo || !formData.productName || !formData.productPrice || !formData.qty) {
-        alert("Please fill in all the product details.");
-        return;
-      }
-
-      const newRow = [
-        formData.cusName,
-        formData.cusAddress,
-        formData.productNo,
-        formData.productName,
-        formData.productPrice,
-        formData.qty,
-        formData.discount,
-        formData.totalPrice,
-        formData.productNote,
-        productId,
-        stockId,
-      ];
-
-      setTableData(prevData => [...prevData, newRow]);
-      setFormData(prevData => ({
-        ...prevData,
-        productNo: '',
-        productName: '',
-        productPrice: '',
-        qty: '',
-        discount: '',
-        totalPrice: '',
-        productNote: '',
-        emi: ''
-      }));
-      resetSalesPerson();
-      console.log("Added new row:", newRow);
-      console.log("Updated table data:", [...tableData, newRow]);
-
-      const updatedTableData = [...tableData, newRow];
-      let totalAmount = 0;
-      let totalDiscount = 0;
-      let payableAmount = 0;
-
-      updatedTableData.forEach((row) => {
-        const price = parseFloat(row[4]) || 0;
-        const qty = parseFloat(row[5]) || 0;
-        const discount = parseFloat(row[6]) || 0;
-        const totalPrice = parseFloat(row[7]) || 0;
-
-        totalAmount += price * qty;
-        totalDiscount += discount;
-        payableAmount += totalPrice;
+      const invoiceResponse = await fetch(`${config.BASE_URL}/invoice`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(invoiceData),
       });
 
-      setFormData((prevData) => ({
-        ...prevData,
-        totalAmount: totalAmount.toFixed(2),
-        discountPrice: totalDiscount.toFixed(2),
-        amount: payableAmount.toFixed(2),
-      }));
-
-    };
-
-    // const generateInvoiceCode = () => {
-    //   return "InvNO" + Date.now().toString().slice(-4);
-    // };
-
-    
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      try{
-        if (!formData.invoiceDate) {
-          throw new Error('select invoice Date.');
-        }
-        if (tableData.length === 0) {
-          throw new Error('Add Product to table');
-        }
-
-        const invoiceData = {
-          invoiceNo:formData.invoiceNo,
-          invoiceDate: formData.invoiceDate,
-          cusName:formData.cusName,
-          cusAddress:formData.cusAddress,
-          cusJob:formData.cusJob,
-          cusOffice:formData.cusOffice
-        };
-
-        console.log('Sending invoice data:', invoiceData);
-
-        const invoiceResponse = await fetch(`${config.BASE_URL}/invoice`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(invoiceData),
-        });
-
-        if (!invoiceResponse.ok) {
-          const errorData = await invoiceResponse.json();
-          console.error('Invoice error details:', errorData);
-          throw new Error(errorData.error || 'Failed to create invoice');
-        }
-
-        const invoiceResult = await invoiceResponse.json();
-        console.log('Invoice created:', invoiceResult);
-
-        //transaction Data----------------------------------------------------------------------------------
-        const transactionData = {
-          transactionType: [
-            showCard && 'card',
-            showCash && 'cash',
-            showCheque && 'cheque',
-            showBank && 'bank'
-          ].filter(Boolean).join(' '),
-          price: parseFloat(formData.amount) || 0,
-          dateTime: invoiceData.invoiceDate,
-          discount: parseFloat(formData.discountPrice) || 0,
-          note: formData.note || '',
-          paid: parseFloat(formData.paidAmount) || 0,
-          due: parseFloat(formData.dueAmount) || 0,
-          invoiceId: invoiceResult.invoiceId,
-          userId: formData.salesPerson,
-        };
-
-        console.log('Sending transaction data:', transactionData);
-
-        const transactionResponse = await fetch(`${config.BASE_URL}/transaction`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(transactionData),
-        });
-
-        if (!transactionResponse.ok) {
-          const errorData = await transactionResponse.json();
-          console.error('Transaction error details:', errorData);
-          throw new Error(errorData.error || 'Failed to create transaction');
-        }
-
-        const transactionResult = await transactionResponse.json();
-        console.log('Transaction created:', transactionResult);
-
-        //product------------------------------------------------------------------------------------------
-        const invalidProducts = tableData.filter(row => !row[3]);
-        if (invalidProducts.length > 0) {
-          throw new Error('One or more products have an invalid product ID.');
-        }
-
-        const productInvoice = tableData.map(row => ({
-          productId: row[9],
-          stockId: row[10],
-          invoiceId: invoiceResult.invoiceId,
-          invoiceNo: invoiceResult.invoiceNo,
-          totalAmount:row[4]*row[5],
-          invoiceQty:row[5],
-        }));
-        console.log('Invoice No before sending:', formData.invoiceNo);
-
-        const productResponse = await fetch(`${config.BASE_URL}/invoiceProduct`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(productInvoice),
-        });
-
-        if (!productResponse.ok) {
-          const errorData = await productResponse.json();
-          
-          if (errorData.insufficientProducts) {
-            const errorMessage = errorData.insufficientProducts
-              .map(product => 
-                `Product: ${product.productName}\n` +
-                `Available Stock: ${product.availableStock}\n` +
-                `Requested Quantity: ${product.requestedQuantity}`
-              )
-              .join('\n\n');
-            
-            alert(`Insufficient Stock:\n${errorMessage}`);
-            return;
-          }
-    
-          console.error('Product error details:', errorData);
-          throw new Error(errorData.error || 'Failed to send Product');
-        }
-    
-        const productResult = await productResponse.json();
-        console.log('Product ID before sending:', productId);
-        console.log('Sending product data:', productInvoice);
-        console.log('product created:', productResult);
-
-
-        alert('Invoice and transaction created successfully!');
-
-        setTableData([]);
-        resetForm();
-        resetSalesPerson();
-        SelectInvoice();
-      } catch (error) {
-        console.error('Error:', error);
-        alert(`${error.message}`);
+      if (!invoiceResponse.ok) {
+        const errorData = await invoiceResponse.json();
+        console.error('Invoice error details:', errorData);
+        throw new Error(errorData.error || 'Failed to create invoice');
       }
-    };
-    
-    const resetForm = () => {
-      setFormData({
-        cusName: '',
+
+      const invoiceResult = await invoiceResponse.json();
+      console.log('Invoice created:', invoiceResult);
+
+      //transaction Data----------------------------------------------------------------------------------
+      const transactionData = {
+        transactionType: [
+          showCard && 'card',
+          showCash && 'cash',
+          showCheque && 'cheque',
+          showBank && 'bank'
+        ].filter(Boolean).join(' '),
+        price: parseFloat(formData.amount) || 0,
+        dateTime: invoiceData.invoiceDate,
+        discount: parseFloat(formData.discountPrice) || 0,
+        note: formData.note || '',
+        paid: parseFloat(formData.paidAmount) || 0,
+        due: parseFloat(formData.dueAmount) || 0,
+        invoiceId: invoiceResult.invoiceId,
+        userId: formData.salesPerson,
+      };
+
+      console.log('Sending transaction data:', transactionData);
+
+      const transactionResponse = await fetch(`${config.BASE_URL}/transaction`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(transactionData),
+      });
+
+      if (!transactionResponse.ok) {
+        const errorData = await transactionResponse.json();
+        console.error('Transaction error details:', errorData);
+        throw new Error(errorData.error || 'Failed to create transaction');
+      }
+
+      const transactionResult = await transactionResponse.json();
+      console.log('Transaction created:', transactionResult);
+
+      //product------------------------------------------------------------------------------------------
+      const invalidProducts = tableData.filter(row => !row[3]);
+      if (invalidProducts.length > 0) {
+        throw new Error('One or more products have an invalid product ID.');
+      }
+
+      const productInvoice = tableData.map(row => ({
+        productId: row[9],
+        stockId: row[10],
+        invoiceId: invoiceResult.invoiceId,
+        invoiceNo: invoiceResult.invoiceNo,
+        totalAmount: row[4] * row[5],
+        invoiceQty: row[5],
+      }));
+      console.log('Invoice No before sending:', formData.invoiceNo);
+
+      const productResponse = await fetch(`${config.BASE_URL}/invoiceProduct`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productInvoice),
+      });
+
+      if (!productResponse.ok) {
+        const errorData = await productResponse.json();
+
+        if (errorData.insufficientProducts) {
+          const errorMessage = errorData.insufficientProducts
+            .map(product =>
+              `Product: ${product.productName}\n` +
+              `Available Stock: ${product.availableStock}\n` +
+              `Requested Quantity: ${product.requestedQuantity}`
+            )
+            .join('\n\n');
+
+          alert(`Insufficient Stock:\n${errorMessage}`);
+          return;
+        }
+
+        console.error('Product error details:', errorData);
+        throw new Error(errorData.error || 'Failed to send Product');
+      }
+
+      const productResult = await productResponse.json();
+      console.log('Product ID before sending:', productId);
+      console.log('Sending product data:', productInvoice);
+      console.log('product created:', productResult);
+
+
+      alert('Invoice and transaction created successfully!');
+
+      setTableData([]);
+      resetForm();
+      resetSalesPerson();
+      SelectInvoice();
+    } catch (error) {
+      console.error('Error:', error);
+      alert(`${error.message}`);
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      cusName: '',
       cusNic: '',
       cusCode: '',
       productNo: '',
@@ -391,95 +429,95 @@
       invoiceDate: '',
       totalAmount: '',
       discountPrice: '',
-      cusJob:'',
-      cusOffice:'',
-      });
-    };
-    
+      cusJob: '',
+      cusOffice: '',
+    });
+  };
 
-    const resetSalesPerson = () => {
-      setFormData(prevData => ({
-        ...prevData,
-        salesPerson: 'select',
-      }));
-    };
 
-    const [Emi, setEmi] = useState(false);
-    const handleEmi = (e) => {
-      setEmi(e.target.checked)
-    }
+  const resetSalesPerson = () => {
+    setFormData(prevData => ({
+      ...prevData,
+      salesPerson: 'select',
+    }));
+  };
 
-    const [showCard, setCard] = useState(false);
-    const [showCash, setCash] = useState(false);
-    const [showCheque, setCheque] = useState(false);
-    const [showBank, setBank] = useState(false);
+  const [Emi, setEmi] = useState(false);
+  const handleEmi = (e) => {
+    setEmi(e.target.checked)
+  }
 
-    const handleCard = (e) => {
-      setCard(e.target.checked)
-    }
-    const handleCash = (e) => {
-      setCash(e.target.checked)
-    }
-    const handleCheque = (e) => {
-      setCheque(e.target.checked)
-    }
-    const handleBank = (e) => {
-      setBank(e.target.checked)
-    }
+  const [showCard, setCard] = useState(false);
+  const [showCash, setCash] = useState(false);
+  const [showCheque, setCheque] = useState(false);
+  const [showBank, setBank] = useState(false);
 
-    const handlePaymentChange = (e) => {
-      const { name, value } = e.target;
-      const numericValue = parseFloat(value) || 0;
+  const handleCard = (e) => {
+    setCard(e.target.checked)
+  }
+  const handleCash = (e) => {
+    setCash(e.target.checked)
+  }
+  const handleCheque = (e) => {
+    setCheque(e.target.checked)
+  }
+  const handleBank = (e) => {
+    setBank(e.target.checked)
+  }
 
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: numericValue,
-      }));
+  const handlePaymentChange = (e) => {
+    const { name, value } = e.target;
+    const numericValue = parseFloat(value) || 0;
 
-      const totalPaid = parseFloat(name === 'card' ? numericValue : formData.card || 0)
-        + parseFloat(name === 'cheque' ? numericValue : formData.cheque || 0)
-        + parseFloat(name === 'bank' ? numericValue : formData.bank || 0)
-        + parseFloat(name === 'cash' ? numericValue : formData.cash || 0);
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: numericValue,
+    }));
 
-      const payableAmount = parseFloat(formData.amount) || 0;
-      const dueAmount = payableAmount - totalPaid;
+    const totalPaid = parseFloat(name === 'card' ? numericValue : formData.card || 0)
+      + parseFloat(name === 'cheque' ? numericValue : formData.cheque || 0)
+      + parseFloat(name === 'bank' ? numericValue : formData.bank || 0)
+      + parseFloat(name === 'cash' ? numericValue : formData.cash || 0);
 
-      setFormData((prevData) => ({
-        ...prevData,
-        paidAmount: totalPaid.toFixed(2),
-        dueAmount: dueAmount.toFixed(2),
-      }));
-    };
-    const clear = () => {
-      setTableData([]);
-      setFormData({
-        cusName: '',
-        cusNic: '',
-        cusCode: '',
-        productNo: '',
-        productName: '',
-        productPrice: '',
-        qty: '',
-        discount: '',
-        totalPrice: '',
-        productNote: '',
-        emi: '',
-        amount: '',
-        card: '',
-        cheque: '',
-        bank: '',
-        cash: '',
-        paidAmount: '',
-        dueAmount: '',
-        note: '',
-        invoiceDate: '',
-        totalAmount: '',
-        discountPrice: '',
-        cusJob:'',
-        cusOffice:'',
-      });
-      resetSalesPerson();
-    }
+    const payableAmount = parseFloat(formData.amount) || 0;
+    const dueAmount = payableAmount - totalPaid;
+
+    setFormData((prevData) => ({
+      ...prevData,
+      paidAmount: totalPaid.toFixed(2),
+      dueAmount: dueAmount.toFixed(2),
+    }));
+  };
+  const clear = () => {
+    setTableData([]);
+    setFormData({
+      cusName: '',
+      cusNic: '',
+      cusCode: '',
+      productNo: '',
+      productName: '',
+      productPrice: '',
+      qty: '',
+      discount: '',
+      totalPrice: '',
+      productNote: '',
+      emi: '',
+      amount: '',
+      card: '',
+      cheque: '',
+      bank: '',
+      cash: '',
+      paidAmount: '',
+      dueAmount: '',
+      note: '',
+      invoiceDate: '',
+      totalAmount: '',
+      discountPrice: '',
+      cusJob: '',
+      cusOffice: '',
+    });
+    resetSalesPerson();
+  }
 
   return (
     <div>
@@ -519,7 +557,7 @@
                 <div className="customer-details">
                   <input onChange={handleChange} value={formData.cusAddress} type="text" className="form-control" name="cusAddress" id="cusAddress" placeholder="Customer Address" />
                 </div>
-                
+
 
                 {/* <div className="customer-details">
                   <label htmlFor="">Customer Code</label>
@@ -528,17 +566,17 @@
               </div>
 
               <div className="product">
-              <div className="subCaption d-flex justify-content-between align-items-center">
-  <p className="mb-0 d-flex align-items-center">
-    <ShoppingCart className="me-2" /> Product Details
-  </p>
-  <CirclePlus
-    className=" me-2"
-    onClick={() => navigate('/product/create')}
-    size={24} // Optional: Adjust the size of the icon
-  />
- 
-</div>
+                <div className="subCaption d-flex justify-content-between align-items-center">
+                  <p className="mb-0 d-flex align-items-center">
+                    <ShoppingCart className="me-2" /> Product Details
+                  </p>
+                  <CirclePlus
+                    className=" me-2"
+                    onClick={() => navigate('/product/create')}
+                    size={24} // Optional: Adjust the size of the icon
+                  />
+
+                </div>
 
                 <div className="row">
                   <div className="product-details col-md-4 mb-2">
