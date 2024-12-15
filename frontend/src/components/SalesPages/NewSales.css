@@ -84,7 +84,9 @@
 .sales-person-box {
     width: 100%;
 }
+.btn-pos{
 
+}
 @media (min-width: 1200px) {
     .sales-add-form {
         margin: 40px 80px;

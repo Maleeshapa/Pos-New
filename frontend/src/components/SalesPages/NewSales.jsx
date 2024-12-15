@@ -25,26 +25,26 @@ const NewSales = ({ invoice }) => {
       second: '2-digit',
       hour12: false
     }).format(now);
-  
+
     const [date, time] = NewTime.split(', ');
     return { date: date.split('/').reverse().join('-'), time };
-  };   
+  };
 
-  const Columns = ["Customer Code", 'Customer Name','Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty','Product ID','Stock ID'];
+  const Columns = ["Customer Code", 'Customer Name', 'Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty', 'Product ID', 'Stock ID'];
   const [formData, setFormData] = useState({
     cusName: '',
     cusNic: '',
     cusCode: '',
-    cusAddress:'',
+    cusAddress: '',
     productNo: '',
     productName: '',
     productPrice: '',
     qty: '',
     discount: '',
-    discountRs:'',
+    discountRs: '',
     totalPrice: '',
     productNote: '',
-    discountPrice:'',
+    discountPrice: '',
     emi: '',
     amount: '',
     card: '',
@@ -54,11 +54,11 @@ const NewSales = ({ invoice }) => {
     paidAmount: '',
     dueAmount: '',
     note: '',
-    invoiceDate: DateTime().date+" "+DateTime().time ,
-    invoiceNo:'',
+    invoiceDate: DateTime().date + " " + DateTime().time,
+    invoiceNo: '',
     salesPerson: '',
-    cusJob:'',
-    cusOffice:''
+    cusJob: '',
+    cusOffice: ''
   });
 
   const navigate = useNavigate();
@@ -78,9 +78,9 @@ const NewSales = ({ invoice }) => {
             invoiceNo: nextInvoiceNo.toString()
           }));
           console.log(nextInvoiceNo.toString());
-        console.log(data);
+          console.log(data);
         }
-        
+
       } catch (error) {
         console.error('Error fetching last invoice number:', error);
       }
@@ -204,24 +204,24 @@ const NewSales = ({ invoice }) => {
   const discount = (e) => {
     const { name, value } = e.target;
     const numericValue = parseFloat(value) || 0;
-  
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: numericValue,
     }));
-  
+
     const productPrice = parseFloat(formData.productPrice) || 0;
     const qty = parseFloat(formData.qty) || 1;
     const discountRs = name === "discountRs" ? numericValue : parseFloat(formData.discountRs) || 0;
-  
+
     const discountedPrice = productPrice - discountRs;
     const newTotalPrice = discountedPrice * qty;
-  
+
     setFormData((prevData) => ({
       ...prevData,
       totalPrice: newTotalPrice.toFixed(2),
     }));
-  };  
+  };
 
   const handleAddProduct = (e) => {
     e.preventDefault();
@@ -238,7 +238,7 @@ const NewSales = ({ invoice }) => {
       formData.productName,
       formData.productPrice,
       formData.qty,
-      formData.discount||formData.discountRs,
+      formData.discount || formData.discountRs,
       formData.totalPrice,
       formData.productNote,
       productId,
@@ -253,7 +253,7 @@ const NewSales = ({ invoice }) => {
       productPrice: '',
       qty: '',
       discount: '',
-      discountRs:'',
+      discountRs: '',
       totalPrice: '',
       productNote: '',
       emi: ''
@@ -287,7 +287,7 @@ const NewSales = ({ invoice }) => {
 
   };
 
-  const changeStatus=()=>{
+  const changeStatus = () => {
     setInvoiceStatus('draft');
     navigate('/sales/new');
   };
@@ -297,8 +297,8 @@ const NewSales = ({ invoice }) => {
     try {
       const invoiceData = {
         invoiceDate: formData.invoiceDate,
-        status:invoiceStatus,
-        cusId:cusId
+        status: invoiceStatus,
+        cusId: cusId
       };
       console.log('Sending invoice data:', invoiceData);
 
@@ -404,7 +404,7 @@ const NewSales = ({ invoice }) => {
       const transactionResult = await transactionResponse.json();
       console.log('Transaction created:', transactionResult);
 
-      
+
       alert('Invoice created successfully!');
 
       setTableData([]);
@@ -427,7 +427,7 @@ const NewSales = ({ invoice }) => {
       productPrice: '',
       qty: '',
       discount: '',
-      discountRs:'',
+      discountRs: '',
       totalPrice: '',
       productNote: '',
       emi: '',
@@ -532,7 +532,7 @@ const NewSales = ({ invoice }) => {
     });
     resetSalesPerson();
   }
-  
+
   return (
     <div>
       <div className="scrolling-container">
@@ -718,14 +718,17 @@ const NewSales = ({ invoice }) => {
               </div>
             </div>
 
-            <div className="payment-form-button d-grid d-md-flex me-md-2 justify-content-end px-5">
-              <button className='btn btn-warning mb-2' type='submit' onClick={changeStatus}>Draft</button>
+            <div className="btn-pos">
+              <div className="payment-form-button d-grid d-md-flex me-md-2 justify-content-end px-5">
+                <button className='btn btn-warning mb-2' type='submit' onClick={changeStatus}>Draft</button>
 
+              </div>
+              <div className="payment-form-button  d-grid d-md-flex me-md-2 justify-content-end px-5">
+                <button className='btn btn-danger btn-md mb-2' type='reset' onClick={clear} >Cancel</button>
+                <button className='btn btn-primary btn-md mb-2' type='submit'>Create invoice</button>
+              </div>
             </div>
-            <div className="payment-form-button  d-grid d-md-flex me-md-2 justify-content-end px-5">
-              <button className='btn btn-danger btn-md mb-2' type='reset' onClick={clear} >Cancel</button>
-              <button className='btn btn-primary btn-md mb-2' type='submit'>Create invoice</button>
-            </div>
+
           </div>
         </form>
       </div>

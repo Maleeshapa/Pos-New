@@ -161,7 +161,7 @@ const Terra = () => {
                                         )}
                                     </div>
                                     <p className="details">Capital Twin Speaks</p>
-                                    <p className="details">No 24 Staple Street Colombo 2 - ADDRESS MUST</p>
+                                    <p className="details">No 24 Staple Street Colombo 2</p>
                                 </div>
                                 <div className="invoice-info">
                                     {!isInvoice && (
@@ -282,7 +282,7 @@ const Terra = () => {
                                 </tbody>
                             </table>
                             <footer className="invoice-footer ">
-                                <p className='text-danger font-weight-bold'>We hereby acknowledge the receipt of the above goods are received in damages.</p>
+                                <p className='text-danger font-weight-bold'>I / We hereby acknowledge the receipt of the above goods are received in damages.</p>
 
                                 <div className="signature">
                                     <table className="signature-table">
