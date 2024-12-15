@@ -6,7 +6,6 @@ const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
 
-
 //Controllers
 const SupplierController = require("./controller/SupplerController");
 const UserController = require("./controller/UserController");
@@ -23,7 +22,8 @@ const ReportController = require("./controller/Reports/ReportController");
 const ProductNStockController = require("./controller/Reports/ProductStockController");
 const StockHistoryController = require('./controller/StockHistoryController');
 const SwitchController = require('./controller/SwitchController');
-const InvoiceProductController = require('./controller/InvoiceProduct')
+const InvoiceProductController = require('./controller/InvoiceProduct');
+const CustomerController = require('./controller/CustomerController');
 
 const app = express();
 const PORT = process.env.PORT;
@@ -65,7 +65,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 // Configure multer upload
-const upload = multer({ 
+const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
     limits: {
@@ -78,9 +78,9 @@ app.post('/api/purchase-orders/upload', upload.array('files', 5), (req, res) => 
     try {
         // Check if files were uploaded
         if (!req.files || req.files.length === 0) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'No files uploaded' 
+            return res.status(400).json({
+                success: false,
+                message: 'No files uploaded'
             });
         }
 
@@ -104,10 +104,10 @@ app.post('/api/purchase-orders/upload', upload.array('files', 5), (req, res) => 
         });
     } catch (error) {
         console.error('Upload error:', error);
-        res.status(500).json({ 
-            success: false, 
+        res.status(500).json({
+            success: false,
             message: 'Error processing upload',
-            error: error.message 
+            error: error.message
         });
     }
 });
@@ -132,103 +132,6 @@ app.use((err, req, res, next) => {
 
 // Import the sequelize instance
 const { QueryTypes } = require("sequelize");
-
-// Fetch all customers
-app.get('/customers', async (req, res) => {
-    try {
-        const query = `SELECT cusName, cusJob, cusOffice, cusAddress FROM invoice`;
-        const results = await sequelize.query(query, { type: QueryTypes.SELECT });
-        res.json(results);
-    } catch (err) {
-        console.error('Error fetching customers:', err);
-        res.status(500).json({ message: 'Error fetching customers' });
-    }
-});
-
-// Add or update a customer
-app.post('/customer', async (req, res) => {
-    const { cusId, cusName, cusJob, cusOffice, cusAddress } = req.body;
-
-    try {
-        if (cusId) {
-            // Update existing customer
-            const query = `
-                UPDATE invoice 
-                SET cusName = :cusName, cusJob = :cusJob, cusOffice = :cusOffice, cusAddress = :cusAddress
-                WHERE id = :cusId
-            `;
-            await sequelize.query(query, {
-                replacements: { cusId, cusName, cusJob, cusOffice, cusAddress },
-                type: QueryTypes.UPDATE
-            });
-            res.json({ message: 'Customer updated successfully' });
-        } else {
-            // Add new customer
-            const query = `
-                INSERT INTO invoice (cusName, cusJob, cusOffice, cusAddress) 
-                VALUES (:cusName, :cusJob, :cusOffice, :cusAddress)
-            `;
-            await sequelize.query(query, {
-                replacements: { cusName, cusJob, cusOffice, cusAddress },
-                type: QueryTypes.INSERT
-            });
-            res.json({ message: 'Customer added successfully' });
-        }
-    } catch (err) {
-        console.error('Error adding/updating customer:', err);
-        res.status(500).json({ message: 'Error adding/updating customer' });
-    }
-});
-
-// Delete a customer
-app.delete('/customer/:id', async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const query = `DELETE FROM invoice WHERE id = :id`;
-        await sequelize.query(query, {
-            replacements: { id },
-            type: QueryTypes.DELETE
-        });
-        res.json({ message: 'Customer deleted successfully' });
-    } catch (err) {
-        console.error('Error deleting customer:', err);
-        res.status(500).json({ message: 'Error deleting customer' });
-    }
-});
-
-// Fetch customer details by name
-app.get('/customer/name/:customerName', async (req, res) => {
-    const { customerName } = req.params;
-
-    try {
-        const query = `
-            SELECT cusName AS customerName, 
-                   cusJob AS customerJob, 
-                   cusOffice AS customerCompany, 
-                   cusAddress AS customerAddress 
-            FROM invoice 
-            WHERE cusName = :customerName
-            LIMIT 1
-        `;
-        const results = await sequelize.query(query, {
-            replacements: { customerName },
-            type: QueryTypes.SELECT
-        });
-
-        if (results.length > 0) {
-            res.json(results[0]); // Return the first matching result
-        } else {
-            res.status(404).json({ message: 'Customer not found' });
-        }
-    } catch (err) {
-        console.error('Error fetching customer details:', err);
-        res.status(500).json({ message: 'Error fetching customer details' });
-    }
-});
-
-
-
 
 // status endpoint
 app.get('/api/switch', SwitchController.getStatus);
@@ -257,6 +160,13 @@ app.get("/category/:id", CategoryController.getCategoryById);
 app.put("/category/:id", CategoryController.updateCategory);
 app.delete("/category/:id", CategoryController.deleteCustomer);
 
+//customer routes
+app.post('/customer', CustomerController.createCustomer);
+app.get('/customers', CustomerController.getAllCustomers);
+app.get('/customer/:id', CustomerController.getCustomerById);
+app.put('/customer/:id', CustomerController.updateCustomer);
+app.delete('/customer/:id', CustomerController.deleteCustomer);
+
 //product routes
 app.post("/product", ProductController.createProduct);
 app.get("/products", ProductController.getAllProducts);
@@ -266,7 +176,6 @@ app.delete("/product/:id", ProductController.deleteProduct);
 app.get("/product/productName/:name", ProductController.getProductByName);
 app.get('/product/codeOrName/:value', ProductController.getProductByCodeOrName);
 app.get('/products/suggestions', ProductController.getProductSuggestions);
-
 
 //stock routes
 app.post("/stock", StockController.createStock);
