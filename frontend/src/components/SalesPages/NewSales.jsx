@@ -41,8 +41,10 @@ const NewSales = ({ invoice }) => {
     productPrice: '',
     qty: '',
     discount: '',
+    discountRs:'',
     totalPrice: '',
     productNote: '',
+    discountPrice:'',
     emi: '',
     amount: '',
     card: '',
@@ -199,6 +201,28 @@ const NewSales = ({ invoice }) => {
     setFormData(prevData => ({ ...prevData, totalPrice: newTotalPrice }));
   }, [formData.productPrice, formData.discount, formData.qty]);
 
+  const discount = (e) => {
+    const { name, value } = e.target;
+    const numericValue = parseFloat(value) || 0;
+  
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: numericValue,
+    }));
+  
+    const productPrice = parseFloat(formData.productPrice) || 0;
+    const qty = parseFloat(formData.qty) || 1;
+    const discountRs = name === "discountRs" ? numericValue : parseFloat(formData.discountRs) || 0;
+  
+    const discountedPrice = productPrice - discountRs;
+    const newTotalPrice = discountedPrice * qty;
+  
+    setFormData((prevData) => ({
+      ...prevData,
+      totalPrice: newTotalPrice.toFixed(2),
+    }));
+  };  
+
   const handleAddProduct = (e) => {
     e.preventDefault();
 
@@ -214,7 +238,7 @@ const NewSales = ({ invoice }) => {
       formData.productName,
       formData.productPrice,
       formData.qty,
-      formData.discount,
+      formData.discount||formData.discountRs,
       formData.totalPrice,
       formData.productNote,
       productId,
@@ -229,6 +253,7 @@ const NewSales = ({ invoice }) => {
       productPrice: '',
       qty: '',
       discount: '',
+      discountRs:'',
       totalPrice: '',
       productNote: '',
       emi: ''
@@ -405,6 +430,7 @@ const NewSales = ({ invoice }) => {
       productPrice: '',
       qty: '',
       discount: '',
+      discountRs:'',
       totalPrice: '',
       productNote: '',
       emi: '',
@@ -484,6 +510,7 @@ const NewSales = ({ invoice }) => {
       productPrice: '',
       qty: '',
       discount: '',
+      discountRs: '',
       totalPrice: '',
       productNote: '',
       emi: '',
@@ -558,6 +585,9 @@ const NewSales = ({ invoice }) => {
                   </div>
                   <div className="product-details col-md-3 mb-2">
                     <input onChange={handleChange} value={formData.discount} type="number" onWheel={(e) => e.target.blur()} name="discount" className="form-control" id="discount" placeholder="Product Discount %" />
+                  </div>
+                  <div className="product-details col-md-3 mb-2">
+                    <input onChange={discount} value={formData.discountRs} type="number" onWheel={(e) => e.target.blur()} name="discountRs" className="form-control" id="discountRs" placeholder="Product DiscountRs LKR" />
                   </div>
                   <div className="product-details col-md-3 mb-2">
                     <input onChange={handleChange} value={formData.totalPrice} type="number" onWheel={(e) => e.target.blur()} name="totalPrice" className="form-control" id="totalPrice" placeholder="Total Price" />
