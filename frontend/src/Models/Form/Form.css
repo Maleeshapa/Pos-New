@@ -47,10 +47,6 @@
   width: 400px;
 }
 
-.form-group-2 {
-  width: 500px;
-}
-
 .form-group-name-flex {
   display: flex;
   justify-content: space-between;

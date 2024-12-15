@@ -166,6 +166,9 @@ app.get('/customers', CustomerController.getAllCustomers);
 app.get('/customer/:id', CustomerController.getCustomerById);
 app.put('/customer/:id', CustomerController.updateCustomer);
 app.delete('/customer/:id', CustomerController.deleteCustomer);
+app.get("/customer/cusCode/:code", CustomerController.getCustomerByCode);
+app.get("/customer/cusName/:name", CustomerController.getCustomerByName);
+app.get('/customers/suggestions', CustomerController.getCustomerSuggestions);
 
 //product routes
 app.post("/product", ProductController.createProduct);

@@ -1,4 +1,5 @@
 const Customer = require("../model/Customer");
+const { Op } = require('sequelize');
 
 async function createCustomer(req, res) {
     try {
@@ -114,10 +115,72 @@ async function deleteCustomer(req, res) {
     }
 }
 
+async function getCustomerByCode(req, res) {
+    try {
+        const { code } = req.params;
+
+        const customer = await Customer.findOne({
+            where: { cusCode: code }
+        });
+
+        if (!customer) {
+            return res.status(404).json({ message: "Customer not found" });
+        } customer
+        res.status(200).json(customer);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+async function getCustomerByName(req, res) {
+    try {
+        const { name } = req.params;
+
+        const customer = await Customer.findOne({
+            where: { cusName: name }
+        });
+
+        if (!customer) {
+            return res.status(404).json({ message: "Customer not found" });
+        } customer
+        res.status(200).json(customer);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+async function getCustomerSuggestions(req, res) {
+    try {
+        const { query } = req.query;
+
+        if (!query || query.length < 2) {
+            return res.status(400).json({ message: 'Query must be at least 2 characters long' });
+        }
+
+        const customer = await Customer.findAll({
+            where: {
+                [Op.or]: [
+                    { cusName: { [Op.like]: `%${query}%` } },
+                ]
+            },
+            attributes: ['cusName'],
+            limit: 10
+        });
+
+        res.status(200).json(customer);
+    } catch (error) {
+        console.error('Error fetching product suggestions:', error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     createCustomer,
     getAllCustomers,
     getCustomerById,
     updateCustomer,
-    deleteCustomer
+    deleteCustomer,
+    getCustomerByCode,
+    getCustomerByName,
+    getCustomerSuggestions
 }

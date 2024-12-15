@@ -12,7 +12,7 @@ const CustomerList = () => {
   const [selectedCus, setSelectedCus] = useState(null);
 
   // Update column headers to match the new database structure
-  const columns = ['Customer Name', 'Customer Position', 'Company Name', 'Company Address'];
+  const columns = ['#', 'Customer Name', 'Customer Code', 'Customer Address', 'Customer Phone', 'Customer Job', 'Customer Office'];
 
   useEffect(() => {
     fetchCustomer();
@@ -29,10 +29,13 @@ const CustomerList = () => {
 
       // Format the data to match the table structure
       const formattedData = customers.map(cus => [
-        cus.cusName,  // Customer Name
-        cus.cusJob,   // Customer Position
-        cus.cusOffice, // Company Name
-        cus.cusAddress // Company Address
+        cus.cusId,
+        cus.cusName,
+        cus.cusCode,
+        cus.cusAddress,
+        cus.cusPhone,
+        cus.cusJob,
+        cus.cusOffice,
       ]);
       setData(formattedData);
       setIsLoading(false);
@@ -46,7 +49,7 @@ const CustomerList = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete this Customer?");
     if (confirmDelete) {
       try {
-        const cusId = data[rowIndex][0]; // Assuming `cusId` is the unique identifier in your data
+        const cusId = data[rowIndex][0];
         const response = await fetch(`${config.BASE_URL}/customer/${cusId}`, {
           method: 'DELETE',
         });
@@ -99,7 +102,8 @@ const CustomerList = () => {
           <Table
             data={data}
             columns={columns}
-            showButton={false}
+            showButton={true}
+            btnName={"Add New Customer"}
             onAdd={openModal}
             onDelete={handleDelete}
             onEdit={handleEdit}
