@@ -2,16 +2,18 @@ import React, { useEffect, useState } from 'react';
 import Table from '../../components/Table/Table';
 import config from '../../config';
 import SupplierForm from '../../Models/SupplierForm/SupplierForm';
+import ConfirmModal from '../../Models/ConfirmModal';
 
 function SupplierDetails() {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedSup, setSelectedSup] = useState(null);
+  const [selectedRowIndex, setSelectedRowIndex] = useState(null);
 
   const columns = ['#', 'Supplier Name', 'Supplier Address', 'NIC', 'Email', 'Contact 1', 'Contact 2', 'Status'];
-
   const btnName = ' + New Supplier ';
 
   useEffect(() => {
@@ -23,6 +25,7 @@ function SupplierDetails() {
       const response = await fetch(`${config.BASE_URL}/suppliers`);
       if (!response.ok) {
         setError('Failed to fetch supplier list');
+        return;
       }
       const supplier = await response.json();
       const formattedData = supplier.map(supplier => [
@@ -34,7 +37,7 @@ function SupplierDetails() {
         supplier.supplierTP,
         supplier.supplierSecondTP,
         <select
-          className='form-control'
+          className="form-control"
           value={supplier.supplierStatus}
           onChange={(e) => handleStatusChange(supplier.supplierId, e.target.value)}
         >
@@ -86,17 +89,21 @@ function SupplierDetails() {
     setShowModal(true);
   };
 
-  const handleDelete = async (rowIndex) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this supplier?');
-    if (!confirmDelete) return;
+  const openDeleteConfirmModal = (rowIndex) => {
+    setSelectedRowIndex(rowIndex);
+    setShowConfirmModal(true);
+  };
+
+  const handleDelete = async () => {
+    setShowConfirmModal(false);
     try {
-      const supplierId = data[rowIndex][0];
+      const supplierId = data[selectedRowIndex][0];
       const response = await fetch(`${config.BASE_URL}/supplier/${supplierId}`, {
         method: 'DELETE',
       });
 
       if (!response.ok) {
-        alert('Supplier is User for create stock');
+        alert('Supplier is used for creating stock');
       } else {
         fetchSuppliers();
       }
@@ -125,7 +132,9 @@ function SupplierDetails() {
           <p>Loading...</p>
         ) : error ? (
           <p>Error: {error}</p>
-        ) : (<p></p>)}
+        ) : (
+          <p></p>
+        )}
         <Table
           search={'Search by Supplier Name'}
           data={data}
@@ -133,7 +142,7 @@ function SupplierDetails() {
           btnName={btnName}
           onAdd={openModal}
           onEdit={handleEdit}
-          onDelete={handleDelete}
+          onDelete={openDeleteConfirmModal}
           title={title}
           invoice={invoice}
           showDate={false}
@@ -145,6 +154,13 @@ function SupplierDetails() {
           onSave={fetchSuppliers}
           supplier={selectedSup}
         />
+
+        {showConfirmModal && (
+          <ConfirmModal
+            onConfirm={handleDelete}
+            onClose={() => setShowConfirmModal(false)}
+          />
+        )}
       </div>
     </div>
   );
