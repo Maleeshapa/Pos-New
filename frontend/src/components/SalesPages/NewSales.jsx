@@ -2,18 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { CirclePlus, Plus, PlusCircle, ShoppingCart, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './NewSales.css';
-import Form from '../../Models/Form/Form';
-import Modal from 'react-modal';
 import Table from '../Table/Table'
 import config from '../../config';
 
 const NewSales = ({ invoice }) => {
-
   const [tableData, setTableData] = useState([]);
   const [users, setUsers] = useState([]);
   const [productId, setProductId] = useState('');
   const [stockId, setStockId] = useState('');
-  const [customers, setCustomers] = useState([]);
+  const [invoiceStatus, setInvoiceStatus] = useState('Invoice');
   const [cusId, setCusId] = useState('');
 
   const DateTime = () => {
@@ -152,7 +149,6 @@ const NewSales = ({ invoice }) => {
       }
     }
 
-    // When updating the formData for salesPerson
     if (name === 'salesPerson') {
       const selectedUserId = value; // Assuming value contains the user ID
       setFormData(prevData => ({
@@ -163,7 +159,6 @@ const NewSales = ({ invoice }) => {
 
   };
 
-  // Function to fetch stock data based on product ID
   const fetchStockData = async (productId) => {
     try {
       const response = await fetch(`${config.BASE_URL}/stock/product/${productId}`);
@@ -206,11 +201,6 @@ const NewSales = ({ invoice }) => {
 
   const handleAddProduct = (e) => {
     e.preventDefault();
-
-    // if (!formData.productNo || !formData.productName || !formData.productPrice || !formData.qty) {
-    //   alert("Please fill in all the product details.");
-    //   return;
-    // }
 
     const newRow = [
       formData.cusName,
@@ -267,23 +257,18 @@ const NewSales = ({ invoice }) => {
 
   };
 
-  // const generateInvoiceCode = () => {
-  //   return "InvNO" + Date.now().toString().slice(-4);
-  // };
-
+  const changeStatus=()=>{
+    setInvoiceStatus('draft');
+    navigate('/sales/new');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (!formData.invoiceDate) {
-        throw new Error('select invoice Date.');
-      }
-      if (tableData.length === 0) {
-        throw new Error('Add Product to table');
-      }
 
       const invoiceData = {
         invoiceDate: formData.invoiceDate,
+        status:invoiceStatus,
         cusId:cusId
       };
 
@@ -305,43 +290,6 @@ const NewSales = ({ invoice }) => {
 
       const invoiceResult = await invoiceResponse.json();
       console.log('Invoice created:', invoiceResult);
-
-      //transaction Data----------------------------------------------------------------------------------
-      const transactionData = {
-        transactionType: [
-          showCard && 'card',
-          showCash && 'cash',
-          showCheque && 'cheque',
-          showBank && 'bank'
-        ].filter(Boolean).join(' '),
-        price: parseFloat(formData.amount) || 0,
-        dateTime: invoiceData.invoiceDate,
-        discount: parseFloat(formData.discountPrice) || 0,
-        note: formData.note || '',
-        paid: parseFloat(formData.paidAmount) || 0,
-        due: parseFloat(formData.dueAmount) || 0,
-        invoiceId: invoiceResult.invoiceId,
-        userId: formData.salesPerson,
-      };
-
-      console.log('Sending transaction data:', transactionData);
-
-      const transactionResponse = await fetch(`${config.BASE_URL}/transaction`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(transactionData),
-      });
-
-      if (!transactionResponse.ok) {
-        const errorData = await transactionResponse.json();
-        console.error('Transaction error details:', errorData);
-        throw new Error(errorData.error || 'Failed to create transaction');
-      }
-
-      const transactionResult = await transactionResponse.json();
-      console.log('Transaction created:', transactionResult);
 
       //product------------------------------------------------------------------------------------------
       const invalidProducts = tableData.filter(row => !row[3]);
@@ -392,8 +340,45 @@ const NewSales = ({ invoice }) => {
       console.log('Sending product data:', productInvoice);
       console.log('product created:', productResult);
 
+      //transaction Data----------------------------------------------------------------------------------
+      const transactionData = {
+        transactionType: [
+          showCard && 'card',
+          showCash && 'cash',
+          showCheque && 'cheque',
+          showBank && 'bank'
+        ].filter(Boolean).join(' '),
+        price: parseFloat(formData.amount) || 0,
+        dateTime: invoiceData.invoiceDate,
+        discount: parseFloat(formData.discountPrice) || 0,
+        note: formData.note || '',
+        paid: parseFloat(formData.paidAmount) || 0,
+        due: parseFloat(formData.dueAmount) || 0,
+        invoiceId: invoiceResult.invoiceId,
+        userId: formData.salesPerson,
+      };
 
-      alert('Invoice and transaction created successfully!');
+      console.log('Sending transaction data:', transactionData);
+
+      const transactionResponse = await fetch(`${config.BASE_URL}/transaction`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(transactionData),
+      });
+
+      if (!transactionResponse.ok) {
+        const errorData = await transactionResponse.json();
+        console.error('Transaction error details:', errorData);
+        throw new Error(errorData.error || 'Failed to create transaction');
+      }
+
+      const transactionResult = await transactionResponse.json();
+      console.log('Transaction created:', transactionResult);
+
+      
+      alert('Invoice created successfully!');
 
       setTableData([]);
       resetForm();
@@ -441,11 +426,6 @@ const NewSales = ({ invoice }) => {
       salesPerson: 'select',
     }));
   };
-
-  const [Emi, setEmi] = useState(false);
-  const handleEmi = (e) => {
-    setEmi(e.target.checked)
-  }
 
   const [showCard, setCard] = useState(false);
   const [showCash, setCash] = useState(false);
@@ -518,7 +498,7 @@ const NewSales = ({ invoice }) => {
     });
     resetSalesPerson();
   }
-
+  
   return (
     <div>
       <div className="scrolling-container">
@@ -528,22 +508,9 @@ const NewSales = ({ invoice }) => {
             <div className="sales-add-form">
               <div className="customer">
                 <div className="subCaption">
-
                   <p><User />Customer Details</p>
-                  {/* <button className='addCusBtn' type="button" onClick={openModal}><PlusCircle size={30} /></button> */}
+                  <button className='addCusBtn' type="button"><PlusCircle size={30} /></button>
                 </div>
-                {/* <Modal
-                  isOpen={modalIsOpen}  
-                  onRequestClose={closeModal}
-                  contentLabel="New Customer Form"
-                >
-                  <Form closeModal={closeModal} onSave={handleCustomerCreated} />
-                </Modal> */}
-
-                {/* <div className="customer-details">
-                  <label htmlFor="">Customer Nic</label>
-                  <input onChange={handleChange} value={formData.cusNic} type="text" className="form-control" name="cusNic" id="cusNic" placeholder="Enter Nic" />
-                </div> */}
 
                 <div className="customer-details">
                   <input onChange={handleChange} value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" />
@@ -557,12 +524,6 @@ const NewSales = ({ invoice }) => {
                 <div className="customer-details">
                   <input onChange={handleChange} value={formData.cusAddress} type="text" className="form-control" name="cusAddress" id="cusAddress" placeholder="Customer Address" />
                 </div>
-
-
-                {/* <div className="customer-details">
-                  <label htmlFor="">Customer Code</label>
-                  <input onChange={handleChange} value={formData.cusCode} type="text" className="form-control" name="cusCode" id="refNo" placeholder="Enter No" />
-                </div> */}
               </div>
 
               <div className="product">
@@ -575,7 +536,6 @@ const NewSales = ({ invoice }) => {
                     onClick={() => navigate('/product/create')}
                     size={24} // Optional: Adjust the size of the icon
                   />
-
                 </div>
 
                 <div className="row">
@@ -600,16 +560,6 @@ const NewSales = ({ invoice }) => {
                   <div className="product-details col-md-6 mb-2">
                     <textarea onChange={handleChange} value={formData.productNote} name="productNote" className="form-control" id="productNote" placeholder="Warranty" rows="3"></textarea>
                   </div>
-                  {/* <div className="product-details-checkbox col-md-1 mb-2">
-                    <input type="checkbox" id="emi" name="emi" value="EMI" onChange={handleEmi} />
-                    <label htmlFor="emi">Imei</label>
-                  </div> */}
-                  {/* {Emi && (
-                    <div className="product-details col-md-5">
-                      <input onChange={handleChange} value={formData.emi} type="text" name="emi" className="form-control" id="emi" placeholder="Imei/Serial Number" />
-                    </div>
-                  )} */}
-
                 </div>
               </div>
             </div>
@@ -635,7 +585,7 @@ const NewSales = ({ invoice }) => {
             <div className="payment-form-group">
               <div className="sales-person-box">
                 <div className="sales-person">
-                  <label id='label'>Sales Person</label>
+                  <label id='label'>Cashier</label>
                   <select className="form-control" name="salesPerson" value={formData.salesPerson} onChange={handleChange}>
                     <option value="Select">Select</option>
                     {users.map((user) => (
@@ -649,14 +599,6 @@ const NewSales = ({ invoice }) => {
                   <label htmlFor="" id='label'>Invoice Date</label>
                   <input type="datetime-local" className="form-control" name="invoiceDate" onChange={handleChange} value={formData.invoiceDate} id="date" />
                 </div>
-                <div className="sales-person">
-                  <label htmlFor="" id='label'>Invoice No</label>
-                  <input type="text" className="form-control" name="invoiceNo" onChange={handleChange} value={formData.invoiceNo} id="date" />
-                </div>
-                {/* <div className="sales-person">
-                  <label htmlFor="" id='label'>Invoice Due Date</label>
-                  <input type="datetime-local" className="form-control" name="invoiceDueDate" id="date" />
-                </div> */}
               </div>
 
               <div className="amount-box">
@@ -668,11 +610,6 @@ const NewSales = ({ invoice }) => {
                   <label htmlFor="" id='label'>Discount</label>
                   <input type="number" className="form-control" value={formData.discountPrice} onChange={handleChange} id='readOnly' readOnly />
                 </div>
-
-                {/* <div className="amount-group">
-                  <label htmlFor="" id='label'>Invoice Note</label>
-                  <textarea className="form-control" onChange={handleChange} value={formData.note} name='note' id="invoiceNote" rows={3} />
-                </div> */}
               </div>
             </div>
 
@@ -731,12 +668,13 @@ const NewSales = ({ invoice }) => {
                   <label htmlFor="" id='label'>Due Amount</label>
                   <input className="form-control" type="number" value={formData.dueAmount} onWheel={(e) => e.target.blur()} name="discount" id="readOnly" readOnly />
                 </div>
-                {/* <div className="amount-group">
-                  <label htmlFor="" id='label'>If Credit Sale</label>
-                </div> */}
               </div>
             </div>
 
+            <div className="payment-form-button d-grid d-md-flex me-md-2 justify-content-end px-5">
+              <button className='btn btn-warning mb-2' type='submit' onClick={changeStatus}>Draft</button>
+
+            </div>
             <div className="payment-form-button  d-grid d-md-flex me-md-2 justify-content-end px-5">
               <button className='btn btn-danger btn-md mb-2' type='reset' onClick={clear} >Cancel</button>
               <button className='btn btn-primary btn-md mb-2' type='submit'>Create invoice</button>

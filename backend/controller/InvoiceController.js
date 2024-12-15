@@ -4,12 +4,10 @@ const Stock = require("../model/Stock");
 
 const generateNextInvoiceNumber = async () => {
     try {
-        // Find the last invoice number
         const lastInvoice = await Invoice.findOne({
-            order: [['invoiceNo', 'DESC']], // Sort by invoiceNo in descending order
+            order: [['invoiceNo', 'DESC']],
         });
 
-        // If no invoices exist, start with 1500
         if (!lastInvoice) {
             return 1500;
         }
@@ -27,16 +25,16 @@ const createInvoice = async (req, res) => {
     try {
         const {
             invoiceDate,
+            status='invoice',
             cusId,
         } = req.body;
 
-        // Generate the next invoice number if not provided
         const invoiceNo = req.body.invoiceNo || await generateNextInvoiceNumber();
 
-        // Create a new invoice
         const newInvoice = await Invoice.create({
             invoiceNo,
             invoiceDate,
+            status,
             cusId
         });
 

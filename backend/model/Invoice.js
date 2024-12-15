@@ -18,6 +18,10 @@ const Invoice = sequelize.define(
             type: DataTypes.DATE,
             allowNull: false,
         },
+        status: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
         cusId: {
             type: DataTypes.INTEGER,
             references: {

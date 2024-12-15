@@ -61,7 +61,7 @@ function Login() {
             <br /><br />
             Call - 0764980664
           </>
-        );setError('NM Digital Solutions Kandy එකට කෝල් කරන්න');
+        );setError('කෝල් කරන්න');
         return;
       }
 
