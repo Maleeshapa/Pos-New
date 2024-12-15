@@ -202,6 +202,11 @@ const NewSales = ({ invoice }) => {
   const handleAddProduct = (e) => {
     e.preventDefault();
 
+    if (!formData.productNo || !formData.productName || !formData.productPrice || !formData.qty) {
+      alert("Please fill in all the product details.");
+      return;
+    }
+
     const newRow = [
       formData.cusName,
       formData.cusAddress,
