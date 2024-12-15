@@ -2,31 +2,42 @@ const Invoice = require("../model/Invoice");
 const Product = require("../model/Products");
 const Stock = require("../model/Stock");
 
+const generateNextInvoiceNumber = async () => {
+    try {
+        // Find the last invoice number
+        const lastInvoice = await Invoice.findOne({
+            order: [['invoiceNo', 'DESC']], // Sort by invoiceNo in descending order
+        });
+
+        // If no invoices exist, start with 1500
+        if (!lastInvoice) {
+            return 1500;
+        }
+
+        // Generate the next sequential number
+        const nextInvoiceNo = parseInt(lastInvoice.invoiceNo) + 1;
+        return nextInvoiceNo;
+    } catch (error) {
+        throw new Error(`Error generating invoice number: ${error.message}`);
+    }
+};
+
 // Create invoice
 const createInvoice = async (req, res) => {
     try {
         const {
-            invoiceNo,
             invoiceDate,
-            cusName,
-            cusAddress,
-            cusJob,
-            cusOffice
+            cusId,
         } = req.body;
 
-        // Validate required fields
-        if (!invoiceDate|| !cusName || !cusAddress || !cusJob) {
-            return res.status(400).json({ error: "All fields are required." });
-        }
+        // Generate the next invoice number if not provided
+        const invoiceNo = req.body.invoiceNo || await generateNextInvoiceNumber();
 
         // Create a new invoice
         const newInvoice = await Invoice.create({
             invoiceNo,
             invoiceDate,
-            cusName,
-            cusAddress,
-            cusJob,
-            cusOffice
+            cusId
         });
 
         res.status(201).json(newInvoice);
@@ -39,19 +50,17 @@ const createInvoice = async (req, res) => {
     }
 };
 
+
 const getLastInvoiceNumber = async (req, res) => {
     try {
-        // Fetch the most recent invoice sorted by invoiceNo in descending order
         const lastInvoice = await Invoice.findOne({
-            order: [['invoiceNo', 'DESC']], // Sort by invoiceNo in descending order
+            order: [['invoiceNo', 'DESC']],
         });
 
         if (!lastInvoice) {
-            // If no invoices exist, return a default starting invoice number
             return res.status(200).json({ lastInvoiceNo: 1500 });
         }
 
-        // Return the last invoice number
         res.status(200).json({ lastInvoiceNo: lastInvoice.invoiceNo });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -178,4 +187,6 @@ module.exports = {
     getInvoiceByNo,
     updateInvoice,
     deleteInvoice,
+    getLastInvoiceNumber,
+    generateNextInvoiceNumber
 };
