@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, ShoppingCart, Package, Users, Boxes, Truck, FileText, Menu, FileUp, Sheet } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Package, Users, Boxes, Truck, FileText, Menu, FileUp, Sheet, User } from 'lucide-react';
 import './SideBar.css';
 
 const Sidebar = () => {
@@ -179,7 +179,7 @@ const Sidebar = () => {
         },
         {
             title: 'Staff',
-            icon: <FileText size={20} />,
+            icon: <User size={20} />,
             path: '/staff',
             submenus: [
                 { title: 'Create Staff', path: '/staff/create-staff' },

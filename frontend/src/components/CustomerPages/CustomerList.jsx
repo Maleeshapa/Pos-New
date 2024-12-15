@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Table from '../Table/Table';
 import Form from '../../Models/Form/Form';
 import Modal from 'react-modal';
+import ConfirmModal from '../../Models/ConfirmModal';
 import config from '../../config';
 
 const CustomerList = () => {
@@ -10,8 +11,9 @@ const CustomerList = () => {
   const [error, setError] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedCus, setSelectedCus] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [deleteRowIndex, setDeleteRowIndex] = useState(null);
 
-  // Update column headers to match the new database structure
   const columns = ['#', 'Customer Name', 'Customer Code', 'Customer Address', 'Customer Phone', 'Customer Job', 'Customer Office'];
 
   useEffect(() => {
@@ -27,7 +29,6 @@ const CustomerList = () => {
       }
       const customers = await response.json();
 
-      // Format the data to match the table structure
       const formattedData = customers.map(cus => [
         cus.cusId,
         cus.cusName,
@@ -45,34 +46,39 @@ const CustomerList = () => {
     }
   };
 
-  const handleDelete = async (rowIndex) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this Customer?");
-    if (confirmDelete) {
-      try {
-        const cusId = data[rowIndex][0];
-        const response = await fetch(`${config.BASE_URL}/customer/${cusId}`, {
-          method: 'DELETE',
-        });
+  const handleDelete = async () => {
+    try {
+      const cusId = data[deleteRowIndex][0];
+      const response = await fetch(`${config.BASE_URL}/customer/${cusId}`, {
+        method: 'DELETE',
+      });
 
-        if (!response.ok) {
-          throw new Error('Failed to delete customer');
-        }
-
-        setData(prevData => prevData.filter((_, index) => index !== rowIndex));
-        fetchCustomer();
-      } catch (err) {
-        setError(err.message);
+      if (!response.ok) {
+        throw new Error('Failed to delete customer');
       }
+
+      setData(prevData => prevData.filter((_, index) => index !== deleteRowIndex));
+      fetchCustomer();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setShowConfirmModal(false);
     }
+  };
+
+  const confirmDelete = (rowIndex) => {
+    setDeleteRowIndex(rowIndex);
+    setShowConfirmModal(true);
   };
 
   const handleEdit = (rowIndex) => {
     const selectedCusData = data[rowIndex];
     setSelectedCus({
-      cusName: selectedCusData[0],
-      cusJob: selectedCusData[1],
-      cusOffice: selectedCusData[2],
+      cusName: selectedCusData[1],
       cusAddress: selectedCusData[3],
+      cusPhone: selectedCusData[4],
+      cusJob: selectedCusData[5],
+      cusOffice: selectedCusData[6],
     });
     setModalIsOpen(true);
   };
@@ -105,7 +111,7 @@ const CustomerList = () => {
             showButton={true}
             btnName={"Add New Customer"}
             onAdd={openModal}
-            onDelete={handleDelete}
+            onDelete={confirmDelete}
             onEdit={handleEdit}
             showDate={false}
             title={title}
@@ -132,6 +138,12 @@ const CustomerList = () => {
             }}
           />
         </Modal>
+        {showConfirmModal && (
+          <ConfirmModal
+            onConfirm={handleDelete}
+            onClose={() => setShowConfirmModal(false)}
+          />
+        )}
       </div>
     </div>
   );

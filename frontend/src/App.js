@@ -74,7 +74,6 @@ function Layout() {
             <Route path="/CreditNote/colkan/:id" element={<ColkanCR />} />
             <Route path="/CreditNote/haman/:id" element={<HamanCR />} />
             <Route path="/CreditNote/terra/:id" element={<TerraCR />} />
-      
           </Routes>
         </div>
       </div>
