@@ -295,13 +295,11 @@ const NewSales = ({ invoice }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-
       const invoiceData = {
         invoiceDate: formData.invoiceDate,
         status:invoiceStatus,
         cusId:cusId
       };
-
       console.log('Sending invoice data:', invoiceData);
 
       const invoiceResponse = await fetch(`${config.BASE_URL}/invoice`, {
@@ -317,7 +315,6 @@ const NewSales = ({ invoice }) => {
         console.error('Invoice error details:', errorData);
         throw new Error(errorData.error || 'Failed to create invoice');
       }
-
       const invoiceResult = await invoiceResponse.json();
       console.log('Invoice created:', invoiceResult);
 
@@ -460,6 +457,7 @@ const NewSales = ({ invoice }) => {
 
   const [showCard, setCard] = useState(false);
   const [showCash, setCash] = useState(false);
+  const [showCredit, setCredit] = useState(false);
   const [showCheque, setCheque] = useState(false);
   const [showBank, setBank] = useState(false);
 
@@ -468,6 +466,10 @@ const NewSales = ({ invoice }) => {
   }
   const handleCash = (e) => {
     setCash(e.target.checked)
+  }
+  const handleCredit = (e) => {
+    setCredit(e.target.checked)
+    setInvoiceStatus('credit');
   }
   const handleCheque = (e) => {
     setCheque(e.target.checked)
@@ -672,6 +674,16 @@ const NewSales = ({ invoice }) => {
                   {showCard && (
                     <input type="number" className="form-control" id='' name='card' onChange={handlePaymentChange} value={formData.card} placeholder='Card Payment' onWheel={(e) => e.target.blur()} />
 
+                  )}
+                </div>
+                <div className="payment-details">
+                  <div className="payment-details-amount">
+                    <input type="checkbox" name="credit" id="credit" onChange={handleCredit} />
+                    <label htmlFor="" id='label'>Credit Payment</label>
+                  </div>
+
+                  {showCredit && (
+                    <input type="number" className="form-control" id='payment' name='credit' value={formData.credit} onChange={handlePaymentChange} placeholder='credit Amount' onWheel={(e) => e.target.blur()} />
                   )}
                 </div>
                 <div className="payment-details">
