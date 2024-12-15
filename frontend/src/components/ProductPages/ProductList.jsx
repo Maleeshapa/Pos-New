@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Table from '../Table/Table';
+import ConfirmModal from '../../Models/ConfirmModal';
 import config from '../../config';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,14 +8,15 @@ const ProductList = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProductIndex, setSelectedProductIndex] = useState(null);
 
   const columns = ['id', 'Product', 'Product Code', 'Weight(g/Kg)', 'Buying Price', 'Selling Price', 'Warranty (months)', 'Profit', 'Description', 'Category', 'Status'];
-
   const btnName = ['Add Product'];
 
   useEffect(() => {
     fetchProductList();
-  },);
+  });
 
   const fetchProductList = async () => {
     try {
@@ -35,7 +37,7 @@ const ProductList = () => {
         prod.productDescription,
         prod.category?.categoryName,
         <select
-          className='form-control'
+          className="form-control"
           value={prod.productStatus}
           onChange={(e) => handleStatusChange(prod.productId, e.target.value)}
         >
@@ -71,27 +73,37 @@ const ProductList = () => {
     }
   };
 
-  const handleDelete = async (rowIndex) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this Product?");
-    if (confirmDelete) {
-      try {
-        const productId = data[rowIndex][0];
-        const response = await fetch(`${config.BASE_URL}/product/${productId}`, {
-          method: 'DELETE',
-        });
+  const handleDelete = (rowIndex) => {
+    setSelectedProductIndex(rowIndex);
+    setIsModalOpen(true);
+  };
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`Failed to delete Product: ${response.status} ${response.statusText}. ${errorData.message || ''}`);
-        }
+  const confirmDelete = async () => {
+    try {
+      const productId = data[selectedProductIndex][0];
+      const response = await fetch(`${config.BASE_URL}/product/${productId}`, {
+        method: 'DELETE',
+      });
 
-        setData(prevData => prevData.filter((_, index) => index !== rowIndex));
-        await fetchProductList();
-      } catch (err) {
-        setError(`Error deleting product: ${err.message}`);
-        alert('This product used for create invoice')
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Failed to delete Product: ${response.status} ${response.statusText}. ${errorData.message || ''}`);
       }
+
+      setData(prevData => prevData.filter((_, index) => index !== selectedProductIndex));
+      await fetchProductList();
+    } catch (err) {
+      setError(`Error deleting product: ${err.message}`);
+      alert('This product is used for creating invoices.');
+    } finally {
+      setIsModalOpen(false);
+      setSelectedProductIndex(null);
     }
+  };
+
+  const cancelDelete = () => {
+    setIsModalOpen(false);
+    setSelectedProductIndex(null);
   };
 
   const handleEdit = (rowIndex) => {
@@ -118,27 +130,6 @@ const ProductList = () => {
     navigate('/product/create');
   };
 
-  const markAsOutOfStock = async (rowIndex) => {
-    try {
-      const productId = data[rowIndex][0];
-      const response = await fetch(`${config.BASE_URL}/product/${productId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ productStatus: 'Out of Stock', productQty: 0 }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`Failed to update product to out of stock: ${response.status} ${response.statusText}. ${errorData.message || ''}`);
-      }
-      await fetchProductList();
-    } catch (err) {
-      setError(`Error marking product as out of stock: ${err.message}`);
-    }
-  };
-
   const title = 'Product List';
   const invoice = 'product_list.pdf';
 
@@ -149,9 +140,8 @@ const ProductList = () => {
         {isLoading ? (
           <p>Loading...</p>
         ) : error ? (
-            <p>Error: {error}</p>
-        ) : (<p></p>
-        )}
+          <p>Error: {error}</p>
+        ) : (
           <Table
             data={data}
             columns={columns}
@@ -159,11 +149,17 @@ const ProductList = () => {
             onAdd={handleAddProduct}
             onDelete={handleDelete}
             onEdit={handleEdit}
-            onMarkOutOfStock={markAsOutOfStock}
             showDate={false}
             title={title}
             invoice={invoice}
           />
+        )}
+        {isModalOpen && (
+          <ConfirmModal
+            onConfirm={confirmDelete}
+            onClose={cancelDelete}
+          />
+        )}
       </div>
     </div>
   );

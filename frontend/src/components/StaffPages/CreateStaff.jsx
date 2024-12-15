@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import Table from '../Table/Table';
 import StaffModal from '../../Models/StaffModel/StaffModal';
+import ConfirmModal from '../../Models/ConfirmModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import config from '../../config';
 import './CreateStaff.css';
 
 const CreateStaff = () => {
-
   const [data, setData] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -15,23 +15,24 @@ const CreateStaff = () => {
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [showImageModal, setShowImageModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedRowIndex, setSelectedRowIndex] = useState(null);
 
   const columns = ["#", "Title", "Full Name", "Department / Job Position", "User Type", "User Name", "Email", "Contact 1", "Contact 2", "Address", "Nic", 'Image', "Status"];
   const btnName = 'Add New Staff Member';
 
   useEffect(() => {
     fetchStaff();
-  });
+  }, []);
 
   const fetchStaff = async () => {
     try {
       const response = await fetch(`${config.BASE_URL}/users`);
       if (!response.ok) {
-        setError('Failed to fetch user list');
+        throw new Error('Failed to fetch user list');
       }
-      const user = await response.json();
-      const formattedData = user.map(user => [
-
+      const users = await response.json();
+      const formattedData = users.map(user => [
         user.userId,
         user.userTitle,
         user.userFullName,
@@ -56,7 +57,6 @@ const CreateStaff = () => {
           <option value="Active">Active</option>
           <option value="Inactive">Inactive</option>
         </select>
-
       ]);
       setData(formattedData);
       setIsLoading(false);
@@ -85,9 +85,14 @@ const CreateStaff = () => {
     }
   };
 
-  const handleDelete = async (rowIndex) => {
+  const handleDeleteRequest = (rowIndex) => {
+    setSelectedRowIndex(rowIndex);
+    setShowConfirmModal(true);
+  };
+
+  const confirmDelete = async () => {
     try {
-      const userId = data[rowIndex][0];
+      const userId = data[selectedRowIndex][0];
       const response = await fetch(`${config.BASE_URL}/user/${userId}`, {
         method: 'DELETE',
       });
@@ -96,10 +101,13 @@ const CreateStaff = () => {
         throw new Error('Failed to delete user');
       }
 
-      setData(prevData => prevData.filter((_, index) => index !== rowIndex));
+      setData(prevData => prevData.filter((_, index) => index !== selectedRowIndex));
       fetchStaff();
     } catch (err) {
       setError(err.message);
+    } finally {
+      setShowConfirmModal(false);
+      setSelectedRowIndex(null);
     }
   };
 
@@ -120,6 +128,11 @@ const CreateStaff = () => {
   const closeImageModal = () => {
     setSelectedImage(null);
     setShowImageModal(false);
+  };
+
+  const closeConfirmModal = () => {
+    setShowConfirmModal(false);
+    setSelectedRowIndex(null);
   };
 
   const handleEdit = (rowIndex) => {
@@ -157,7 +170,7 @@ const CreateStaff = () => {
             btnName={btnName}
             onAdd={handleAddNewStaff}
             onEdit={handleEdit}
-            onDelete={handleDelete}
+            onDelete={handleDeleteRequest}
             showDate={false}
             title={title}
             invoice={invoice}
@@ -182,9 +195,17 @@ const CreateStaff = () => {
             </div>
           </div>
         )}
+
+        {/* Confirm Modal */}
+        {showConfirmModal && (
+          <ConfirmModal
+            onConfirm={confirmDelete}
+            onClose={closeConfirmModal}
+          />
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default CreateStaff;
