@@ -5,11 +5,11 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Link } from 'react-router-dom'
 import { Eye } from 'lucide-react';
 
-const Credit = () => {
+const Invoice = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const columns = ["ID", "Invoice No","Type","Customer", 'address', "Date/time", "Transaction Type", "Total Amount", "Due", "invoice"];
+  const columns = ["ID", "Invoice No", 'Type', "Customer", 'address', "Date/time", "Transaction Type", "Total Amount", "Due", "invoice"];
 
   useEffect(() => {
     fetchSalesHistory();
@@ -23,7 +23,7 @@ const Credit = () => {
       }
       const invoices = await response.json();
 
-      const filteredInvoices = invoices.filter(invoice => invoice.status === "credit");
+      const filteredInvoices = invoices.filter(invoice => invoice.status === "Invoice");
 
       const transactionPromises = filteredInvoices.map(async (invoice) => {
         const transactionResponse = await fetch(`${config.BASE_URL}/transaction/invoice/${invoice.invoiceId}`);
@@ -69,8 +69,8 @@ const Credit = () => {
     }
   };
 
-  const title = 'Credit';
-  const invoice = 'Credit.pdf';
+  const title = 'Draft History';
+  const invoice = 'Draft History.pdf';
 
   const handleDelete = async (rowIndex) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this invoice?");
@@ -111,7 +111,7 @@ const Credit = () => {
     <div>
       <div className="scrolling-container">
         <div className="new-sales-container">
-          <h4>Credit</h4>
+          <h4>Invoice</h4>
 
           {isLoading ? (
             <p>Loading...</p>
@@ -133,4 +133,4 @@ const Credit = () => {
   );
 };
 
-export default Credit;
+export default Invoice;

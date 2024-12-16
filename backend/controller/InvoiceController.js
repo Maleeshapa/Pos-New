@@ -1,6 +1,7 @@
 const Invoice = require("../model/Invoice");
 const Product = require("../model/Products");
 const Stock = require("../model/Stock");
+const Customer = require("../model/Customer"); // Ensure Customer model is imported
 
 const generateNextInvoiceNumber = async () => {
     try {
@@ -25,7 +26,7 @@ const createInvoice = async (req, res) => {
     try {
         const {
             invoiceDate,
-            status='invoice',
+            status = 'invoice',
             store,
             cusId,
         } = req.body;
@@ -69,7 +70,11 @@ const getLastInvoiceNumber = async (req, res) => {
 
 const getAllInvoice = async (req, res) => {
     try {
-        const invoices = await Invoice.findAll({});
+        const invoices = await Invoice.findAll({
+            include: [
+                { model: Customer, as: 'customer' }, // Include customer details
+            ],
+        });
 
         if (invoices.length === 0) {
             return res.status(404).json({ message: "No invoices found" });
@@ -82,7 +87,6 @@ const getAllInvoice = async (req, res) => {
 };
 
 // Get invoice by id with customer and product details
-const Customer = require("../model/Customer"); // Ensure Customer model is imported
 
 const getInvoiceById = async (req, res) => {
     try {

@@ -6,6 +6,7 @@ import Header from '../../components/SideBar/Header'
 import Draft from '../../components/SalesPages/Draft';
 import Credit from '../../components/SalesPages/Creadit';
 import Delivery from '../../components/SalesPages/Delivery';
+import Invoice from '../../components/SalesPages/Invoice';
 
 const Sales = () => {
   return (
@@ -14,6 +15,7 @@ const Sales = () => {
       <Routes>
         <Route path="new" element={<NewSales />} />
         <Route path="history" element={<SalesHistory />} />
+        <Route path="invoice" element={<Invoice />} />
         <Route path="delivery" element={<Delivery />} />
         <Route path="draft" element={<Draft />} />
         <Route path="credit" element={<Credit />} />

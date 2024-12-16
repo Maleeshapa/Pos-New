@@ -9,7 +9,7 @@ const Draft = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const columns = ["ID", "Invoice No", "Customer", 'address', "Date/time", "Transaction Type", "Total Amount", "Due", "invoice"];
+  const columns = ["ID", "Invoice No", 'Type', "Customer", 'address', "Date/time", "Transaction Type", "Total Amount", "Due", "invoice"];
 
   useEffect(() => {
     fetchSalesHistory();
@@ -23,7 +23,9 @@ const Draft = () => {
       }
       const invoices = await response.json();
 
-      const transactionPromises = invoices.map(async (invoice) => {
+      const filteredInvoices = invoices.filter(invoice => invoice.status === "draft");
+
+      const transactionPromises = filteredInvoices.map(async (invoice) => {
         const transactionResponse = await fetch(`${config.BASE_URL}/transaction/invoice/${invoice.invoiceId}`);
         if (transactionResponse.ok) {
           return await transactionResponse.json();
@@ -33,7 +35,7 @@ const Draft = () => {
 
       const transactionsData = await Promise.all(transactionPromises);
 
-      const formattedData = invoices.map((invoice, index) => {
+      const formattedData = filteredInvoices.map((invoice, index) => {
         const invoiceDate = new Date(invoice.invoiceDate);
 
         const formattedInvoiceDate = `${invoiceDate.getFullYear()}-${String(invoiceDate.getMonth() + 1).padStart(2, '0')}-${String(invoiceDate.getDate()).padStart(2, '0')} ${String(invoiceDate.getHours()).padStart(2, '0')}:${String(invoiceDate.getMinutes()).padStart(2, '0')}`;
@@ -45,8 +47,9 @@ const Draft = () => {
         return [
           invoice.invoiceId,
           invoice.invoiceNo,
-          invoice.cusName,
-          invoice.cusAddress,
+          invoice.status,
+          invoice.customer.cusName,
+          invoice.customer.cusAddress,
           formattedInvoiceDate,
           transactionTypes,
           transactionPrice,
