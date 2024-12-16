@@ -11,7 +11,7 @@ const CreateProductReturn = () => {
     const [users, setUsers] = useState([]);
     const [productSuggestions, setProductSuggestions] = useState([]);
     const [data, setData] = useState([]);
-    const Columns = ["id", 'product', 'Type', 'qty', 'price'];
+    const Columns = ["id", "product", "Type", "qty", "price"];
 
     const initialFormData = {
         cusName: '',
@@ -19,7 +19,7 @@ const CreateProductReturn = () => {
         returnType: '',
         user: '',
         store: '',
-        returnDate: '',
+        returnDate: new Date().toISOString().slice(0, 16),
         note: '',
         product: '',
         productNo: '',
@@ -29,29 +29,27 @@ const CreateProductReturn = () => {
     };
 
     const [formData, setFormData] = useState(initialFormData);
+
+    // Fetch stores, users, and returns on component mount
     useEffect(() => {
         fetchStores();
         fetchUsers();
-        fetchReturn();
+        fetchReturnData();
     }, []);
 
-    const fetchReturn = async () => {
+    const fetchReturnData = async () => {
         try {
             const response = await fetch(`${config.BASE_URL}/returns`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch return list');
-            }
+            if (!response.ok) throw new Error('Failed to fetch return list');
             const returnList = await response.json();
 
-            const formattedData = returnList.map(returns => {
-                return [
-                    returns.returnItemId,
-                    returns.products?.productName,
-                    returns.returnItemType,
-                    returns.returnQty,
-                    returns.products?.productSellingPrice,
-                ];
-            });
+            const formattedData = returnList.map(returns => [
+                returns.returnItemId,
+                returns.products?.productName,
+                returns.returnItemType,
+                returns.returnQty,
+                returns.products?.productSellingPrice,
+            ]);
 
             setData(formattedData);
             setIsLoading(false);
@@ -61,7 +59,6 @@ const CreateProductReturn = () => {
         }
     };
 
-    // Handle form data changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevData => ({
@@ -72,41 +69,28 @@ const CreateProductReturn = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null);
+        setSuccessMessage(null);
+
         try {
+            // Validate invoice number and fetch its details
             const invoiceResponse = await fetch(`${config.BASE_URL}/invoiceProduct/${formData.invoiceNo}`);
             if (!invoiceResponse.ok) throw new Error('Invoice not found.');
             const invoiceData = await invoiceResponse.json();
-
-            // Ensure the return date is valid
-            if (!formData.returnDate) {
-                throw new Error('Return date is required.');
-            }
-
-            const selectedDate = new Date(formData.returnDate);
-            if (isNaN(selectedDate)) {
-                throw new Error('Invalid return date.');
-            }
-
-            // Get the current time
-            const currentTime = new Date().toLocaleTimeString('en-GB', { hour12: false });
-            // Combine date and time
-            const fullReturnDate = new Date(`${selectedDate.toISOString().split('T')[0]}T${currentTime}`);
-            if (isNaN(fullReturnDate)) {
-                throw new Error('Invalid date or time value.');
-            }
 
             const response = await fetch(`${config.BASE_URL}/return`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     returnItemType: formData.returnType,
-                    returnItemDate: fullReturnDate,
+                    returnItemDate: formData.returnDate,
                     returnQty: formData.qty,
                     returnNote: formData.note,
                     productId: formData.product,
                     storeId: formData.store,
                     userId: formData.user,
                     invoiceId: invoiceData[0]?.invoiceId,
+                    stockId: formData.stockId,
                 }),
             });
 
@@ -114,39 +98,34 @@ const CreateProductReturn = () => {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Failed to create return.');
             }
+
             const result = await response.json();
             setSuccessMessage('Return created successfully.');
             setFormData(initialFormData);
-        } catch (error) {
-            setError(`Error: ${error.message}`);
+        } catch (err) {
+            setError(err.message);
         }
     };
 
     const fetchStores = async () => {
         try {
             const response = await fetch(`${config.BASE_URL}/stores`);
-            if (response.ok) {
-                const data = await response.json();
-                setStores(data);
-            } else {
-                console.error('Failed to fetch stores');
-            }
-        } catch (error) {
-            console.error('Error fetching stores:', error);
+            if (!response.ok) throw new Error('Failed to fetch stores');
+            const data = await response.json();
+            setStores(data);
+        } catch (err) {
+            setError(err.message);
         }
     };
 
     const fetchUsers = async () => {
         try {
             const response = await fetch(`${config.BASE_URL}/users`);
-            if (response.ok) {
-                const data = await response.json();
-                setUsers(data);
-            } else {
-                console.error('Failed to fetch users');
-            }
-        } catch (error) {
-            console.error('Error fetching users:', error);
+            if (!response.ok) throw new Error('Failed to fetch users');
+            const data = await response.json();
+            setUsers(data);
+        } catch (err) {
+            setError(err.message);
         }
     };
 
@@ -157,14 +136,11 @@ const CreateProductReturn = () => {
         if (query.length >= 2) {
             try {
                 const response = await fetch(`${config.BASE_URL}/products/suggestions?query=${query}`);
-                if (response.ok) {
-                    const suggestions = await response.json();
-                    setProductSuggestions(suggestions);
-                } else {
-                    console.error('Failed to fetch product suggestions');
-                }
-            } catch (error) {
-                console.error('Error fetching product suggestions:', error);
+                if (!response.ok) throw new Error('Failed to fetch product suggestions');
+                const suggestions = await response.json();
+                setProductSuggestions(suggestions);
+            } catch (err) {
+                setError(err.message);
             }
         } else {
             setProductSuggestions([]);
@@ -176,24 +152,26 @@ const CreateProductReturn = () => {
         setProductSuggestions([]);
 
         try {
-            const response = await fetch(`${config.BASE_URL}/product/productName/${productName}`);
-            if (response.ok) {
-                const product = await response.json();
-                setFormData(prevData => ({
-                    ...prevData,
-                    product: product.productId,
-                    productNo: product.productCode,
-                    productName: product.productName,
-                    productNote: product.productDescription + '  ' + product.productWarranty,
-                }));
-            } else {
-                console.error('Product not found');
-            }
-        } catch (error) {
-            console.error('Error fetching product details:', error);
+            const productResponse = await fetch(`${config.BASE_URL}/product/productName/${productName}`);
+            if (!productResponse.ok) throw new Error('Product not found');
+            const product = await productResponse.json();
+
+            const stockResponse = await fetch(`${config.BASE_URL}/stock/product/${product.productId}`);
+            if (!stockResponse.ok) throw new Error('Stock ID not found for this product');
+            const stock = await stockResponse.json();
+
+            setFormData(prevData => ({
+                ...prevData,
+                product: product.productId,
+                productNo: product.productCode,
+                productName: product.productName,
+                productNote: `${product.productDescription} ${product.productWarranty}`,
+                stockId: stock.stockId,
+            }));
+        } catch (err) {
+            setError(err.message);
         }
     };
-
 
     return (
         <div>
@@ -250,7 +228,7 @@ const CreateProductReturn = () => {
                             </div>
                             <div className="Stock-details mb-2">
                                 <label htmlFor="returnDate">Return Date</label>
-                                <input type="date" className="form-control" name="returnDate" value={formData.returnDate} onChange={handleChange} />
+                                <input type="datetime-local" className="form-control" name="returnDate" value={formData.returnDate} onChange={handleChange} readOnly />
                             </div>
                             <div className="Stock-details mb-2">
                                 <label htmlFor="note">Note</label>
