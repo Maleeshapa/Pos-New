@@ -13,13 +13,20 @@ const CreateProductReturn = () => {
     const [data, setData] = useState([]);
     const Columns = ["id", "product", "Type", "qty", "price"];
 
+    const getSriLankanTime = () => {
+        const now = new Date();
+        const sriLankanOffset = 5.5 * 60 * 60 * 1000;
+        const sriLankanTime = new Date(now.getTime() + sriLankanOffset);
+        return sriLankanTime.toISOString().slice(0, 16);
+    };
+
     const initialFormData = {
         cusName: '',
         invoiceNo: '',
         returnType: '',
         user: '',
         store: '',
-        returnDate: new Date().toISOString().slice(0, 16),
+        returnDate: getSriLankanTime(),
         note: '',
         product: '',
         productNo: '',
