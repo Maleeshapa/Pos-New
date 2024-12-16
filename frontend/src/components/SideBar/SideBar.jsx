@@ -73,6 +73,9 @@ const Sidebar = () => {
             submenus: [
                 { title: 'Create Sale Invoice', path: '/sales/new' },
                 { title: 'Sales History', path: '/sales/history' },
+                { title: 'Delivery', path: '/sales/delivery' },
+                { title: 'Draft', path: '/sales/draft' },
+                { title: 'Credit', path: '/sales/credit' },
             ]
         },
         /*{

@@ -303,10 +303,8 @@ const NewSales = ({ invoice }) => {
     if (e.target.checked) {
       setDelivary('notDelivered');
       setInvoiceStatus('delivery');
-    }
-    if (!e.target.checked) {
+    }else{
       setDelivary('invoice');
-      setInvoiceStatus('invoice');
     }
   }
   const [showCard, setCard] = useState(false);
@@ -453,7 +451,7 @@ const NewSales = ({ invoice }) => {
       if (invoiceStatus) {
         navigate('/sales/new')
       }
-      if (delivary === 'delivery') {
+      if (delivary === 'notDelivered') {
         navigate(`/${selectedStore}DN`)
       }
       else {
