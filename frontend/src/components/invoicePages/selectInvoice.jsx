@@ -15,7 +15,7 @@ const SelectInvoice = () => {
 
   const handleSelect = (path, index) => {
     setSelected(index);
-    navigate(`/selected/${path}`);
+    navigate(`/${path}`);
   };
 
   return (
