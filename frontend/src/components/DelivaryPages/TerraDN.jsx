@@ -35,8 +35,8 @@ const TerraDN = () => {
                         ...prevData,
                         invoiceNo: invoiceData.invoiceNo,
                         invoiceDate: formattedDate,
-                        cusName: invoiceData.cusName,
-                        cusJob: invoiceData.cusJob,
+                        cusName: invoiceData.customer.cusName||'',
+                        cusJob: invoiceData.customer.cusJob||'',
                     }));
 
                     if (invoiceData.invoiceId) {
@@ -214,8 +214,8 @@ const TerraDN = () => {
                                         <th>S/N</th>
                                         <th>Description</th>
                                         <th>Qty</th>
-                                        <th>Unit Price</th>
-                                        <th>Total LKR</th>
+                                        {/* <th>Unit Price</th>
+                                        <th>Total LKR</th> */}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -234,8 +234,8 @@ const TerraDN = () => {
                                                 <td>{index + 1}</td>
                                                 <td>{invoiceProduct.product.productName}</td>
                                                 <td>{invoiceProduct.invoiceQty}</td>
-                                                <td>{invoiceProduct.product.productSellingPrice}</td>
-                                                <td>{(invoiceProduct.totalAmount)}</td>
+                                                {/* <td>{invoiceProduct.product.productSellingPrice}</td>
+                                                <td>{(invoiceProduct.totalAmount)}</td> */}
                                             </tr>
                                         ))
                                     )}
@@ -263,15 +263,15 @@ const TerraDN = () => {
                                             )}
                                         </td>
 
-                                        <td>Subtotal</td>
+                                        {/* <td>Subtotal</td>
                                         <td>
                                             {invoiceProducts.reduce(
                                                 (total, product) => total + product.product.productSellingPrice * product.invoiceQty,
                                                 0
                                             )}
-                                        </td>
+                                        </td> */}
                                     </tr>
-                                    <tr>
+                                    {/* <tr>
                                         <td>Discount</td>
                                         {Transaction.map((Transaction) => (
                                             < td>{Transaction.discount}</td>
@@ -282,7 +282,7 @@ const TerraDN = () => {
                                         {Transaction.map((Transaction) => (
                                             < td>{Transaction.paid}</td>
                                         ))}
-                                    </tr>
+                                    </tr> */}
                                 </tbody>
                             </table>
                             <footer className="invoice-footer ">

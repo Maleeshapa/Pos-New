@@ -1,11 +1,10 @@
-
 .sales-add-form {
     display: flex;
     justify-content: space-around;
     margin: 20px 40px;
 }
 
-.displayNone{
+.displayNone {
     display: none;
 }
 
@@ -67,6 +66,7 @@
     justify-content: center;
 }
 
+.select-store input,
 .payment-details-amount input {
     width: 20px;
 }
@@ -84,9 +84,20 @@
 .sales-person-box {
     width: 100%;
 }
-.btn-pos{
 
+.store {
+    display: flex;
+    justify-content: space-around;
+    gap: 30px;
+    padding: 10px;
+    border-top: 1px solid #d5d5d5;
 }
+
+.payment-lable {
+    font-size: 18px;
+    font-weight: 700;
+}
+
 @media (min-width: 1200px) {
     .sales-add-form {
         margin: 40px 80px;
@@ -132,7 +143,7 @@
         width: 100%;
     }
 }
- 
+
 @media (max-width: 568px) {
     .sales-add-form {
         display: block;
@@ -157,13 +168,13 @@
         width: 50px;
     }
 
-    #label{
+    #label {
         width: 100%;
     }
+
     .amount-box,
     .payment-details-box,
     .sales-person-box {
         width: 100%;
     }
 }
-
