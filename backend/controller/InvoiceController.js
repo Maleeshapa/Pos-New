@@ -82,13 +82,15 @@ const getAllInvoice = async (req, res) => {
 };
 
 // Get invoice by id with customer and product details
+const Customer = require("../model/Customer"); // Ensure Customer model is imported
+
 const getInvoiceById = async (req, res) => {
     try {
         const { id } = req.params;
+
         const invoice = await Invoice.findByPk(id, {
             include: [
-                { model: Product, as: 'product' },
-                { model: Stock, as: 'stock' },
+                { model: Customer, as: 'customer' }, // Include customer details
             ],
         });
 
@@ -102,12 +104,14 @@ const getInvoiceById = async (req, res) => {
     }
 };
 
+
 const getInvoiceByNo = async (req, res) => {
     try {
         const { num } = req.params;
 
         const invoice = await Invoice.findOne({
-            where: { invoiceNo: num }
+            where: { invoiceNo: num },
+            include: [{ model: Customer, as: 'customer' }],
         });
 
         if (!invoice) {
@@ -119,6 +123,7 @@ const getInvoiceByNo = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 // Update invoice
 const updateInvoice = async (req, res) => {

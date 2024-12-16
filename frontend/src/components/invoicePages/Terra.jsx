@@ -35,8 +35,8 @@ const Terra = () => {
                         ...prevData,
                         invoiceNo: invoiceData.invoiceNo,
                         invoiceDate: formattedDate,
-                        cusName: invoiceData.cusName,
-                        cusJob: invoiceData.cusJob,
+                        cusName: invoiceData.customer.cusName|| '',
+                        cusJob: invoiceData.customer.cusJob||'',
                     }));
 
                     if (invoiceData.invoiceId) {
@@ -151,12 +151,6 @@ const Terra = () => {
                                     <div className="details mb-2">
                                         <input type="text" className="form-input" onChange={handleChange} name="cusJob" value={formData.cusJob} />
                                     </div>
-                                    <div className="details mb-2">
-                                        <div className="details-box">
-                                            {/* <label htmlFor="">Pickup from</label> */}
-                                            <input type="text" className="form-input" name="cusAddress" />
-                                        </div>
-                                    </div>
                                     {showAddress && (
                                         <div>
                                             <p className="details">No 64, Summer 64, 10/4, 9th Floor,</p>
@@ -165,16 +159,6 @@ const Terra = () => {
                                     )}
                                 </div>
                                 <div className="invoice-info">
-                                    <div className="details">
-                                        <label htmlFor="">Delivary No</label>
-                                        <input
-                                            type="text"
-                                            onChange={handleChange}
-                                            className="form-input"
-                                            name="delivaryNo"
-                                            value={formData.delivaryNo}
-                                        />
-                                    </div>
                                     <div className="details">
                                         <label htmlFor="">Invoice No</label>
                                         <input
@@ -193,16 +177,6 @@ const Terra = () => {
                                             className="form-input date"
                                             name="invoiceDate"
                                             value={formData.invoiceDate}
-                                        />
-                                    </div>
-                                    <div className="details">
-                                        <label htmlFor="">Purchase Order</label>
-                                        <input
-                                            type="text"
-                                            onChange={handleChange}
-                                            className="form-input"
-                                            name="PurchaseOrder"
-                                            value={formData.PurchaseOrder}
                                         />
                                     </div>
                                 </div>
