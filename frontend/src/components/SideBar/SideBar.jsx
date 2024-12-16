@@ -72,7 +72,7 @@ const Sidebar = () => {
             path: '/sales',
             submenus: [
                 { title: 'Create Sale Invoice', path: '/sales/new' },
-                { title: 'Sales History', path: '/sales/history' },
+                // { title: 'Sales History', path: '/sales/history' },
                 { title: 'Invoice', path: '/sales/invoice' },
                 { title: 'Delivery', path: '/sales/delivery' },
                 { title: 'Draft', path: '/sales/draft' },
