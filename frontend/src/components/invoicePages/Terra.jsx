@@ -17,11 +17,6 @@ const Terra = () => {
     const [Transaction, setTransaction] = useState([]);
 
     const [ShowRemove, setShowRemove] = useState(null);
-    const [isInvoice, setIsInvoice] = useState(false); // State to track radio button selection
-
-    const handleRadioChange = (e) => {
-        setIsInvoice(e.target.value === 'invoice');
-    };
 
     const handleChange = async (e) => {
         const { name, value } = e.target;
@@ -119,6 +114,16 @@ const Terra = () => {
         }
     };
 
+    const [showAddress, setShowAddress] = useState(false)
+    const [showBank, setShowBank] = useState(false)
+
+    const handleAddress = (e) => {
+        setShowAddress(e.target.checked);
+    };
+    const handleBank = (e) => {
+        setShowBank(e.target.checked);
+    };
+
     return (
         <div>
             <div className="scrolling-container">
@@ -147,34 +152,29 @@ const Terra = () => {
                                         <input type="text" className="form-input" onChange={handleChange} name="cusJob" value={formData.cusJob} />
                                     </div>
                                     <div className="details mb-2">
-                                        {!isInvoice && (
-                                            <div className="row">
-                                                <div className="details-box col-md-6">
-                                                    <label htmlFor="">Pickup from</label>
-                                                    <input type="text" className="form-input" name="cusAddress" />
-                                                </div>
-                                                <div className="details-box col-md-6">
-                                                    <label htmlFor="">Pickup point</label>
-                                                    <input type="text" className="form-input" name="cusAddress" />
-                                                </div>
-                                            </div>
-                                        )}
+                                        <div className="details-box">
+                                            {/* <label htmlFor="">Pickup from</label> */}
+                                            <input type="text" className="form-input" name="cusAddress" />
+                                        </div>
                                     </div>
-                                    <p className="details">Capital Twin Speaks</p>
-                                    <p className="details">No 24 Staple Street Colombo 2</p>
+                                    {showAddress && (
+                                        <div>
+                                            <p className="details">No 64, Summer 64, 10/4, 9th Floor,</p>
+                                            <p className="details">Suvisuddarama Road, Colombo 6, Sri Lanka</p>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="invoice-info">
-                                    {!isInvoice && (
-                                        <div className="details">
-                                            <label htmlFor="">Delivary No</label>
-                                            <input
-                                                type="text"
-                                                onChange={handleChange}
-                                                className="form-input"
-                                                name="delivaryNo"
-                                                value={formData.delivaryNo}
-                                            />
-                                        </div>)}
+                                    <div className="details">
+                                        <label htmlFor="">Delivary No</label>
+                                        <input
+                                            type="text"
+                                            onChange={handleChange}
+                                            className="form-input"
+                                            name="delivaryNo"
+                                            value={formData.delivaryNo}
+                                        />
+                                    </div>
                                     <div className="details">
                                         <label htmlFor="">Invoice No</label>
                                         <input
@@ -214,10 +214,8 @@ const Terra = () => {
                                         <th>S/N</th>
                                         <th>Description</th>
                                         <th>Qty</th>
-                                        {isInvoice && (
-                                            <th>Unit Price</th>)}
-                                        {isInvoice && (
-                                            <th>Total LKR</th>)}
+                                        <th>Unit Price</th>
+                                        <th>Total LKR</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -236,49 +234,55 @@ const Terra = () => {
                                                 <td>{index + 1}</td>
                                                 <td>{invoiceProduct.product.productName}</td>
                                                 <td>{invoiceProduct.invoiceQty}</td>
-                                                {isInvoice && (
-                                                    <td>{invoiceProduct.product.productSellingPrice}</td>)}
-                                                {isInvoice && (
-                                                    <td>{(invoiceProduct.totalAmount)}</td>)}
+                                                <td>{invoiceProduct.product.productSellingPrice}</td>
+                                                <td>{(invoiceProduct.totalAmount)}</td>
                                             </tr>
                                         ))
                                     )}
                                 </tbody>
                                 <tbody>
                                     <tr>
-                                        <td id="table-content" colSpan={3} rowSpan={3}>
-                                            <div className="table-content" contentEditable="true">
-                                                Notes:
-                                            </div>
+                                        <td id="table-content" rowSpan={3}>
+                                            {showBank && (
+                                                <div>
+                                                    Bank           :<br />
+                                                    Account Number :<br />
+                                                    Account Name   :<br />
+                                                    Branch Name    :<br />
+                                                </div>
+                                            )}
                                         </td>
-                                        {isInvoice && (
-                                            <td>Subtotal</td>
-                                        )}
-                                        {isInvoice && (
-                                            <td>
-                                                {invoiceProducts.reduce(
-                                                    (total, product) => total + product.product.productSellingPrice * product.invoiceQty,
-                                                    0
-                                                )}
-                                            </td>
-                                        )}
+                                        <td id="table-content" colSpan={2} rowSpan={3}>
+                                            {showBank && (
+                                                <div contentEditable="true">
+                                                    SAMPATH BANK<br />
+                                                    0117 1000 1407<br />
+                                                    Terra walkers<br />
+                                                    Kirulapona<br />
+                                                </div>
+                                            )}
+                                        </td>
+
+                                        <td>Subtotal</td>
+                                        <td>
+                                            {invoiceProducts.reduce(
+                                                (total, product) => total + product.product.productSellingPrice * product.invoiceQty,
+                                                0
+                                            )}
+                                        </td>
                                     </tr>
-                                    {isInvoice && (
-                                        <tr>
-                                            <td>Discount</td>
-                                            {Transaction.map((Transaction) => (
-                                                < td>{Transaction.discount}</td>
-                                            ))}
-                                        </tr>
-                                    )}
-                                    {isInvoice && (
-                                        <tr>
-                                            <td>TOTAL</td>
-                                            {Transaction.map((Transaction) => (
-                                                < td>{Transaction.paid}</td>
-                                            ))}
-                                        </tr>
-                                    )}
+                                    <tr>
+                                        <td>Discount</td>
+                                        {Transaction.map((Transaction) => (
+                                            < td>{Transaction.discount}</td>
+                                        ))}
+                                    </tr>
+                                    <tr>
+                                        <td>TOTAL</td>
+                                        {Transaction.map((Transaction) => (
+                                            < td>{Transaction.paid}</td>
+                                        ))}
+                                    </tr>
                                 </tbody>
                             </table>
                             <footer className="invoice-footer ">
@@ -309,22 +313,21 @@ const Terra = () => {
                     <div className="options">
                         <div className="invoice-type">
                             <form action="">
-                                <label className='invoice-type-label' htmlFor="">Invoice</label>
+                                <br />
+                                <label className='invoice-type-label' htmlFor="">Address</label>
                                 <input
-                                    type="radio"
-                                    name="formType"
-                                    value="invoice"
-                                    checked={isInvoice}
-                                    onChange={handleRadioChange}
+                                    type="checkbox"
+                                    name="address"
+                                    value="address"
+                                    onChange={handleAddress}
                                 />
-                                <br></br>
-                                <label className='invoice-type-label' htmlFor="">Delivary</label>
+                                <br />
+                                <label className='invoice-type-label' htmlFor="">Bank</label>
                                 <input
-                                    type="radio"
-                                    name="formType"
-                                    value="other"
-                                    checked={!isInvoice}
-                                    onChange={handleRadioChange}
+                                    type="checkbox"
+                                    name="bank"
+                                    value="bank"
+                                    onChange={handleBank}
                                 />
                             </form>
                         </div>

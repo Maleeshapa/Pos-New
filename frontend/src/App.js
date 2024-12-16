@@ -27,6 +27,9 @@ import CreditNote from './components/StockPages/Credit Note/CreditNote';
 import ColkanCR from './components/StockPages/Credit Note/ColkanCR';
 import HamanCR from './components/StockPages/Credit Note/HamanCR';
 import TerraCR from './components/StockPages/Credit Note/Terra';
+import ColkanDN from './components/DelivaryPages/ColkanDN';
+import HamanDN from './components/DelivaryPages/HamanDN';
+import TerraDN from './components/DelivaryPages/TerraDN'
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token');
@@ -63,9 +66,15 @@ function Layout() {
             <Route path="/stock-reports/*" element={<ProtectedRoute><StockReports /></ProtectedRoute>} />
             <Route path="/staff/*" element={<ProtectedRoute><Staff /></ProtectedRoute>} />
             <Route path="/selectInvoice" element={<ProtectedRoute><SelectInvoice /></ProtectedRoute>} />
-            <Route path="/selected/colkan" element={<ProtectedRoute><Colkan /></ProtectedRoute>} />
-            <Route path="/selected/haman" element={<ProtectedRoute><Haman /></ProtectedRoute>} />
-            <Route path="/selected/terra" element={<ProtectedRoute><Terra /></ProtectedRoute>} />
+
+            <Route path="/colkan" element={<ProtectedRoute><Colkan /></ProtectedRoute>} />
+            <Route path="/haman" element={<ProtectedRoute><Haman /></ProtectedRoute>} />
+            <Route path="/terra" element={<ProtectedRoute><Terra /></ProtectedRoute>} />
+
+            <Route path="/colkanDN" element={<ProtectedRoute><ColkanDN /></ProtectedRoute>} />
+            <Route path="/hamanDN" element={<ProtectedRoute><HamanDN /></ProtectedRoute>} />
+            <Route path="/terraDN" element={<ProtectedRoute><TerraDN /></ProtectedRoute>} />
+
             <Route path="/salesDetails/:invoiceNo" element={<ProtectedRoute><SalesDetails /></ProtectedRoute>} />
             <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
             <Route path="/costing-table" element={<ProtectedRoute><CostingTable /></ProtectedRoute>} />

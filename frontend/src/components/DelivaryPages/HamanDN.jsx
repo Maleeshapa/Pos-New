@@ -4,7 +4,7 @@ import one from '../../assets/2.jpg';
 import config from '../../config';
 import { jsPDF } from "jspdf";
 
-const Haman = () => {
+const HamanDN = () => {
     const [formData, setFormData] = useState({
         invoiceNo: '',
         invoiceDate: '',
@@ -127,7 +127,7 @@ const Haman = () => {
     return (
         <div>
             <div className="scrolling-container">
-                <h4>Haman</h4>
+                <h4>HamanDN</h4>
                 <div className="invoice-page">
                     <div className="invoice">
                         <div id="invoice-card">
@@ -341,4 +341,4 @@ const Haman = () => {
     );
 };
 
-export default Haman;
+export default HamanDN;

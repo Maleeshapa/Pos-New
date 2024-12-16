@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CirclePlus, Plus, PlusCircle, ShoppingCart, User } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './NewSales.css';
 import Table from '../Table/Table'
 import config from '../../config';
@@ -61,10 +61,9 @@ const NewSales = ({ invoice }) => {
     cusOffice: ''
   });
 
-  const navigate = useNavigate();
-  const SelectInvoice = () => {
-    navigate('/selectInvoice')
-  }
+  // const SelectInvoice = () => {
+  //   navigate('/selectInvoice')
+  // }
 
   useEffect(() => {
     const fetchLastInvoiceNumber = async () => {
@@ -287,17 +286,57 @@ const NewSales = ({ invoice }) => {
 
   };
 
+  const navigate = useNavigate();
+
   const changeStatus = () => {
     setInvoiceStatus('draft');
-    navigate('/sales/new');
   };
+
+  const [selectedStore, setSelectedStore] = useState('');
+  const [delivary, setDelivary] = useState('invoice')
+
+  const handleInvoice = (e) => {
+    setSelectedStore(e.target.value);
+  };
+
+  const handleDelivary = (e) => {
+    if (e.target.checked) {
+      setDelivary('notDelivered');
+      setInvoiceStatus('delivery');
+    } else {
+      setDelivary('invoice');
+    }
+  }
+  const [showCard, setCard] = useState(false);
+  const [showCash, setCash] = useState(false);
+  const [showCredit, setCredit] = useState(false);
+  const [showCheque, setCheque] = useState(false);
+  const [showBank, setBank] = useState(false);
+
+  const handleCard = (e) => {
+    setCard(e.target.checked)
+  }
+  const handleCash = (e) => {
+    setCash(e.target.checked)
+  }
+  const handleCredit = (e) => {
+    setCredit(e.target.checked)
+    setInvoiceStatus('credit');
+  }
+  const handleCheque = (e) => {
+    setCheque(e.target.checked)
+  }
+  const handleBank = (e) => {
+    setBank(e.target.checked)
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const invoiceData = {
-        invoiceDate: formData.invoiceDate,
+        invoiceDate: DateTime().date + " " + DateTime().time,
         status: invoiceStatus,
+        store: selectedStore,
         cusId: cusId
       };
       console.log('Sending invoice data:', invoiceData);
@@ -331,6 +370,7 @@ const NewSales = ({ invoice }) => {
         invoiceNo: invoiceResult.invoiceNo,
         totalAmount: row[4] * row[5],
         invoiceQty: row[5],
+        invoiceProductStatus: delivary,
       }));
       console.log('Invoice No before sending:', formData.invoiceNo);
 
@@ -372,6 +412,7 @@ const NewSales = ({ invoice }) => {
         transactionType: [
           showCard && 'card',
           showCash && 'cash',
+          showCredit && 'credit',
           showCheque && 'cheque',
           showBank && 'bank'
         ].filter(Boolean).join(' '),
@@ -405,12 +446,20 @@ const NewSales = ({ invoice }) => {
       console.log('Transaction created:', transactionResult);
 
 
-      alert('Invoice created successfully!');
+      alert('sales created successfully!');
 
+      if (invoiceStatus) {
+        navigate('/sales/new')
+      }
+      if (delivary) {
+        navigate(`/${selectedStore}DN`)
+      }
+      else {
+        navigate(`/${selectedStore}`)
+      }
       setTableData([]);
       resetForm();
       resetSalesPerson();
-      SelectInvoice();
     } catch (error) {
       console.error('Error:', error);
       alert(`${error.message}`);
@@ -439,14 +488,13 @@ const NewSales = ({ invoice }) => {
       paidAmount: '',
       dueAmount: '',
       note: '',
-      invoiceDate: '',
       totalAmount: '',
       discountPrice: '',
       cusJob: '',
       cusOffice: '',
+      cusAddress: ''
     });
   };
-
 
   const resetSalesPerson = () => {
     setFormData(prevData => ({
@@ -454,29 +502,6 @@ const NewSales = ({ invoice }) => {
       salesPerson: 'select',
     }));
   };
-
-  const [showCard, setCard] = useState(false);
-  const [showCash, setCash] = useState(false);
-  const [showCredit, setCredit] = useState(false);
-  const [showCheque, setCheque] = useState(false);
-  const [showBank, setBank] = useState(false);
-
-  const handleCard = (e) => {
-    setCard(e.target.checked)
-  }
-  const handleCash = (e) => {
-    setCash(e.target.checked)
-  }
-  const handleCredit = (e) => {
-    setCredit(e.target.checked)
-    setInvoiceStatus('credit');
-  }
-  const handleCheque = (e) => {
-    setCheque(e.target.checked)
-  }
-  const handleBank = (e) => {
-    setBank(e.target.checked)
-  }
 
   const handlePaymentChange = (e) => {
     const { name, value } = e.target;
@@ -489,6 +514,7 @@ const NewSales = ({ invoice }) => {
 
     const totalPaid = parseFloat(name === 'card' ? numericValue : formData.card || 0)
       + parseFloat(name === 'cheque' ? numericValue : formData.cheque || 0)
+      + parseFloat(name === 'credit' ? numericValue : formData.credit || 0)
       + parseFloat(name === 'bank' ? numericValue : formData.bank || 0)
       + parseFloat(name === 'cash' ? numericValue : formData.cash || 0);
 
@@ -524,11 +550,11 @@ const NewSales = ({ invoice }) => {
       paidAmount: '',
       dueAmount: '',
       note: '',
-      invoiceDate: '',
       totalAmount: '',
       discountPrice: '',
       cusJob: '',
       cusOffice: '',
+      cusAddress: ''
     });
     resetSalesPerson();
   }
@@ -715,6 +741,28 @@ const NewSales = ({ invoice }) => {
                   <label htmlFor="" id='label'>Due Amount</label>
                   <input className="form-control" type="number" value={formData.dueAmount} onWheel={(e) => e.target.blur()} name="discount" id="readOnly" readOnly />
                 </div>
+                <div className="seltction_options">
+                  <div className="store">
+                    <div className="selectStore">
+                      <input type="radio" name="store" value='colkan' id="colkan" onChange={handleInvoice} />
+                      <label htmlFor="">Colkan</label>
+                    </div>
+                    <div className="selectStore">
+                      <input type="radio" name="store" value='terra' id="terra" onChange={handleInvoice} />
+                      <label htmlFor="">Terra</label>
+                    </div>
+                    <div className="selectStore">
+                      <input type="radio" name="store" value='haman' id="haman" onChange={handleInvoice} />
+                      <label htmlFor="">Haman</label>
+                    </div>
+                  </div>
+
+                  <div className="selectStore">
+                    <input type="checkbox" name="notDelivered" value='notDelivered' id="notDelivered" onChange={handleDelivary} />
+                    <label htmlFor="">Haman</label>
+                  </div>
+                </div>
+
               </div>
             </div>
 

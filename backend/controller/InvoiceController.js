@@ -26,6 +26,7 @@ const createInvoice = async (req, res) => {
         const {
             invoiceDate,
             status='invoice',
+            store,
             cusId,
         } = req.body;
 
@@ -35,6 +36,7 @@ const createInvoice = async (req, res) => {
             invoiceNo,
             invoiceDate,
             status,
+            store,
             cusId
         });
 

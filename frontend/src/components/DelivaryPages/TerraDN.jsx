@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './Colkan.css';
-import one from '../../assets/2.jpg';
+import one from '../../assets/3.jpg';
 import config from '../../config';
 import { jsPDF } from "jspdf";
 
-const Haman = () => {
+const TerraDN = () => {
     const [formData, setFormData] = useState({
         invoiceNo: '',
         invoiceDate: '',
@@ -127,7 +127,7 @@ const Haman = () => {
     return (
         <div>
             <div className="scrolling-container">
-                <h4>Haman</h4>
+                <h4>Terra Delivey Note</h4>
                 <div className="invoice-page">
                     <div className="invoice">
                         <div id="invoice-card">
@@ -159,8 +159,8 @@ const Haman = () => {
                                     </div>
                                     {showAddress && (
                                         <div>
-                                            <p className="details">No 13/6, Alexandra Road,</p>
-                                            <p className="details">Colombo 6, Sri Lanka</p>
+                                            <p className="details">No 64, Summer 64, 10/4, 9th Floor,</p>
+                                            <p className="details">Suvisuddarama Road, Colombo 6, Sri Lanka</p>
                                         </div>
                                     )}
                                 </div>
@@ -255,10 +255,10 @@ const Haman = () => {
                                         <td id="table-content" colSpan={2} rowSpan={3}>
                                             {showBank && (
                                                 <div contentEditable="true">
-                                                    BOC<br />
-                                                    93829087<br />
-                                                    HAMAN<br />
-                                                    Wellewathe<br />
+                                                    SAMPATH BANK<br />
+                                                    0117 1000 1407<br />
+                                                    Terra walkers<br />
+                                                    Kirulapona<br />
                                                 </div>
                                             )}
                                         </td>
@@ -341,4 +341,4 @@ const Haman = () => {
     );
 };
 
-export default Haman;
+export default TerraDN;
