@@ -32,10 +32,10 @@ const SalesDetails = () => {
                 setFormData({
                     invoiceNo: invoiceData.invoiceNo,
                     invoiceDate: new Date(invoiceData.invoiceDate).toISOString().slice(0, 16),
-                    cusName: invoiceData.cusName,
-                    cusJob: invoiceData.cusJob,
-                    cusAddress: invoiceData.cusAddress,
-                    cusOffice: invoiceData.cusOffice,
+                    cusName: invoiceData.customer.cusName,
+                    cusJob: invoiceData.customer.cusJob,
+                    cusAddress: invoiceData.customer.cusAddress,
+                    cusOffice: invoiceData.customer.cusOffice,
                 });
 
                 if (invoiceData.invoiceId) {

@@ -67,15 +67,15 @@ function Layout() {
             <Route path="/stock-reports/*" element={<ProtectedRoute><StockReports /></ProtectedRoute>} />
             <Route path="/staff/*" element={<ProtectedRoute><Staff /></ProtectedRoute>} />
 
-            <Route path="/selectInvoice" element={<ProtectedRoute><SelectInvoice /></ProtectedRoute>} />
-            <Route path="/colkan" element={<ProtectedRoute><Colkan /></ProtectedRoute>} />
-            <Route path="/haman" element={<ProtectedRoute><Haman /></ProtectedRoute>} />
-            <Route path="/terra" element={<ProtectedRoute><Terra /></ProtectedRoute>} />
+            <Route path="/selectInvoice/:invoiceNo" element={<ProtectedRoute><SelectInvoice /></ProtectedRoute>} />
+            <Route path="/colkan/:invoiceNo" element={<ProtectedRoute><Colkan /></ProtectedRoute>} />
+            <Route path="/haman/:invoiceNo" element={<ProtectedRoute><Haman /></ProtectedRoute>} />
+            <Route path="/terra/:invoiceNo" element={<ProtectedRoute><Terra /></ProtectedRoute>} />
 
-            <Route path="/selectDn" element={<ProtectedRoute><SelectDN /></ProtectedRoute>} />
-            <Route path="/colkanDN" element={<ProtectedRoute><ColkanDN /></ProtectedRoute>} />
-            <Route path="/hamanDN" element={<ProtectedRoute><HamanDN /></ProtectedRoute>} />
-            <Route path="/terraDN" element={<ProtectedRoute><TerraDN /></ProtectedRoute>} />
+            <Route path="/selectDn/:invoiceNo" element={<ProtectedRoute><SelectDN /></ProtectedRoute>} />
+            <Route path="/colkanDN/:invoiceNo" element={<ProtectedRoute><ColkanDN /></ProtectedRoute>} />
+            <Route path="/hamanDN/:invoiceNo" element={<ProtectedRoute><HamanDN /></ProtectedRoute>} />
+            <Route path="/terraDN/:invoiceNo" element={<ProtectedRoute><TerraDN /></ProtectedRoute>} />
 
             <Route path="/salesDetails/:invoiceNo" element={<ProtectedRoute><SalesDetails /></ProtectedRoute>} />
             <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
