@@ -37,6 +37,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads', 'purchase-ord
 app.post("/user", UserController.createUser);
 app.get("/users", UserController.getAllUsers);
 app.get("/user/:id", UserController.getUserById);
+app.get('/user/name/:name', UserController.getUserByName);
 app.put("/user/:id", UserController.updateUser);
 app.delete("/user/:id", UserController.deleteUser);
 app.post("/userLogin", UserController.userLogin);

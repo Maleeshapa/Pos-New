@@ -35,6 +35,7 @@ header button {
 }
 .time {
   padding-left: 20px;
+  padding-top: 3px;
 }
 
 @media (max-width: 768px) {

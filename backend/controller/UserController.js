@@ -183,6 +183,36 @@ const getUserById = async (req, res) => {
     }
 };
 
+// Get a single user by name
+const getUserByName = async (req, res) => {
+    try {
+        const { name } = req.params;
+
+        // Find user by username
+        const user = await User.findOne({
+            where: { userName: name },
+            include: [
+                {
+                    model: Store,
+                    as: 'store',
+                },
+            ],
+        });
+
+        // If no user found, return 404
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Return the user details
+        res.status(200).json(user);
+    } catch (error) {
+        // Handle any errors
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
 // Update user
 const updateUser = async (req, res) => {
     upload(req, res, async function (err) {
@@ -365,6 +395,7 @@ module.exports = {
     createUser,
     getAllUsers,
     getUserById,
+    getUserByName,
     updateUser,
     deleteUser,
     userLogin,

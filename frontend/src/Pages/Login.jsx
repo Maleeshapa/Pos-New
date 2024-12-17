@@ -19,7 +19,7 @@ function Login() {
     password: "",
   });
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { id, value } = e.target;

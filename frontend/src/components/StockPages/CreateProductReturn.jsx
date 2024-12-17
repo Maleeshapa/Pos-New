@@ -25,6 +25,7 @@ const CreateProductReturn = () => {
         invoiceNo: '',
         returnType: '',
         user: '',
+        userName: '',
         store: '',
         returnDate: getSriLankanTime(),
         note: '',
@@ -37,12 +38,34 @@ const CreateProductReturn = () => {
 
     const [formData, setFormData] = useState(initialFormData);
 
-    // Fetch stores, users, and returns on component mount
     useEffect(() => {
         fetchStores();
         fetchUsers();
         fetchReturnData();
+        fetchUserId();
     }, []);
+
+    const fetchUserId = async () => {
+        const userName = localStorage.getItem('userName');
+        if (userName) {
+            try {
+                const response = await fetch(`${config.BASE_URL}/user/name/${userName}`);
+                if (!response.ok) throw new Error('User not found');
+                const userData = await response.json();
+
+                setFormData(prev => ({
+                    ...prev,
+                    user: userData.userId,
+                    userName: userData.userName,
+                }));
+            } catch (err) {
+                setError(err.message);
+            }
+        } else {
+            setError('No username found in local storage.');
+        }
+    };
+
 
     const fetchReturnData = async () => {
         try {
@@ -80,7 +103,6 @@ const CreateProductReturn = () => {
         setSuccessMessage(null);
 
         try {
-            // Validate invoice number and fetch its details
             const invoiceResponse = await fetch(`${config.BASE_URL}/invoiceProduct/${formData.invoiceNo}`);
             if (!invoiceResponse.ok) throw new Error('Invoice not found.');
             const invoiceData = await invoiceResponse.json();
@@ -213,15 +235,15 @@ const CreateProductReturn = () => {
                             </div>
                             <div className="Stock-details">
                                 <label htmlFor="user">Person</label>
-                                <select name="user" className="form-control" value={formData.user} onChange={handleChange}>
-                                    <option value="">Select Store</option>
-                                    {users.map((user) => (
-                                        <option key={user.userId} value={user.userId}>
-                                            {user.userName}
-                                        </option>
-                                    ))}
-                                </select>
+                                <input
+                                    type="text"
+                                    name="userName"
+                                    value={formData.userName}
+                                    disabled
+                                    className="form-control"
+                                />
                             </div>
+
                             <div className="Stock-details mb-2">
                                 <label htmlFor="store">Store</label>
                                 <select name="store" className="form-control" value={formData.store} onChange={handleChange}>
