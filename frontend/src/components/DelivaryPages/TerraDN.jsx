@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import './Colkan.css';
 import one from '../../assets/3.jpg';
 import config from '../../config';
 import { jsPDF } from "jspdf";
+import { useParams } from 'react-router';
 
 const TerraDN = () => {
+    const { invoiceNo } = useParams()
     const [formData, setFormData] = useState({
         invoiceNo: '',
         invoiceDate: '',
@@ -18,43 +20,35 @@ const TerraDN = () => {
 
     const [ShowRemove, setShowRemove] = useState(null);
 
-    const handleChange = async (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+    useEffect(() => {
+        if (invoiceNo) {
+            fetchInvoiceData(invoiceNo);
+        }
+    }, [invoiceNo]);
 
-        if (name === 'invoiceNo') {
-            try {
-                const response = await fetch(`${config.BASE_URL}/invoice/invoiceNo/${value}`);
-                if (response.ok) {
-                    const invoiceData = await response.json();
+    const fetchInvoiceData = async (invoiceNo) => {
+        try {
+            const response = await fetch(`${config.BASE_URL}/invoice/invoiceNo/${invoiceNo}`);
+            if (response.ok) {
+                const invoiceData = await response.json();
 
-                    const invoiceDate = new Date(invoiceData.invoiceDate);
-                    const formattedDate = invoiceDate.toISOString().slice(0, 16);
+                setFormData({
+                    invoiceNo: invoiceData.invoiceNo,
+                    invoiceDate: new Date(invoiceData.invoiceDate).toISOString().slice(0, 16),
+                    cusName: invoiceData.customer.cusName,
+                    cusJob: invoiceData.customer.cusJob,
+                });
 
-                    setFormData(prevData => ({
-                        ...prevData,
-                        invoiceNo: invoiceData.invoiceNo,
-                        invoiceDate: formattedDate,
-                        cusName: invoiceData.customer.cusName||'',
-                        cusJob: invoiceData.customer.cusJob||'',
-                    }));
-
-                    if (invoiceData.invoiceId) {
-                        fetchInvoiceProducts(invoiceData.invoiceId);
-                        fetchTransaction(invoiceData.invoiceId)
-                    }
-                } else {
-                    setFormData(prevData => ({
-                        ...prevData,
-                        invoiceDate: '',
-                        cusName: '',
-                        cusJob: '',
-                    }));
+                if (invoiceData.invoiceId) {
+                    fetchInvoiceProducts(invoiceData.invoiceId);
+                    fetchTransaction(invoiceData.invoiceId);
                 }
-            } catch (error) {
-                console.error('Error fetching invoice data:', error);
-                alert('An error occurred while fetching invoice data');
+            } else {
+                alert('Invoice not found');
             }
+        } catch (error) {
+            console.error('Error fetching invoice data:', error);
+            alert('An error occurred while fetching invoice data');
         }
     };
 
@@ -142,14 +136,14 @@ const TerraDN = () => {
                                     <div className="details mb-2">
                                         <input
                                             type="text"
-                                            onChange={handleChange}
+                                            
                                             className="form-input"
                                             name="cusName"
                                             value={formData.cusName}
                                         />
                                     </div>
                                     <div className="details mb-2">
-                                        <input type="text" className="form-input" onChange={handleChange} name="cusJob" value={formData.cusJob} />
+                                        <input type="text" className="form-input"  name="cusJob" value={formData.cusJob} />
                                     </div>
                                     <div className="details mb-2">
                                         <div className="details-box">
@@ -169,7 +163,7 @@ const TerraDN = () => {
                                         <label htmlFor="">Delivary No</label>
                                         <input
                                             type="text"
-                                            onChange={handleChange}
+                                            
                                             className="form-input"
                                             name="delivaryNo"
                                             value={formData.delivaryNo}
@@ -179,7 +173,7 @@ const TerraDN = () => {
                                         <label htmlFor="">Invoice No</label>
                                         <input
                                             type="text"
-                                            onChange={handleChange}
+                                            
                                             className="form-input"
                                             name="invoiceNo"
                                             value={formData.invoiceNo}
@@ -189,7 +183,7 @@ const TerraDN = () => {
                                         <label htmlFor="">Date</label>
                                         <input
                                             type="datetime-local"
-                                            onChange={handleChange}
+                                            
                                             className="form-input date"
                                             name="invoiceDate"
                                             value={formData.invoiceDate}
@@ -199,7 +193,7 @@ const TerraDN = () => {
                                         <label htmlFor="">Purchase Order</label>
                                         <input
                                             type="text"
-                                            onChange={handleChange}
+                                            
                                             className="form-input"
                                             name="PurchaseOrder"
                                             value={formData.PurchaseOrder}

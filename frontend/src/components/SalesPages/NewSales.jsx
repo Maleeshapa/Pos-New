@@ -303,7 +303,7 @@ const NewSales = ({ invoice }) => {
     if (e.target.checked) {
       setDelivary('notDelivered');
       setInvoiceStatus('delivery');
-    }else{
+    } else {
       setDelivary('invoice');
     }
   }
@@ -448,14 +448,17 @@ const NewSales = ({ invoice }) => {
 
       alert('sales created successfully!');
 
-      if (invoiceStatus) {
+      if (invoiceStatus==='draft') {
         navigate('/sales/new')
       }
-      if (delivary === 'notDelivered') {
-        navigate(`/${selectedStore}DN`)
+      else if (delivary === 'notDelivered') {
+        navigate(`/${selectedStore}DN/${invoiceResult.invoiceNo}`)
+      }
+      else if (!selectedStore) {
+        alert('Select Department')
       }
       else {
-        navigate(`/${selectedStore}`)
+        navigate(`/${selectedStore}/${invoiceResult.invoiceNo}`)
       }
       setTableData([]);
       resetForm();
@@ -649,7 +652,7 @@ const NewSales = ({ invoice }) => {
               <div className="sales-person-box">
                 <div className="sales-person">
                   <label id='label'>Cashier</label>
-                  <select className="form-control" name="salesPerson" value={formData.salesPerson} onChange={handleChange}>
+                  <select className="form-control" name="salesPerson" value={formData.salesPerson} onChange={handleChange} required>
                     <option value="Select">Select</option>
                     {users.map((user) => (
                       <option key={user.id} value={user.userId}>
@@ -747,50 +750,50 @@ const NewSales = ({ invoice }) => {
 
                     <div className="payment-details">
                       <div className="payment-details-amount">
-                        <input type="radio" name="store" value='colkan' id="colkan" onChange={handleInvoice} style={{ width: '20px' }} />
+                        <input type="radio" name="store" value='colkan' id="colkan" onChange={handleInvoice} style={{ width: '20px' }} required/>
                         <label className='payment-lable' htmlFor="">Colkan</label>
                       </div>
                     </div>
 
                     <div className="payment-details">
                       <div className="payment-details-amount">
-                        <input type="radio" name="store" value='terra' id="terra" onChange={handleInvoice} />
+                        <input type="radio" name="store" value='terra' id="terra" onChange={handleInvoice}required />
                         <label className='payment-lable' htmlFor="">Terra</label>
                       </div>
                     </div>
 
                     <div className="payment-details">
                       <div className="payment-details-amount">
-                      <input type="radio" name="store" value='haman' id="haman" onChange={handleInvoice} />
-                      <label className='payment-lable' htmlFor="">Haman</label>
+                        <input type="radio" name="store" value='haman' id="haman" onChange={handleInvoice} required/>
+                        <label className='payment-lable' htmlFor="">Haman</label>
+                      </div>
+                    </div>
+
+
+                    <div className="payment-details-amount">
+                      <input type="checkbox" name="notDelivered" value='notDelivered' id="notDelivered" onChange={handleDelivary} />
+                      <label className='payment-lable' htmlFor="">Delivey</label>
                     </div>
                   </div>
-                
+                </div>
 
-                  <div className="payment-details-amount">
-                    <input type="checkbox" name="notDelivered" value='notDelivered' id="notDelivered" onChange={handleDelivary} />
-                    <label className='payment-lable' htmlFor="">Delivey</label>
+                <div className="btn-pos mt-4">
+                  <div className="payment-form-button d-grid d-md-flex me-md-2 justify-content-end px-5">
+                    <button className='btn btn-warning mb-2' type='submit' onClick={changeStatus}>Draft</button>
+
                   </div>
-                </div>
-              </div>
-
-              <div className="btn-pos mt-4">
-                <div className="payment-form-button d-grid d-md-flex me-md-2 justify-content-end px-5">
-                  <button className='btn btn-warning mb-2' type='submit' onClick={changeStatus}>Draft</button>
-
-                </div>
-                <div className="payment-form-button  d-grid d-md-flex me-md-2 justify-content-end px-5">
-                  <button className='btn btn-danger btn-md mb-2' type='reset' onClick={clear} >Cancel</button>
-                  <button className='btn btn-primary btn-md mb-2' type='submit'>Create invoice</button>
+                  <div className="payment-form-button  d-grid d-md-flex me-md-2 justify-content-end px-5">
+                    <button className='btn btn-danger btn-md mb-2' type='reset' onClick={clear} >Cancel</button>
+                    <button className='btn btn-primary btn-md mb-2' type='submit'>Create invoice</button>
+                  </div>
                 </div>
               </div>
             </div>
+
+
+
           </div>
-
-
-
-      </div>
-    </form>
+        </form>
       </div >
     </div >
   )

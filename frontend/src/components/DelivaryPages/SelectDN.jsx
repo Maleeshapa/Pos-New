@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const SelectDN = () => {
   const [selected, setSelected] = useState(null);
   const navigate = useNavigate();
+  const { invoiceNo } = useParams();
 
   // Define meaningful IDs for navigation
   const invoices = [
@@ -14,7 +16,7 @@ const SelectDN = () => {
 
   const handleSelect = (path, index) => {
     setSelected(index);
-    navigate(`/${path}`);
+    navigate(`/${path}/${invoiceNo}`);
   };
 
   return (

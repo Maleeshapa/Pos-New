@@ -9,7 +9,7 @@ const Delivery = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const columns = ["ID", "Invoice No","Type", "Customer", 'address', "Date/time", "Transaction Type", "Total Amount", "Due", "invoice"];
+  const columns = ["ID", "Invoice No","Type", "Customer","store", 'address', "Date/time", "Transaction Type", "Total Amount", "Due", "invoice"];
 
   useEffect(() => {
     fetchSalesHistory();
@@ -51,12 +51,13 @@ const Delivery = () => {
           invoice.status,
           invoice.customer.cusName,
           invoice.customer.cusOffice,
+          invoice.store,
           formattedInvoiceDate,
           transactionTypes,
           transactionPrice,
           transactiondue,
           <div>
-            <Link to={'/selectInvoice'}><button className="btn btn-primary">Invoice</button></Link>
+            <Link to={`/${invoice.store}DN/${invoice.invoiceNo}`}><button className="btn btn-primary">Delivery Note</button></Link>
             <Link to={`/salesDetails/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye/></button></Link>
           </div>,
         ];
