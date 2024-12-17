@@ -1,7 +1,33 @@
 const Invoice = require("../model/Invoice");
 const Product = require("../model/Products");
 const Stock = require("../model/Stock");
-const Customer = require("../model/Customer"); // Ensure Customer model is imported
+const Customer = require("../model/Customer");
+
+
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const { Sequelize } = require('sequelize');
+
+// Image upload setup
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadDir = path.join(__dirname, '..', 'uploads', 'invoice');
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+    },
+    filename: function (req, file, cb) {
+        const invoiceNo = req.body.invoiceNo || 'INV';
+        const timestamp = Date.now();
+        const ext = path.extname(file.originalname);
+        const safeInvoiceNo = invoiceNo.replace(/[^a-zA-Z0-9]/g, '_');
+        cb(null, `${safeInvoiceNo}_${timestamp}${ext}`);
+    }
+});
+
+const upload = multer({ storage: storage }).single('image');
 
 const generateNextInvoiceNumber = async () => {
     try {
@@ -188,6 +214,46 @@ const deleteInvoice = async (req, res) => {
     }
 };
 
+async function addImage(req, res) {
+    upload(req, res, async (err) => {
+        if (err instanceof multer.MulterError) {
+            console.error('Multer Error:', err);
+            return res.status(500).json({ error: 'Multer error: Image upload failed' });
+        } else if (err) {
+            console.error('Unknown Error:', err);
+            return res.status(500).json({ error: 'Unknown error: Image upload failed' });
+        }
+
+        console.log('Uploaded File:', req.file);
+        console.log('Request Body:', req.body);
+
+        try {
+            const { id } = req.params;
+
+            const invoice = await Invoice.findByPk(id);
+            if (!invoice) {
+                return res.status(404).json({ message: "Invoice not found" });
+            }
+
+            if (!req.file) {
+                return res.status(400).json({ error: "No file uploaded" });
+            }
+
+            const image = `${req.protocol}://${req.get('host')}/uploads/invoice/${req.file.filename}`;
+            invoice.image = image;
+            await invoice.save();
+
+            return res.status(200).json({
+                message: "File successfully uploaded",
+                image,
+            });
+
+        } catch (error) {
+            console.error("Error updating invoice image:", error);
+            return res.status(500).json({ error: "Server error: Unable to update file" });
+        }
+    });
+}
 
 module.exports = {
     createInvoice,
@@ -197,5 +263,6 @@ module.exports = {
     updateInvoice,
     deleteInvoice,
     getLastInvoiceNumber,
-    generateNextInvoiceNumber
+    generateNextInvoiceNumber,
+    addImage
 };

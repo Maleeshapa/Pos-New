@@ -22,6 +22,10 @@ const Invoice = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        image: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
         store: {
             type: DataTypes.STRING,
             allowNull: false,
