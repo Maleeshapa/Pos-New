@@ -5,31 +5,13 @@ import Table from '../Table/Table'
 import config from '../../config';
 
 const DraftSale = ({ invoice }) => {
+  const { invoiceId, invoiceNo } = useParams();
   const [tableData, setTableData] = useState([]);
   const [users, setUsers] = useState([]);
   const [productId, setProductId] = useState('');
   const [stockId, setStockId] = useState('');
   const [invoiceStatus, setInvoiceStatus] = useState('Invoice');
   const [cusId, setCusId] = useState('');
-
-  const DateTime = () => {
-    const now = new Date();
-    const NewTime = new Intl.DateTimeFormat('en-GB', {
-      timeZone: 'Asia/Colombo',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    }).format(now);
-
-    const [date, time] = NewTime.split(', ');
-    return { date: date.split('/').reverse().join('-'), time };
-  };
-
-  const Columns = ["Customer Code", 'Customer Name', 'Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty', 'Product ID', 'Stock ID'];
   const [formData, setFormData] = useState({
     cusName: '',
     cusNic: '',
@@ -50,86 +32,128 @@ const DraftSale = ({ invoice }) => {
     cheque: '',
     bank: '',
     cash: '',
-    user: '',
-    userName: '',
     paidAmount: '',
     dueAmount: '',
     note: '',
-    invoiceDate: DateTime().date + " " + DateTime().time,
+    invoiceDate: '',
     invoiceNo: '',
     salesPerson: '',
     cusJob: '',
-    cusOffice: ''
+    cusOffice: '',
   });
 
-  // const SelectInvoice = () => {
-  //   navigate('/selectInvoice')
-  // }
-
-  useEffect(() => {
-    const fetchLastInvoiceNumber = async () => {
-      try {
-        const response = await fetch(`${config.BASE_URL}/invoice/last`);
-        if (response.ok) {
-          const data = await response.json();
-          const nextInvoiceNo = data.lastInvoiceNo + 1;
-          setFormData(prevData => ({
-            ...prevData,
-            invoiceNo: nextInvoiceNo.toString()
-          }));
-          console.log(nextInvoiceNo.toString());
-          console.log(data);
-        }
-
-      } catch (error) {
-        console.error('Error fetching last invoice number:', error);
-      }
-    };
-
-    fetchLastInvoiceNumber();
-    fetchUserId();
-
-  }, []);
-
-  const fetchUserId = async () => {
-    const userName = localStorage.getItem('userName');
-    if (userName) {
-      try {
-        const response = await fetch(`${config.BASE_URL}/user/name/${userName}`);
-        if (!response.ok) throw new Error('User not found');
-        const userData = await response.json();
-
-        setFormData(prev => ({
-          ...prev,
-          user: userData.userId,
-          userName: userData.userName,
-        }));
-      } catch (err) {
-        console.log('err', err);
-
-      }
-    } else {
-      console.log('err');
-
-    }
+  const DateTime = () => {
+    const now = new Date();
+    const NewTime = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Colombo',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }).format(now);
+    const [date, time] = NewTime.split(', ');
+    return { date: date.split('/').reverse().join('-'), time };
   };
 
-  const fetchCustomerData = async (cusName) => {
+  const Columns = [
+    "Customer Code",
+    'Customer Name',
+    'Product Code',
+    'Product Name',
+    'Product Price',
+    'Quantity',
+    'Discount',
+    'Total Price',
+    'Warranty',
+    'Product ID',
+    'Stock ID'
+  ];
+
+  useEffect(() => {
+    if (invoiceId && invoiceNo) {
+      fetchInvoiceData();
+      fetchInvoiceProducts();
+    } else {
+      fetchLastInvoiceNumber();
+    }
+  }, [invoiceId, invoiceNo]);
+
+  const fetchInvoiceData = async () => {
     try {
-      const response = await fetch(`${config.BASE_URL}/customer/cusName/${cusName}`);
+      const response = await fetch(`${config.BASE_URL}/invoice/invoiceNo/${invoiceNo}`);
       if (response.ok) {
-        const customerData = await response.json();
-        setCusId(customerData.cusId)
+        const invoiceData = await response.json();
+        const invoiceDate = new Date(invoiceData.invoiceDate);
+        const formattedDate = invoiceDate.toISOString().slice(0, 16);
         setFormData(prevData => ({
           ...prevData,
-          cusName: customerData.cusName,
-          cusJob: customerData.cusJob,
-          cusOffice: customerData.cusOffice,
-          cusAddress: customerData.cusAddress
+          invoiceNo: invoiceData.invoiceNo,
+          invoiceDate: formattedDate,
+          cusName: invoiceData.customer.cusName || '',
+          cusJob: invoiceData.customer.cusJob || '',
+          cusOffice: invoiceData.customer.cusOffice || '',
+          cusAddress: invoiceData.customer.cusAddress || '',
+        }));
+        setCusId(invoiceData.customer.cusId);
+      } else {
+        setFormData(prevData => ({
+          ...prevData,
+          invoiceDate: '',
+          cusName: '',
+          cusJob: '',
+          cusOffice: '',
+          cusAddress: '',
         }));
       }
     } catch (error) {
-      console.error('Error fetching customer data:', error);
+      console.error('Error fetching invoice data:', error);
+      alert('An error occurred while fetching invoice data');
+    }
+  };
+
+  const fetchInvoiceProducts = async () => {
+    try {
+      const response = await fetch(`${config.BASE_URL}/invoiceProducts/${invoiceId}`);
+      if (response.ok) {
+        const data = await response.json();
+        const formattedTableData = data.map((product) => [
+          formData.cusName,
+          formData.cusAddress,
+          product.product.productCode,
+          product.product.productName,
+          product.product.productSellingPrice,
+          product.invoiceQty,
+          product.product.productDiscount,
+          product.totalAmount,
+          product.product.productWarranty + ' ' + product.product.productDescription,
+          product.product.productId,
+          product.stockId,
+        ]);
+        setTableData(formattedTableData);
+      } else {
+        alert('No invoice products found');
+      }
+    } catch (error) {
+      console.error('Error fetching invoice products:', error);
+      alert('An error occurred while fetching invoice products');
+    }
+  };
+
+  const fetchLastInvoiceNumber = async () => {
+    try {
+      const response = await fetch(`${config.BASE_URL}/invoice/last`);
+      if (response.ok) {
+        const data = await response.json();
+        const nextInvoiceNo = data.lastInvoiceNo + 1;
+        setFormData(prevData => ({ ...prevData, invoiceNo: nextInvoiceNo.toString() }));
+        console.log(nextInvoiceNo.toString());
+        console.log(data);
+      }
+    } catch (error) {
+      console.error('Error fetching last invoice number:', error);
     }
   };
 
@@ -146,7 +170,7 @@ const DraftSale = ({ invoice }) => {
         const response = await fetch(`${config.BASE_URL}/product/codeOrName/${value}`);
         if (response.ok) {
           const productData = await response.json();
-          setProductId(productData.productId)
+          setProductId(productData.productId);
           setFormData(prevData => ({
             ...prevData,
             productNo: productData.productCode,
@@ -178,12 +202,27 @@ const DraftSale = ({ invoice }) => {
 
     if (name === 'salesPerson') {
       const selectedUserId = value; // Assuming value contains the user ID
-      setFormData(prevData => ({
-        ...prevData,
-        salesPerson: selectedUserId
-      }));
+      setFormData(prevData => ({ ...prevData, salesPerson: selectedUserId }));
     }
+  };
 
+  const fetchCustomerData = async (cusName) => {
+    try {
+      const response = await fetch(`${config.BASE_URL}/customer/cusName/${cusName}`);
+      if (response.ok) {
+        const customerData = await response.json();
+        setCusId(customerData.cusId);
+        setFormData(prevData => ({
+          ...prevData,
+          cusName: customerData.cusName,
+          cusJob: customerData.cusJob,
+          cusOffice: customerData.cusOffice,
+          cusAddress: customerData.cusAddress
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching customer data:', error);
+    }
   };
 
   const fetchStockData = async (productId) => {
@@ -191,14 +230,11 @@ const DraftSale = ({ invoice }) => {
       const response = await fetch(`${config.BASE_URL}/stock/product/${productId}`);
       if (response.ok) {
         const stockData = await response.json();
-        setStockId(stockData.stockId)
+        setStockId(stockData.stockId);
       } else {
         const errorBody = await response.json(); // Log the response body
         console.log('Error fetching stock:', errorBody);
-        setFormData(prevData => ({
-          ...prevData,
-          stockId: ''
-        }));
+        setFormData(prevData => ({ ...prevData, stockId: '' }));
       }
     } catch (error) {
       console.error('Error fetching stock data:', error);
@@ -211,7 +247,7 @@ const DraftSale = ({ invoice }) => {
         const response = await fetch(`${config.BASE_URL}/users`);
         if (response.ok) {
           const userData = await response.json();
-          setUsers(userData);  // Populate users in state
+          setUsers(userData); // Populate users in state
         } else {
           console.error('Failed to fetch users');
         }
@@ -224,38 +260,27 @@ const DraftSale = ({ invoice }) => {
     const discountedPrice = (formData.productPrice || 0) * (1 - (formData.discount || 0) / 100);
     const newTotalPrice = discountedPrice * (formData.qty || 1);
     setFormData(prevData => ({ ...prevData, totalPrice: newTotalPrice }));
+
   }, [formData.productPrice, formData.discount, formData.qty]);
 
   const discount = (e) => {
     const { name, value } = e.target;
     const numericValue = parseFloat(value) || 0;
-
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: numericValue,
-    }));
-
+    setFormData((prevData) => ({ ...prevData, [name]: numericValue }));
     const productPrice = parseFloat(formData.productPrice) || 0;
     const qty = parseFloat(formData.qty) || 1;
     const discountRs = name === "discountRs" ? numericValue : parseFloat(formData.discountRs) || 0;
-
     const discountedPrice = productPrice - discountRs;
     const newTotalPrice = discountedPrice * qty;
-
-    setFormData((prevData) => ({
-      ...prevData,
-      totalPrice: newTotalPrice.toFixed(2),
-    }));
+    setFormData((prevData) => ({ ...prevData, totalPrice: newTotalPrice.toFixed(2) }));
   };
 
   const handleAddProduct = (e) => {
     e.preventDefault();
-
     if (!formData.productNo || !formData.productName || !formData.productPrice || !formData.qty) {
       alert("Please fill in all the product details.");
       return;
     }
-
     const newRow = [
       formData.cusName,
       formData.cusAddress,
@@ -269,7 +294,6 @@ const DraftSale = ({ invoice }) => {
       productId,
       stockId,
     ];
-
     setTableData(prevData => [...prevData, newRow]);
     setFormData(prevData => ({
       ...prevData,
@@ -287,29 +311,24 @@ const DraftSale = ({ invoice }) => {
     console.log("Added new row:", newRow);
     console.log("Updated table data:", [...tableData, newRow]);
 
-    const updatedTableData = [...tableData, newRow];
     let totalAmount = 0;
     let totalDiscount = 0;
     let payableAmount = 0;
-
-    updatedTableData.forEach((row) => {
+    [...tableData, newRow].forEach((row) => {
       const price = parseFloat(row[4]) || 0;
       const qty = parseFloat(row[5]) || 0;
       const discount = parseFloat(row[6]) || 0;
       const totalPrice = parseFloat(row[7]) || 0;
-
       totalAmount += price * qty;
       totalDiscount += discount;
       payableAmount += totalPrice;
     });
-
     setFormData((prevData) => ({
       ...prevData,
       totalAmount: totalAmount.toFixed(2),
       discountPrice: totalDiscount.toFixed(2),
       amount: payableAmount.toFixed(2),
     }));
-
   };
 
   const navigate = useNavigate();
@@ -319,8 +338,7 @@ const DraftSale = ({ invoice }) => {
   };
 
   const [selectedStore, setSelectedStore] = useState('');
-  const [delivary, setDelivary] = useState('invoice')
-
+  const [delivary, setDelivary] = useState('invoice');
   const handleInvoice = (e) => {
     setSelectedStore(e.target.value);
   };
@@ -678,8 +696,8 @@ const DraftSale = ({ invoice }) => {
               <div className="sales-person-box">
 
                 <div className="sales-person">
-                    <label id='label'>Cashier</label>
-                    <input type="text" name="userName" value={formData.userName} onChange={handleChange}  className="form-control" readOnly/>
+                  <label id='label'>Cashier</label>
+                  <input type="text" name="userName" value={formData.userName} onChange={handleChange} className="form-control" readOnly />
                 </div>
                 <div className="sales-person">
                   <label htmlFor="" id='label'>Invoice Date</label>
