@@ -9,6 +9,7 @@ const SalesDetails = () => {
     const [formData, setFormData] = useState({
         invoiceNo: '',
         invoiceDate: '',
+        store:'',
         cusName: '',
         cusJob: '',
         cusAddress: '',
@@ -32,6 +33,7 @@ const SalesDetails = () => {
                 setFormData({
                     invoiceNo: invoiceData.invoiceNo,
                     invoiceDate: new Date(invoiceData.invoiceDate).toISOString().slice(0, 16),
+                    store:invoiceData.store,
                     cusName: invoiceData.customer.cusName,
                     cusJob: invoiceData.customer.cusJob,
                     cusAddress: invoiceData.customer.cusAddress,
@@ -135,6 +137,10 @@ const SalesDetails = () => {
                                     <div className="details">
                                         <label>Date</label>
                                         <input type="datetime-local" className="form-input date" name="invoiceDate" value={formData.invoiceDate} readOnly />
+                                    </div>
+                                    <div className="details">
+                                        <label>Department</label>
+                                        <input type="text" className="form-input" name="store" value={formData.store} readOnly />
                                     </div>
                                 </div>
                             </section>
