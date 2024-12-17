@@ -56,7 +56,7 @@ const Credit = () => {
           transactionPrice,
           transactiondue,
           <div>
-            <Link to={`/selectInvoice/${invoice.invoiceNo}`}><button className="btn btn-primary">Delivery Note</button></Link>
+            <Link to={`/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-primary">Credit Invoice</button></Link>
             <Link to={`/salesDetails/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye/></button></Link>
           </div>,
         ];

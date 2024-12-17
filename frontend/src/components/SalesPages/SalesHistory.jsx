@@ -53,7 +53,7 @@ const SalesHistory = () => {
           transactionPrice,
           transactiondue,
           <div>
-            <Link to={`/selectDn/${invoice.invoiceNo}`}><button className="btn btn-primary">Delivery Note</button></Link>
+            {/* <Link to={`/selectDn/${invoice.invoiceNo}`}><button className="btn btn-primary">invoice</button></Link> */}
             <Link to={`/salesDetails/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye/></button></Link>
           </div>,
         ];
