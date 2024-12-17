@@ -148,24 +148,24 @@
   }
 
 
-  .details-container {
+  .performa-details-container {
     display: flex;
     flex-direction: column; /* Stack rows vertically */
     gap: 10px; /* Add spacing between rows */
 }
 
-.details {
+.performa-details {
     display: flex;
     align-items: center; /* Align label and input vertically */
     gap: 10px; /* Add spacing between label and input */
 }
 
-.details label {
+.performa-details label {
     flex: 0 0 200px; /* Set label width (adjust as needed) */
     text-align: left; /* Left-align the label text */
 }
 
-.details input {
+.performa-details input {
     flex: 1; /* Allow input to take remaining space */
     padding: 5px;
     font-size: 14px;

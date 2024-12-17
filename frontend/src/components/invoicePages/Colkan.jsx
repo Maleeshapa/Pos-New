@@ -149,7 +149,7 @@ const Colkan = () => {
                                     )}
                                 </div>
                                 <div className="invoice-info">
-                                    <div className="details">
+                                    <div className="details mb-2">
                                         <label htmlFor="">Invoice No</label>
                                         <input
                                             type="text"

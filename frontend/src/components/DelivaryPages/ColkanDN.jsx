@@ -159,7 +159,7 @@ const ColkanDN = () => {
                                     )}
                                 </div>
                                 <div className="invoice-info">
-                                    <div className="details">
+                                    <div className="details mb-2">
                                         <label htmlFor="">Delivary No</label>
                                         <input
                                             type="text"
@@ -169,7 +169,7 @@ const ColkanDN = () => {
                                             value={formData.delivaryNo}
                                         />
                                     </div>
-                                    <div className="details">
+                                    <div className="details mb-2">
                                         <label htmlFor="">Invoice No</label>
                                         <input
                                             type="text"
@@ -179,7 +179,7 @@ const ColkanDN = () => {
                                             value={formData.invoiceNo}
                                         />
                                     </div>
-                                    <div className="details">
+                                    <div className="details mb-2">
                                         <label htmlFor="">Date</label>
                                         <input
                                             type="datetime-local"
@@ -189,7 +189,7 @@ const ColkanDN = () => {
                                             value={formData.invoiceDate}
                                         />
                                     </div>
-                                    <div className="details">
+                                    <div className="details ">
                                         <label htmlFor="">Purchase Order</label>
                                         <input
                                             type="text"

@@ -1,5 +1,5 @@
 
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ProformaInvoice.css';
 import one from '../../assets/1.jpg';
 import config from '../../config';
@@ -158,47 +158,47 @@ const ProformaInvoice = () => {
                                         </div>
                                     )}
                                 </div>
-                                <div className="details-container">
+                                <div className="performa-details-container">
 
-    <div className="details">
-        <label htmlFor="">Proforma Invoice No.</label>
-        <input
-            type="text"
-            className="form-input"
-            name="proforma"
-        />
-    </div>
+                                    <div className="performa-details">
+                                        <label htmlFor="">Proforma Invoice No.</label>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            name="proforma"
+                                        />
+                                    </div>
 
-    <div className="details">
-        <label htmlFor="">Date</label>
-        <input
-            type="datetime-local"
-            className="form-input date"
-            name="invoiceDate"
-            value={formData.invoiceDate}
-        />
-    </div>
+                                    <div className="performa-details">
+                                        <label htmlFor="">Date</label>
+                                        <input
+                                            type="datetime-local"
+                                            className="form-input date"
+                                            name="invoiceDate"
+                                            value={formData.invoiceDate}
+                                        />
+                                    </div>
 
-    <div className="details">
-        <label htmlFor="">Invoice No.</label>
-        <input
-            type="text"
-            className="form-input"
-            name="invoiceNo"
-            value={formData.invoiceNo}
-        />
-    </div>
+                                    <div className="performa-details">
+                                        <label htmlFor="">Invoice No.</label>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            name="invoiceNo"
+                                            value={formData.invoiceNo}
+                                        />
+                                    </div>
 
-    <div className="details">
-        <label htmlFor="">Purchase Order No. (Manually)</label>
-        <input
-            type="text"
-            className="form-input"
-            name="purchaseOrder"
-        />
-    </div>
+                                    <div className="performa-details">
+                                        <label htmlFor="">Purchase Order No. (Manually)</label>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            name="purchaseOrder"
+                                        />
+                                    </div>
 
-</div>
+                                </div>
 
                             </section>
 

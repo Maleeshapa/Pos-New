@@ -152,7 +152,7 @@ const Haman = () => {
                                     )}
                                 </div>
                                 <div className="invoice-info">
-                                    <div className="details">
+                                    <div className="details mb-2">
                                         <label htmlFor="">Invoice No</label>
                                         <input
                                             type="text"
@@ -161,7 +161,7 @@ const Haman = () => {
                                             value={formData.invoiceNo}
                                         />
                                     </div>
-                                    <div className="details">
+                                    <div className="details mb-2">
                                         <label htmlFor="">Date</label>
                                         <input
                                             type="datetime-local"

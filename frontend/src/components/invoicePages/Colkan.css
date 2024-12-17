@@ -146,3 +146,14 @@
   font-size: 17px;
   width: 80px;
 }
+
+.details{
+  display: flex;
+}
+.details label{
+  width: 100%;
+  padding-right: 15px;
+}
+.details input{
+  width: 200px;
+}
