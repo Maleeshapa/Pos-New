@@ -25,20 +25,24 @@ const TerraDN = () => {
             fetchInvoiceData(invoiceNo);
         }
     }, [invoiceNo]);
-
+    
+    useEffect(() => {
+        generateDeliveryNo();
+    }, [invoiceProducts]);
+    
     const fetchInvoiceData = async (invoiceNo) => {
         try {
             const response = await fetch(`${config.BASE_URL}/invoice/invoiceNo/${invoiceNo}`);
             if (response.ok) {
                 const invoiceData = await response.json();
-
+    
                 setFormData({
                     invoiceNo: invoiceData.invoiceNo,
                     invoiceDate: new Date(invoiceData.invoiceDate).toISOString().slice(0, 16),
                     cusName: invoiceData.customer.cusName,
                     cusJob: invoiceData.customer.cusJob,
                 });
-
+    
                 if (invoiceData.invoiceId) {
                     fetchInvoiceProducts(invoiceData.invoiceId);
                     fetchTransaction(invoiceData.invoiceId);
@@ -51,7 +55,7 @@ const TerraDN = () => {
             alert('An error occurred while fetching invoice data');
         }
     };
-
+    
     const fetchInvoiceProducts = async (invoiceId) => {
         try {
             const response = await fetch(`${config.BASE_URL}/invoiceProducts/${invoiceId}`);
@@ -66,6 +70,18 @@ const TerraDN = () => {
             alert('An error occurred while fetching invoice products');
         }
     };
+    
+    const generateDeliveryNo = () => {
+        const currentYear = new Date().getFullYear().toString().slice(-2);
+        const rowCount = invoiceProducts.length;
+        const deliveryNo = `DN-${formData.invoiceNo}-${rowCount}-${currentYear}`;
+    
+        setFormData((prev) => ({
+            ...prev,
+            delivaryNo: deliveryNo,
+        }));
+    };
+    
 
     const fetchTransaction = async (invoiceId) => {
         try {
