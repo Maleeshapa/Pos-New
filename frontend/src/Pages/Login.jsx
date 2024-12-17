@@ -1,100 +1,82 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
 import config from '../config';
 
 function Login() {
-  const [userName, setUserName] = useState('');
-  const [userPassword, setUserPassword] = useState('');
-  const [error, setError] = useState('');
-  const [switchStatus, setSwitchStatus] = useState(null);
-  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [processing, setProcessing] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertType, setAlertType] = useState("");
+  const [message, setMessage] = useState("");
 
-  // Fetch switch status from the 'switch' table
-  useEffect(() => {
-    const fetchSwitchStatus = async () => {
-      try {
-        const response = await axios.get(`${config.BASE_URL}/api/switch`);
-        setSwitchStatus(response.data.status);
-      } catch (err) {
-        setError('Failed to fetch system status. Please try again later.');
-      }
-    };
-    fetchSwitchStatus();
-  }, []);
+  const [formData, setFormData] = useState({
+    userName: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({
+    userName: "",
+    password: "",
+  });
+
+  const navigate = useNavigate(); 
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [id]: value,
+    }));
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [id]: "",
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setProcessing(true);
+
+    const postData = {
+      userName: formData.userName,
+      userPassword: formData.password,
+    };
 
     try {
-      if (switchStatus === null) {
-        setError('Unable to verify system status. Please try again.');
+      const response = await fetch(`${config.BASE_URL}/userLogin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || data.message_type === "error") {
+        setMessage(data.message || "An error occurred during login.");
+        setAlertType("alert alert-danger");
+        setShowAlert(true);
         return;
       }
 
-      // Fetch user data by login
-      const response = await axios.post(`${config.BASE_URL}/userLogin`, { userName, userPassword });
-      const { token, user } = response.data;
+      const { userName, userEmail, userStatus } = data.user;
+      const token = data.token;
 
-      // Check if the user's status is active
-      if (user.userStatus && token === 'active') {
-        setError('Your account is inactive. Please contact support.');
-        return;
-      }
+      localStorage.setItem("userName", userName);
+      localStorage.setItem("userEmail", userEmail);
+      localStorage.setItem("userStatus", userStatus);
+      localStorage.setItem("token", token);
 
-      // If switch is off and the user is not 'master', deny login
-      if (switchStatus === false && user.userName !== 'master') {
-        setError(
-          <>
-            Deposit Monthly Subscription to access 
-            <br />
-            නැවත පිවිසීමට මාසික ගාස්තුව ගෙවන්න     
-            <br /><br />
-            74571076
-            <br />
-            BOC
-            <br />
-            Katugasthota
-            <br />
-            W.P.K.M.M.Pathirana
-            <br /><br />
-            Call - 0764980664
-          </>
-        );setError('කෝල් කරන්න');
-        return;
-      }
-
-      // Verify if the token is still valid by decoding it
-      const decodedToken = jwtDecode(token);
-      const currentTime = Date.now() / 1000; // Current time in seconds
-
-      if (decodedToken.exp < currentTime) {
-        setError('Session expired. Please log in again.');
-        return;
-      }
-
-      // If all conditions are met, allow login
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
       navigate('/');
 
     } catch (error) {
-      if (error.response) {
-        if (error.response.status === 403) {
-          setError('Access denied. Please contact the administrator.');
-        } else if (error.response.status === 404) {
-          setError('User not found.');
-        } else if (error.response.status === 401) {
-          setError('Incorrect password.');
-        } else {
-          setError(error.response.data.error || 'An error occurred during login.');
-        }
-      } else if (error.request) {
-        setError('No response from server. Please try again later.');
-      } else {
-        setError('An error occurred. Please try again.');
-      }
+      setError("Failed to log in. Please check your credentials.");
+      console.error(error);
+    } finally {
+      setProcessing(false);
     }
   };
 
@@ -105,33 +87,52 @@ function Login() {
           <h1>Pos System</h1>
         </div>
         <h2 className="text-center mb-4">Welcome!</h2>
-        {error && <div className="alert alert-danger">{error}</div>}
+
+        {showAlert && (
+          <div className="row mt-2">
+            <div className="col-md-12">
+              <div className={alertType}>
+                {message}
+              </div>
+            </div>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="username" className="form-label">Username</label>
+            <label htmlFor="userName" className="form-label">Username</label>
             <input
               type="text"
-              id="username"
+              name="userName"
+              id="userName"
               className="form-control"
               placeholder="Username"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
+              onChange={handleChange}
+              value={formData.userName}
               required
             />
+            {errors.userName && <small className="text-danger">{errors.userName}</small>}
           </div>
           <div className="mb-3">
             <label htmlFor="password" className="form-label">Password</label>
             <input
               type="password"
+              name="password"
               id="password"
               className="form-control"
               placeholder="Password"
-              value={userPassword}
-              onChange={(e) => setUserPassword(e.target.value)}
+              onChange={handleChange}
+              value={formData.password}
               required
             />
+            {errors.password && <small className="text-danger">{errors.password}</small>}
           </div>
-          <button type="submit" className="btn btn-primary w-100">Login</button>
+
+          {error && <div className="text-danger text-center mb-3">{error}</div>}
+
+          <button type="submit" className="btn btn-primary w-100" disabled={processing}>
+            {processing ? "Logging in..." : "Login"}
+          </button>
         </form>
         <p className="text-center mt-3">
           Don't have an account? <a href="#signup">Sign up</a>
