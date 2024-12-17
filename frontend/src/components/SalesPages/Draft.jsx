@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Table from '../Table/Table';
 import config from '../../config';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 import { Eye } from 'lucide-react';
 
 const Draft = () => {
@@ -107,6 +107,7 @@ const Draft = () => {
     }
   };
 
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -124,7 +125,11 @@ const Draft = () => {
             columns={columns}
             title={title}
             invoice={invoice}
-            showEdit={false}
+            onEdit={(rowIndex) => {
+              const invoiceId = data[rowIndex][0];
+              const invoiceNo = data[rowIndex][1];
+              navigate(`/draft  /${invoiceId}/${invoiceNo}`);
+            }}
             showButton={false}
             onDelete={handleDelete}
           />

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { CirclePlus, Plus, PlusCircle, ShoppingCart, User } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import './NewSales.css';
 import Table from '../Table/Table'
 import config from '../../config';
 
-const NewSales = ({ invoice }) => {
+const DraftSale = ({ invoice }) => {
   const [tableData, setTableData] = useState([]);
   const [users, setUsers] = useState([]);
   const [productId, setProductId] = useState('');
@@ -820,4 +819,4 @@ const NewSales = ({ invoice }) => {
   )
 }
 
-export default NewSales
+export default DraftSale;
