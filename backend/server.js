@@ -21,7 +21,6 @@ const ExpensesCatController = require("./controller/ExpensesCatController");
 const ReportController = require("./controller/Reports/ReportController");
 const ProductNStockController = require("./controller/Reports/ProductStockController");
 const StockHistoryController = require('./controller/StockHistoryController');
-const SwitchController = require('./controller/SwitchController');
 const InvoiceProductController = require('./controller/InvoiceProduct');
 const CustomerController = require('./controller/CustomerController');
 
@@ -33,9 +32,6 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads', 'purchase-orders')));
 
-// status endpoint
-app.get('/api/switch', SwitchController.getStatus);
-app.post('/api/switch', SwitchController.updateStatus);
 
 //user routes
 app.post("/user", UserController.createUser);
@@ -44,7 +40,6 @@ app.get("/user/:id", UserController.getUserById);
 app.put("/user/:id", UserController.updateUser);
 app.delete("/user/:id", UserController.deleteUser);
 app.post("/userLogin", UserController.userLogin);
-app.get("/users/hidden/:is_hidden", UserController.getUsersByHiddenStatus);
 
 //supplier routes
 app.post("/supplier", SupplierController.createSupplier);

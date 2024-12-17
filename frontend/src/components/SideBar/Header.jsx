@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Header.css';
-import Switch from './Switch';
 
 const Header = () => {
   const navigate = useNavigate();
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [isMaster, setIsMaster] = useState(false);
 
   const trialStartDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), 1);
   const trialDuration = 30;
@@ -25,13 +23,6 @@ const Header = () => {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    // Check if the logged-in user is "master"
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.userName === 'master') {
-      setIsMaster(true);
-    }
-  }, []);
 
   const handleNewSaleClick = () => {
     navigate('/sales/new');
@@ -48,7 +39,6 @@ const Header = () => {
   return (
     <header className="d-flex align-items-center justify-content-between p-3  text-light">
       <div className="d-flex align-items-center">
-        {isMaster && <Switch />} 
       </div>
       <div className="d-flex align-items-center">
         <span className="trial-message text-white me-3 d-none d-md-block">
