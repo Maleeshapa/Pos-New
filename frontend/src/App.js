@@ -30,7 +30,9 @@ import ColkanDN from './components/DelivaryPages/ColkanDN';
 import HamanDN from './components/DelivaryPages/HamanDN';
 import TerraDN from './components/DelivaryPages/TerraDN'
 import SelectDN from './components/DelivaryPages/SelectDN';
-import ProformaInvoice from './components/SalesPages/ProformaInvoice';
+import ColkanProformaInvoice from './components/PerformaInvoice/ColkanProformaInvoice';
+import HamanProformaInvoice from './components/PerformaInvoice/HamanProformaInvoice';
+import TerraProformaInvoice from './components/PerformaInvoice/TerraProformaInvoice';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token');
@@ -67,7 +69,9 @@ function Layout() {
             <Route path="/stock-reports/*" element={<ProtectedRoute><StockReports /></ProtectedRoute>} />
             <Route path="/staff/*" element={<ProtectedRoute><Staff /></ProtectedRoute>} />
 
-            <Route path="/sales/ProformaInvoice/*" element={<ProtectedRoute><ProformaInvoice /></ProtectedRoute>} />
+            <Route path="/colkanPF/:invoiceNo" element={<ProtectedRoute><ColkanProformaInvoice /></ProtectedRoute>} />
+            <Route path="/hamanPF/:invoiceNo" element={<ProtectedRoute><HamanProformaInvoice /></ProtectedRoute>} />
+            <Route path="/TerraPF/:invoiceNo" element={<ProtectedRoute><TerraProformaInvoice /></ProtectedRoute>} />
 
             <Route path="/selectInvoice/:invoiceNo" element={<ProtectedRoute><SelectInvoice /></ProtectedRoute>} />
             <Route path="/colkan/:invoiceNo" element={<ProtectedRoute><Colkan /></ProtectedRoute>} />

@@ -2,6 +2,7 @@ const Invoice = require("../model/Invoice");
 const Product = require("../model/Products");
 const Stock = require("../model/Stock");
 const Customer = require("../model/Customer");
+const Transaction = require("../model/Transaction")
 
 
 // const multer = require('multer');
@@ -98,7 +99,8 @@ const getAllInvoice = async (req, res) => {
     try {
         const invoices = await Invoice.findAll({
             include: [
-                { model: Customer, as: 'customer' }, // Include customer details
+                { model: Customer, as: 'customer' },
+                { model: Transaction, as: 'transaction' }
             ],
         });
 
