@@ -244,7 +244,7 @@ const CreateProductReturn = () => {
                                 </select>
                             </div>
                             <div className="Stock-details mb-2">
-                                <label htmlFor="user">Person</label>
+                                <label htmlFor="user">Cashier</label>
                                 <input
                                     type="text"
                                     name="userName"
