@@ -4,31 +4,30 @@ const Stock = require("../model/Stock");
 const Customer = require("../model/Customer");
 const Transaction = require("../model/Transaction")
 
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const { Sequelize } = require('sequelize');
 
-// const multer = require('multer');
-// const path = require('path');
-// const fs = require('fs');
-// const { Sequelize } = require('sequelize');
+// Image upload setup
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadDir = path.join(__dirname, '..', 'uploads', 'invoice');
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+    },
+    filename: function (req, file, cb) {
+        const invoiceNo = req.body.invoiceNo || 'INV';
+        const timestamp = Date.now();
+        const ext = path.extname(file.originalname);
+        const safeInvoiceNo = invoiceNo.replace(/[^a-zA-Z0-9]/g, '_');
+        cb(null, `${safeInvoiceNo}_${timestamp}${ext}`);
+    }
+});
 
-// // Image upload setup
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         const uploadDir = path.join(__dirname, '..', 'uploads', 'invoice');
-//         if (!fs.existsSync(uploadDir)) {
-//             fs.mkdirSync(uploadDir, { recursive: true });
-//         }
-//         cb(null, uploadDir);
-//     },
-//     filename: function (req, file, cb) {
-//         const invoiceNo = req.body.invoiceNo || 'INV';
-//         const timestamp = Date.now();
-//         const ext = path.extname(file.originalname);
-//         const safeInvoiceNo = invoiceNo.replace(/[^a-zA-Z0-9]/g, '_');
-//         cb(null, `${safeInvoiceNo}_${timestamp}${ext}`);
-//     }
-// });
-
-// const upload = multer({ storage: storage }).single('image');
+const upload = multer({ storage: storage }).single('image');
 
 const generateNextInvoiceNumber = async () => {
     try {
@@ -50,32 +49,46 @@ const generateNextInvoiceNumber = async () => {
 
 // Create invoice
 const createInvoice = async (req, res) => {
-    try {
-        const {
-            invoiceDate,
-            status = 'invoice',
-            store,
-            cusId,
-        } = req.body;
 
-        const invoiceNo = req.body.invoiceNo || await generateNextInvoiceNumber();
-
-        const newInvoice = await Invoice.create({
-            invoiceNo,
-            invoiceDate,
-            status,
-            store,
-            cusId
-        });
-
-        res.status(201).json(newInvoice);
-    } catch (error) {
-        if (error.name === "SequelizeValidationError") {
-            console.error('Validation errors:', error.errors);
-            return res.status(400).json({ error: "Validation error: Please check the provided data." });
+    upload(req, res, async function (err) {
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json({ error: 'Image upload failed' });
+        } else if (err) {
+            return res.status(500).json({ error: 'Unknown error: Image upload failed' });
         }
-        return res.status(500).json({ error: `An internal error occurred: ${error.message}` });
-    }
+        try {
+            const {
+                invoiceDate,
+                status = 'invoice',
+                store,
+                cusId,
+            } = req.body;
+
+            const invoiceNo = req.body.invoiceNo || await generateNextInvoiceNumber();
+
+            let image = null;
+            if (req.file) {
+                image = `${req.protocol}://${req.get('host')}/uploads/invoice/${req.file.filename}`;
+            }
+
+            const newInvoice = await Invoice.create({
+                invoiceNo,
+                invoiceDate,
+                status,
+                store,
+                image,
+                cusId
+            });
+
+            res.status(201).json(newInvoice);
+        } catch (error) {
+            if (error.name === "SequelizeValidationError") {
+                console.error('Validation errors:', error.errors);
+                return res.status(400).json({ error: "Validation error: Please check the provided data." });
+            }
+            return res.status(500).json({ error: `An internal error occurred: ${error.message}` });
+        }
+    });
 };
 
 
@@ -121,7 +134,7 @@ const getInvoiceById = async (req, res) => {
 
         const invoice = await Invoice.findByPk(id, {
             include: [
-                { model: Customer, as: 'customer' }, // Include customer details
+                { model: Customer, as: 'customer' },
             ],
         });
 
@@ -158,47 +171,68 @@ const getInvoiceByNo = async (req, res) => {
 
 // Update invoice
 const updateInvoice = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const {
-            // invoiceNo,
-            invoiceDate,
-            totalAmount,
-            invoiceQty,
-            productId,
-            cusId,
-        } = req.body;
-
-        // Check if customer exists
-        const customer = await Customer.findByPk(cusId);
-        if (!customer) {
-            return res.status(400).json({ message: 'Invalid customer ID' });
+    upload(req, res, async function (err) {
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json({ error: 'Image upload failed' });
+        } else if (err) {
+            return res.status(500).json({ error: 'Unknown error: Image upload failed' });
         }
-
-        if (productId) {
-            const product = await Product.findByPk(productId);
-            if (!product) {
-                return res.status(400).json({ message: "Invalid product ID" });
-            }
-        }
-
-        const invoice = await Invoice.findByPk(id);
-        if (invoice) {
-            await invoice.update({
-                invoiceNo,
+        try {
+            const { id } = req.params;
+            const {
+                // invoiceNo,
                 invoiceDate,
                 totalAmount,
                 invoiceQty,
-                products_productId: productId,
-                customer_cusId: cusId,
-            });
-            res.status(200).json(invoice);
-        } else {
-            res.status(404).json({ message: "Invoice not found" });
+                productId,
+                cusId,
+            } = req.body;
+
+            // Check if customer exists
+            const customer = await Customer.findByPk(cusId);
+            if (!customer) {
+                return res.status(400).json({ message: 'Invalid customer ID' });
+            }
+
+            if (productId) {
+                const product = await Product.findByPk(productId);
+                if (!product) {
+                    return res.status(400).json({ message: "Invalid product ID" });
+                }
+            }
+
+            // Handle image replacement
+            let image = user.image;
+            if (req.file) {
+                // Delete old image if it exists
+                if (image) {
+                    const oldImagePath = path.join(__dirname, '..', 'uploads', 'invoice', path.basename(image));
+                    if (fs.existsSync(oldImagePath)) {
+                        fs.unlinkSync(oldImagePath);
+                    }
+                }
+                image = `${req.protocol}://${req.get('host')}/uploads/invoice/${req.file.filename}`;
+            }
+
+            const invoice = await Invoice.findByPk(id);
+            if (invoice) {
+                await invoice.update({
+                    invoiceNo,
+                    invoiceDate,
+                    totalAmount,
+                    invoiceQty,
+                    image,
+                    products_productId: productId,
+                    customer_cusId: cusId,
+                });
+                res.status(200).json(invoice);
+            } else {
+                res.status(404).json({ message: "Invoice not found" });
+            }
+        } catch (error) {
+            res.status(500).json({ message: `An error occurred: ${error.message}` });
         }
-    } catch (error) {
-        res.status(500).json({ message: `An error occurred: ${error.message}` });
-    }
+    });
 };
 // Delete a Invoice
 const deleteInvoice = async (req, res) => {
@@ -215,47 +249,6 @@ const deleteInvoice = async (req, res) => {
     }
 };
 
-async function addImage(req, res) {
-    upload(req, res, async (err) => {
-        if (err instanceof multer.MulterError) {
-            console.error('Multer Error:', err);
-            return res.status(500).json({ error: 'Multer error: Image upload failed' });
-        } else if (err) {
-            console.error('Unknown Error:', err);
-            return res.status(500).json({ error: 'Unknown error: Image upload failed' });
-        }
-
-        console.log('Uploaded File:', req.file);
-        console.log('Request Body:', req.body);
-
-        try {
-            const { id } = req.params;
-
-            const invoice = await Invoice.findByPk(id);
-            if (!invoice) {
-                return res.status(404).json({ message: "Invoice not found" });
-            }
-
-            if (!req.file) {
-                return res.status(400).json({ error: "No file uploaded" });
-            }
-
-            const image = `${req.protocol}://${req.get('host')}/uploads/invoice/${req.file.filename}`;
-            invoice.image = image;
-            await invoice.save();
-
-            return res.status(200).json({
-                message: "File successfully uploaded",
-                image,
-            });
-
-        } catch (error) {
-            console.error("Error updating invoice image:", error);
-            return res.status(500).json({ error: "Server error: Unable to update file" });
-        }
-    });
-}
-
 module.exports = {
     createInvoice,
     getAllInvoice,
@@ -265,5 +258,4 @@ module.exports = {
     deleteInvoice,
     getLastInvoiceNumber,
     generateNextInvoiceNumber,
-    addImage
 };
