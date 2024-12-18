@@ -12,6 +12,7 @@ const NewSales = ({ invoice }) => {
   const [stockId, setStockId] = useState('');
   const [invoiceStatus, setInvoiceStatus] = useState('Invoice');
   const [cusId, setCusId] = useState('');
+  const [file, setFile] = useState(null);
 
   const DateTime = () => {
     const now = new Date();
@@ -363,7 +364,8 @@ const NewSales = ({ invoice }) => {
         invoiceDate: DateTime().date + " " + DateTime().time,
         status: invoiceStatus,
         store: selectedStore,
-        cusId: cusId
+        cusId: cusId,
+        image: file,
       };
       console.log('Sending invoice data:', invoiceData);
 
@@ -443,7 +445,7 @@ const NewSales = ({ invoice }) => {
           showBank && 'bank'
         ].filter(Boolean).join(' '),
         price: parseFloat(formData.amount) || 0,
-        dateTime: invoiceData.invoiceDate,
+        dateTime:  DateTime().date + " " + DateTime().time,
         discount: parseFloat(formData.discountPrice) || 0,
         note: formData.note || '',
         paid: parseFloat(formData.paidAmount) || 0,
@@ -588,6 +590,10 @@ const NewSales = ({ invoice }) => {
     resetSalesPerson();
   }
 
+ const handleFileChange = (event) => {
+    setFile(event.target.files[0]); // Capture the selected file
+  };
+
   return (
     <div>
       <div className="scrolling-container">
@@ -678,12 +684,16 @@ const NewSales = ({ invoice }) => {
               <div className="sales-person-box">
 
                 <div className="sales-person">
-                    <label id='label'>Cashier</label>
-                    <input type="text" name="userName" value={formData.userName} onChange={handleChange}  className="form-control" readOnly/>
+                  <label id='label'>Cashier</label>
+                  <input type="text" name="userName" value={formData.userName} onChange={handleChange} className="form-control" readOnly />
                 </div>
                 <div className="sales-person">
                   <label htmlFor="" id='label'>Invoice Date</label>
                   <input type="datetime-local" className="form-control" name="invoiceDate" onChange={handleChange} value={formData.invoiceDate} id="date" />
+                </div>
+                <div className="sales-person">
+                  <label id='label'>Invoice </label>
+                  <input type="file" className="form-control" onChange={handleFileChange} accept="image/*,.pdf" />
                 </div>
               </div>
 
