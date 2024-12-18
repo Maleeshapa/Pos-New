@@ -348,7 +348,6 @@ const NewSales = ({ invoice }) => {
   }
   const handleCredit = (e) => {
     setCredit(e.target.checked)
-    setInvoiceStatus('credit');
   }
   const handleCheque = (e) => {
     setCheque(e.target.checked)

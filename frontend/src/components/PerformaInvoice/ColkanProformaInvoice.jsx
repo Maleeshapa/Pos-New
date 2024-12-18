@@ -6,7 +6,7 @@ import config from '../../config';
 import { jsPDF } from "jspdf";
 import { useParams } from 'react-router-dom';
 
-const ProformaInvoice = () => {
+const ColkanProformaInvoice = () => {
     const { invoiceNo } = useParams();
     const [formData, setFormData] = useState({
         invoiceNo: '',
@@ -121,7 +121,7 @@ const ProformaInvoice = () => {
     return (
         <div>
             <div className="scrolling-container">
-                <h4>Colkan</h4>
+                <h4>Colkan Proforma invoice</h4>
                 <div className="invoice-page">
                     <div className="invoice">
                         <div id="invoice-card">
@@ -166,6 +166,7 @@ const ProformaInvoice = () => {
                                             type="text"
                                             className="form-input"
                                             name="proforma"
+                                            value={formData.proforma}
                                         />
                                     </div>
 
@@ -190,11 +191,12 @@ const ProformaInvoice = () => {
                                     </div>
 
                                     <div className="performa-details">
-                                        <label htmlFor="">Purchase Order No. (Manually)</label>
+                                        <label htmlFor="">Purchase Order No.</label>
                                         <input
                                             type="text"
                                             className="form-input"
                                             name="purchaseOrder"
+                                            
                                         />
                                     </div>
 
@@ -322,4 +324,4 @@ const ProformaInvoice = () => {
     );
 };
 
-export default ProformaInvoice;
+export default ColkanProformaInvoice;

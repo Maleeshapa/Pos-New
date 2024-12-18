@@ -23,9 +23,9 @@ const Credit = () => {
       }
       const invoices = await response.json();
 
-      const filteredInvoices = invoices.filter(invoice => invoice.status === "credit");
+      const filteredInvoices = invoices.filter(invoice => invoice.transaction.transactionType === "credit");
 
-      const transactionPromises = filteredInvoices.map(async (invoice) => {
+      const transactionPromises = invoices.map(async (invoice) => {
         const transactionResponse = await fetch(`${config.BASE_URL}/transaction/invoice/${invoice.invoiceId}`);
         if (transactionResponse.ok) {
           return await transactionResponse.json();
@@ -35,7 +35,7 @@ const Credit = () => {
 
       const transactionsData = await Promise.all(transactionPromises);
 
-      const formattedData = filteredInvoices.map((invoice, index) => {
+      const formattedData = invoices.map((invoice, index) => {
         const invoiceDate = new Date(invoice.invoiceDate);
 
         const formattedInvoiceDate = `${invoiceDate.getFullYear()}-${String(invoiceDate.getMonth() + 1).padStart(2, '0')}-${String(invoiceDate.getDate()).padStart(2, '0')} ${String(invoiceDate.getHours()).padStart(2, '0')}:${String(invoiceDate.getMinutes()).padStart(2, '0')}`;
@@ -56,7 +56,7 @@ const Credit = () => {
           transactionPrice,
           transactiondue,
           <div>
-            <Link to={`/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-primary">Credit Invoice</button></Link>
+            <Link to={`/${invoice.store}PF/${invoice.invoiceNo}`}><button className="btn btn-primary">Credit Invoice</button></Link>
             <Link to={`/salesDetails/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye/></button></Link>
           </div>,
         ];

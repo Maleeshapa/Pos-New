@@ -161,8 +161,8 @@
 }
 
 .performa-details label {
-    flex: 0 0 200px; /* Set label width (adjust as needed) */
     text-align: left; /* Left-align the label text */
+    width: 180px;
 }
 
 .performa-details input {
