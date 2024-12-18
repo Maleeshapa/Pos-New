@@ -34,7 +34,7 @@ const TerraProformaInvoice = () => {
             if (response.ok) {
                 const invoiceData = await response.json();
     
-                const generatedProformaNo = `PR-${invoiceData.invoiceNo}-${new Date().getFullYear().toString().slice(-2)}`;
+                const generatedProformaNo = `PI-${invoiceData.invoiceNo}-${new Date().getFullYear().toString().slice(-2)}`;
     
                 setFormData({
                     invoiceNo: invoiceData.invoiceNo,

@@ -78,7 +78,6 @@ const Sidebar = () => {
                 { title: 'Delivery', path: '/sales/delivery' },
                 { title: 'Draft', path: '/sales/draft' },
                 { title: 'Credit', path: '/sales/credit' },
-                { title: 'Proforma Invoice', path: '/sales/ProformaInvoice' },
             ]
         },
         /*{
