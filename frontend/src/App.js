@@ -88,7 +88,7 @@ function Layout() {
             <Route path="/costing-table" element={<ProtectedRoute><CostingTable /></ProtectedRoute>} />
 
             <Route path="/CreditNote/:id" element={<CreditNote />} />
-            <Route path="/CreditNote/colkan/:id" element={<ColkanCR />} />
+            <Route path="/CreditNote/:store/:invoiceNo" element={<ColkanCR />} />
             <Route path="/CreditNote/haman/:id" element={<HamanCR />} />
             <Route path="/CreditNote/terra/:id" element={<TerraCR />} />
           </Routes>

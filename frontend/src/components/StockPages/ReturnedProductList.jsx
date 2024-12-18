@@ -13,8 +13,8 @@ const ReturnedProductList = () => {
         'Invoice id',
         'Return Type',
         'Return Date',
+        'store',
         'Product',
-        'Store',
         'Handle By',
         'Credit Note'
     ];
@@ -46,14 +46,14 @@ const ReturnedProductList = () => {
                     returnItem.invoice?.invoiceNo,
                     returnItem.returnItemType,
                     returnDate,
+                    returnItem.invoice.store,
                     returnItem.products?.productName,
-                    returnItem.store?.storeName,
                     returnItem.user?.userName,
                     // Adding the Proforma Invoice button
                     (
                         <button
                             className="btn btn-warning"
-                            onClick={() => navigate(`/CreditNote/${returnItem.returnItemId}`)}
+                            onClick={() => navigate(`/CreditNote/${returnItem.invoice.store}/${returnItem.invoice?.invoiceNo}`)}
                         >
                             Credit Note
                         </button>
