@@ -45,6 +45,8 @@ const CreateProductReturn = () => {
         fetchUserId();
     }, []);
 
+
+
     const fetchUserId = async () => {
         const userName = localStorage.getItem('userName');
         if (userName) {
@@ -142,10 +144,18 @@ const CreateProductReturn = () => {
             if (!response.ok) throw new Error('Failed to fetch stores');
             const data = await response.json();
             setStores(data);
+
+            if (data.length > 0) {
+                setFormData(prevData => ({
+                    ...prevData,
+                    store: data[0].storeId,
+                }));
+            }
         } catch (err) {
             setError(err.message);
         }
     };
+
 
     const fetchUsers = async () => {
         try {
@@ -233,27 +243,28 @@ const CreateProductReturn = () => {
                                     <option value="Exchange">Exchange</option>
                                 </select>
                             </div>
-                            <div className="Stock-details">
+                            <div className="Stock-details mb-2">
                                 <label htmlFor="user">Person</label>
                                 <input
                                     type="text"
                                     name="userName"
                                     value={formData.userName}
-                                    disabled
                                     className="form-control"
+                                    readOnly
                                 />
                             </div>
 
                             <div className="Stock-details mb-2">
                                 <label htmlFor="store">Store</label>
-                                <select name="store" className="form-control" value={formData.store} onChange={handleChange}>
-                                    <option value="">Select Store</option>
-                                    {stores.map((store) => (
-                                        <option key={store.storeId} value={store.storeId}>
-                                            {store.storeName}
-                                        </option>
-                                    ))}
-                                </select>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="store"
+                                    value={
+                                        stores.find(store => store.storeId === formData.store)?.storeName || ""
+                                    }
+                                    readOnly
+                                />
                             </div>
                             <div className="Stock-details mb-2">
                                 <label htmlFor="returnDate">Return Date</label>
