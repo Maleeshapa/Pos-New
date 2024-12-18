@@ -100,7 +100,6 @@ const getAllInvoice = async (req, res) => {
         const invoices = await Invoice.findAll({
             include: [
                 { model: Customer, as: 'customer' },
-                { model: Transaction, as: 'transaction' }
             ],
         });
 
