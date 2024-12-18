@@ -38,7 +38,7 @@ const ColkanCR = () => {
             if (response.ok) {
                 const invoiceData = await response.json();
 
-                const generatedProformaNo = `PI-${invoiceData.invoiceNo}-${new Date().getFullYear().toString().slice(-2)}`;
+                const generatedProformaNo = `CR-${invoiceData.invoiceNo}-${new Date().getFullYear().toString().slice(-2)}`;
 
                 setFormData({
                     invoiceNo: invoiceData.invoiceNo,
@@ -190,7 +190,7 @@ const ColkanCR = () => {
                                 <div className="performa-details-container">
 
                                     <div className="performa-details">
-                                        <label htmlFor="">Proforma Invoice No.</label>
+                                        <label htmlFor="">Credit Note No.</label>
                                         <input
                                             type="text"
                                             className="form-input"
