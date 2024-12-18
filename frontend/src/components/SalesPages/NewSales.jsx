@@ -100,22 +100,21 @@ const NewSales = ({ invoice }) => {
         const response = await fetch(`${config.BASE_URL}/user/name/${userName}`);
         if (!response.ok) throw new Error('User not found');
         const userData = await response.json();
-
-        setFormData(prev => ({
-          ...prev,
-          user: userData.userId,
-          userName: userData.userName,
-        }));
+        setFormData(prev => ({ ...prev, user: userData.userId, userName: userData.userName }));
       } catch (err) {
         console.log('err', err);
-
       }
     } else {
       console.log('err');
-
     }
   };
-
+  
+  useEffect(() => {
+    if (!formData.user) {
+      fetchUserId();
+    }
+  }, [formData.user]);
+  
   const fetchCustomerData = async (cusName) => {
     try {
       const response = await fetch(`${config.BASE_URL}/customer/cusName/${cusName}`);
@@ -208,20 +207,6 @@ const NewSales = ({ invoice }) => {
   };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch(`${config.BASE_URL}/users`);
-        if (response.ok) {
-          const userData = await response.json();
-          setUsers(userData);  // Populate users in state
-        } else {
-          console.error('Failed to fetch users');
-        }
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    };
-    fetchUsers();
 
     const discountedPrice = (formData.productPrice || 0) * (1 - (formData.discount || 0) / 100);
     const newTotalPrice = discountedPrice * (formData.qty || 1);
