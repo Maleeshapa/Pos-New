@@ -38,7 +38,10 @@ const createReturn = async (req, res) => {
         if (!invoice) return res.status(400).json({ message: 'Invalid invoice ID' });
 
         const stock = await Stock.findByPk(stockId);
-        if (!stock) return res.status(400).json({ message: 'Invalid Stock ID' });
+        if (!stock) return res.status(400).json({ message: 'Invalid stock ID' });
+
+        // Calculate the return amount
+        const returnAmount = parseFloat(returnQty) * parseFloat(product.productProfit);
 
         // Create the return
         const newReturn = await Return.create({
@@ -46,6 +49,7 @@ const createReturn = async (req, res) => {
             returnItemDate,
             returnQty,
             returnNote,
+            returnAmount,
             products_productId: productId,
             store_storeId: storeId,
             user_userId: userId,
@@ -118,8 +122,9 @@ const getReturnById = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 module.exports = {
     createReturn,
     getAllReturns,
     getReturnById,
-}
+};
