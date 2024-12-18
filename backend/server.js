@@ -95,6 +95,7 @@ app.put("/invoice/:id", InvoiceController.updateInvoice);
 app.delete("/invoice/:id", InvoiceController.deleteInvoice);
 app.get('/invoice/invoiceNo/:num', InvoiceController.getInvoiceByNo);
 app.get('/invoice/last', InvoiceController.getLastInvoiceNumber);
+app.post('/invoice/:id', InvoiceController.addImage);
 
 //invoiceProduct Route
 app.post('/invoiceProduct', InvoiceProductController.createInvoiceProduct);
