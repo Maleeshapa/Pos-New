@@ -30,6 +30,10 @@ const Return = sequelize.define(
             type: DataTypes.DATE,
             allowNull: false,
         },
+        returnAmount: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+        },
         products_productId: {
             type: DataTypes.INTEGER,
             references: {
