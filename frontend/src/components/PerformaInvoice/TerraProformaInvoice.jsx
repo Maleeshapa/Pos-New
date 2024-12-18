@@ -15,7 +15,7 @@ const TerraProformaInvoice = () => {
         cusName: '',
         cusJob: '',
         cusOffice: '',
-        delivaryNo: ''
+        proforma: ''
     });
     const [invoiceProducts, setInvoiceProducts] = useState([]);
     const [Transaction, setTransaction] = useState([]);
@@ -33,15 +33,18 @@ const TerraProformaInvoice = () => {
             const response = await fetch(`${config.BASE_URL}/invoice/invoiceNo/${invoiceNo}`);
             if (response.ok) {
                 const invoiceData = await response.json();
-
+    
+                const generatedProformaNo = `PR-${invoiceData.invoiceNo}-${new Date().getFullYear().toString().slice(-2)}`;
+    
                 setFormData({
                     invoiceNo: invoiceData.invoiceNo,
                     invoiceDate: new Date(invoiceData.invoiceDate).toISOString().slice(0, 16),
                     cusName: invoiceData.customer.cusName,
                     cusJob: invoiceData.customer.cusJob,
                     cusOffice: invoiceData.customer.cusOffice,
+                    proforma: generatedProformaNo,
                 });
-
+    
                 if (invoiceData.invoiceId) {
                     fetchInvoiceProducts(invoiceData.invoiceId);
                     fetchTransaction(invoiceData.invoiceId);
@@ -53,7 +56,7 @@ const TerraProformaInvoice = () => {
             console.error('Error fetching invoice data:', error);
             alert('An error occurred while fetching invoice data');
         }
-    };
+    };    
 
     const fetchInvoiceProducts = async (invoiceId) => {
         try {
@@ -166,6 +169,7 @@ const TerraProformaInvoice = () => {
                                             type="text"
                                             className="form-input"
                                             name="proforma"
+                                            value={formData.proforma}
                                         />
                                     </div>
 

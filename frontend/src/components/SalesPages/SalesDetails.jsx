@@ -3,13 +3,20 @@ import { useParams } from 'react-router-dom';
 import { jsPDF } from "jspdf";
 import config from '../../config';
 import './SalesDetails.css';
+import one from '../../assets/1.jpg';
+import two from '../../assets/2.jpg';
+import three from '../../assets/3.jpg';
+import Terra from '../invoicePages/Terra';
 
 const SalesDetails = () => {
-    const { invoiceNo } = useParams();
+    const { store, invoiceNo } = useParams();
+    const [colkan, setColkan] = useState(false)
+    const [haman, setHaman] = useState(false)
+    const [terra, setTerra] = useState(false)
     const [formData, setFormData] = useState({
         invoiceNo: '',
         invoiceDate: '',
-        store:'',
+        store: '',
         cusName: '',
         cusJob: '',
         cusAddress: '',
@@ -33,7 +40,6 @@ const SalesDetails = () => {
                 setFormData({
                     invoiceNo: invoiceData.invoiceNo,
                     invoiceDate: new Date(invoiceData.invoiceDate).toISOString().slice(0, 16),
-                    store:invoiceData.store,
                     cusName: invoiceData.customer.cusName,
                     cusJob: invoiceData.customer.cusJob,
                     cusAddress: invoiceData.customer.cusAddress,
@@ -44,6 +50,16 @@ const SalesDetails = () => {
                     fetchInvoiceProducts(invoiceData.invoiceId);
                     fetchTransaction(invoiceData.invoiceId);
                 }
+                if (store === 'colkan') {
+                    setColkan(true)
+                }
+                if (store === 'haman') {
+                    setHaman(true)
+                }
+                if (store === 'terra') {
+                    setTerra(true)
+                }
+
             } else {
                 alert('Invoice not found');
             }
@@ -110,6 +126,22 @@ const SalesDetails = () => {
                 <div className="invoice-page">
                     <div className="invoice-details-page">
                         <div id="invoice-card">
+                            {colkan && (
+                                <section className="invoice-header">
+                                    <img src={one} alt="" className="header-img" />
+                                </section>
+                            )}
+                            {haman && (
+                                <section className="invoice-header">
+                                    <img src={two} alt="" className="header-img" />
+                                </section>
+
+                            )}
+                            {terra && (
+                                <section className="invoice-header">
+                                    <img src={three} alt="" className="header-img" />
+                                </section>
+                            )}
                             <section className="billing-details">
                                 <div className="invoice-info">
                                     <div className="details mb-2">
@@ -137,10 +169,6 @@ const SalesDetails = () => {
                                     <div className="details">
                                         <label>Date</label>
                                         <input type="datetime-local" className="form-input date" name="invoiceDate" value={formData.invoiceDate} readOnly />
-                                    </div>
-                                    <div className="details">
-                                        <label>Department</label>
-                                        <input type="text" className="form-input" name="store" value={formData.store} readOnly />
                                     </div>
                                 </div>
                             </section>

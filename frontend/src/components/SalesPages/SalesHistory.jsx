@@ -9,7 +9,7 @@ const SalesHistory = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const columns = ["ID", "Invoice No","Typr", "Customer", 'address', "Date/time", "Transaction Type", "Total Amount", "Due", "invoice"];
+  const columns = ["ID", "Invoice No","Typr","store", "Customer", 'address', "Date/time", "Transaction Type", "Total Amount", "Due", "invoice"];
 
   useEffect(() => {
     fetchSalesHistory();
@@ -46,6 +46,7 @@ const SalesHistory = () => {
           invoice.invoiceId,
           invoice.invoiceNo,
           invoice.status,
+          invoice.store,
           invoice.customer.cusName,
           invoice.customer.cusAddress,
           formattedInvoiceDate,
@@ -54,7 +55,7 @@ const SalesHistory = () => {
           transactiondue,
           <div>
             {/* <Link to={`/selectDn/${invoice.invoiceNo}`}><button className="btn btn-primary">invoice</button></Link> */}
-            <Link to={`/salesDetails/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye/></button></Link>
+            <Link to={`/salesDetails/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye/></button></Link>
           </div>,
         ];
       });

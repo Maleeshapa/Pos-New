@@ -83,7 +83,7 @@ function Layout() {
             <Route path="/hamanDN/:invoiceNo" element={<ProtectedRoute><HamanDN /></ProtectedRoute>} />
             <Route path="/terraDN/:invoiceNo" element={<ProtectedRoute><TerraDN /></ProtectedRoute>} />
 
-            <Route path="/salesDetails/:invoiceNo" element={<ProtectedRoute><SalesDetails /></ProtectedRoute>} />
+            <Route path="/salesDetails/:store/:invoiceNo" element={<ProtectedRoute><SalesDetails /></ProtectedRoute>} />
             <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
             <Route path="/costing-table" element={<ProtectedRoute><CostingTable /></ProtectedRoute>} />
 
