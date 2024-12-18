@@ -350,7 +350,6 @@ const NewSales = ({ invoice }) => {
         status: invoiceStatus,
         store: selectedStore,
         cusId: cusId,
-        image: file,
       };
       console.log('Sending invoice data:', invoiceData);
 
@@ -369,6 +368,24 @@ const NewSales = ({ invoice }) => {
       }
       const invoiceResult = await invoiceResponse.json();
       console.log('Invoice created:', invoiceResult);
+
+      // //image
+      // const formData = new FormData();
+      // formData.append("image", file);
+
+      // const imageResponse = await fetch(`${config.BASE_URL}/invoice/${invoiceResult.invoiceId}`, {
+      //   method: "POST",
+      //   body: formData,
+      // });
+
+      // if (!imageResponse.ok) {
+      //   const errorData = await imageResponse.json();
+      //   console.error("Image upload error details:", errorData);
+      //   throw new Error(errorData.error || "Failed to upload image");
+      // }
+
+      // const imageResult = await imageResponse.json();
+      // console.log("Image uploaded successfully:", imageResult);
 
       //product------------------------------------------------------------------------------------------
       const invalidProducts = tableData.filter(row => !row[3]);
@@ -430,7 +447,7 @@ const NewSales = ({ invoice }) => {
           showBank && 'bank'
         ].filter(Boolean).join(' '),
         price: parseFloat(formData.amount) || 0,
-        dateTime:  DateTime().date + " " + DateTime().time,
+        dateTime: DateTime().date + " " + DateTime().time,
         discount: parseFloat(formData.discountPrice) || 0,
         note: formData.note || '',
         paid: parseFloat(formData.paidAmount) || 0,
@@ -575,7 +592,7 @@ const NewSales = ({ invoice }) => {
     resetSalesPerson();
   }
 
- const handleFileChange = (event) => {
+  const handleFileChange = (event) => {
     setFile(event.target.files[0]); // Capture the selected file
   };
 
