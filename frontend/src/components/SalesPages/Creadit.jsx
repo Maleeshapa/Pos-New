@@ -60,7 +60,7 @@ const Credit = () => {
           transactionPaid,
           transactiondue,
           <div>
-            <Link to={`/${invoice.store}PF/${invoice.invoiceNo}`}><button className="btn btn-primary">Credit Invoice</button></Link>
+            <Link to={`/${invoice.store}PF/${invoice.invoiceNo}`}><button className="btn btn-primary">proforma Invoice</button></Link>
             <Link to={`/salesDetails/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye/></button></Link>
           </div>,
         ];

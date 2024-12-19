@@ -6,7 +6,6 @@ import './SalesDetails.css';
 import one from '../../assets/1.jpg';
 import two from '../../assets/2.jpg';
 import three from '../../assets/3.jpg';
-import Terra from '../invoicePages/Terra';
 
 const SalesDetails = () => {
     const { store, invoiceNo } = useParams();

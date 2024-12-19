@@ -1,19 +1,25 @@
-import React, { useEffect,useState } from 'react';
-import './Colkan.css';
+import React, { useEffect, useState } from 'react';
+import './InvoiceNote.css';
 import one from '../../assets/1.jpg';
+import two from '../../assets/2.jpg';
+import three from '../../assets/3.jpg';
 import config from '../../config';
 import { jsPDF } from "jspdf";
 import { useParams } from 'react-router-dom';
 
-const Colkan = () => {
-    const { invoiceNo } = useParams();
+const InvoiceNote = () => {
+    const { store, invoiceNo } = useParams();
+    const [colkan, setColkan] = useState(false)
+    const [haman, setHaman] = useState(false)
+    const [terra, setTerra] = useState(false)
     const [formData, setFormData] = useState({
         invoiceNo: '',
         invoiceDate: '',
         PurchaseOrder: '',
         cusName: '',
         cusJob: '',
-        delivaryNo: ''
+        delivaryNo: '',
+        cusAddress: ''
     });
     const [invoiceProducts, setInvoiceProducts] = useState([]);
     const [Transaction, setTransaction] = useState([]);
@@ -37,11 +43,22 @@ const Colkan = () => {
                     invoiceDate: new Date(invoiceData.invoiceDate).toISOString().slice(0, 16),
                     cusName: invoiceData.customer.cusName,
                     cusJob: invoiceData.customer.cusJob,
+                    cusAddress: invoiceData.customer.cusAddress
                 });
 
                 if (invoiceData.invoiceId) {
                     fetchInvoiceProducts(invoiceData.invoiceId);
                     fetchTransaction(invoiceData.invoiceId);
+                }
+
+                if (store === 'colkan') {
+                    setColkan(true)
+                }
+                if (store === 'haman') {
+                    setHaman(true)
+                }
+                if (store === 'terra') {
+                    setTerra(true)
                 }
             } else {
                 alert('Invoice not found');
@@ -118,59 +135,58 @@ const Colkan = () => {
     return (
         <div>
             <div className="scrolling-container">
-                <h4>Colkan</h4>
+                <h4>Invoice </h4>
                 <div className="invoice-page">
                     <div className="invoice">
-                        <div id="invoice-card">
+                        <div id="invoice-card"> 
+                            {colkan && (
+                                <section className="invoice-header">
+                                    <img src={one} alt="" className="header-img" />
+                                </section>
+                            )}
+                            {haman && (
+                                <section className="invoice-header">
+                                    <img src={two} alt="" className="header-img" />
+                                </section>
 
-                            <section className="invoice-header">
-                                <img src={one} alt="" className="header-img" />
-                            </section>
-
+                            )}
+                            {terra && (
+                                <section className="invoice-header">
+                                    <img src={three} alt="" className="header-img" />
+                                </section>
+                            )}
+                            <div className="type-head text-center">
+                                <h4>Invoice</h4>
+                            </div>
                             <section className="billing-details">
                                 <div className="invoice-info">
-                                    <h3>Billing Details</h3>
+                                    <label>Billing Details</label>
                                     <div className="details mb-2">
-                                        <input
-                                            type="text"
-                                            className="form-input"
-                                            name="cusName"
-                                            value={formData.cusName}
-                                        />
+                                        <input type="text" className="form-input" name="cusName" value={formData.cusName} />
                                     </div>
                                     <div className="details mb-2">
                                         <input type="text" className="form-input" name="cusJob" value={formData.cusJob} />
                                     </div>
                                     {showAddress && (
-                                        <div>
-                                            <p className="details">No 64, Summer 64, 10/4, 9th Floor,</p>
-                                            <p className="details">Suvisuddarama Road, Colombo 6, Sri Lanka</p>
+                                        <div className="details mb-2">
+                                            <input type="text" className="form-input" name="cusName" value={formData.cusAddress} />
                                         </div>
                                     )}
                                 </div>
                                 <div className="invoice-info">
                                     <div className="details mb-2">
                                         <label htmlFor="">Invoice No</label>
-                                        <input
-                                            type="text"
-                                            className="form-input"
-                                            name="invoiceNo"
-                                            value={formData.invoiceNo}
-                                        />
+                                        <input type="text" className="form-input" name="invoiceNo" value={formData.invoiceNo} />
                                     </div>
                                     <div className="details">
                                         <label htmlFor="">Date</label>
-                                        <input
-                                            type="datetime-local"
-                                            className="form-input date"
-                                            name="invoiceDate"
-                                            value={formData.invoiceDate}
-                                        />
+                                        <input type="datetime-local" className="form-input date" name="invoiceDate" value={formData.invoiceDate} />
                                     </div>
                                 </div>
                             </section>
 
-                            <table className="invoice-table">
+                            {/* product table---------------------------------------------------------------- */}
+                            <table className="invoice-table mb-2">
                                 <thead>
                                     <tr>
                                         <th>S/N</th>
@@ -202,27 +218,9 @@ const Colkan = () => {
                                 <tbody>
                                     <tr>
                                         <td id="table-content" rowSpan={3}>
-                                            {showBank && (
-                                                <div>
-                                                    Bank           :<br />
-                                                    Account Number :<br />
-                                                    Account Name   :<br />
-                                                    Branch Name    :<br />
-                                                </div>
-                                            )}
                                         </td>
                                         <td id="table-content" colSpan={2} rowSpan={3}>
-                                            {showBank && (
-                                                <div contentEditable="true">
-                                                    HNB BANK<br />
-                                                    250010032342<br />
-                                                    COLKAN HOLDINGS (PVT) LTE<br />
-                                                    250<br />
-                                                    COLKANH.HANEEF<br />
-                                                </div>
-                                            )}
                                         </td>
-
                                         <td>Subtotal</td>
                                         <td>
                                             {invoiceProducts.reduce(
@@ -245,24 +243,101 @@ const Colkan = () => {
                                     </tr>
                                 </tbody>
                             </table>
+                            {/*bank details-------------------------------------------------------------------*/}
+                            {showBank && (
+                                <>
+                                    {colkan && (
+                                        <table>
+                                            <tr>
+                                                <td>Bank </td>
+                                                <td>:</td>
+                                                <td>HNB</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Account Number </td>
+                                                <td>:</td>
+                                                <td>250010032342</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Account Name </td>
+                                                <td>:</td>
+                                                <td>Colkan Holdings (Pvt) LTD</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Branch Name </td>
+                                                <td>:</td>
+                                                <td>Colkan</td>
+                                            </tr>
+                                        </table>
+                                    )}
+                                </>)}
+
+                            {showBank && (
+                                <>
+                                    {haman && (
+                                        <table>
+                                            <tr>
+                                                <td>Bank </td>
+                                                <td>:</td>
+                                                <td>BOC</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Account Number </td>
+                                                <td>:</td>
+                                                <td>93829087</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Account Name </td>
+                                                <td>:</td>
+                                                <td>Haman</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Branch Name </td>
+                                                <td>:</td>
+                                                <td>Wellewathe</td>
+                                            </tr>
+                                        </table>
+                                    )}
+                                </>)}
+
+                            {showBank && (
+                                <>
+                                    {terra && (
+                                        <table>
+                                            <tr>
+                                                <td>Bank </td>
+                                                <td>:</td>
+                                                <td>Sampath Bank</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Account Number </td>
+                                                <td>:</td>
+                                                <td>0117 1000 1407</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Account Name </td>
+                                                <td>:</td>
+                                                <td>Terra walkers</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Branch Name </td>
+                                                <td>:</td>
+                                                <td>Kirulapona</td>
+                                            </tr>
+                                        </table>
+                                    )}
+                                </>)}
+
                             <footer className="invoice-footer ">
                                 <p className='text-danger font-weight-bold'>I / We hereby acknowledge the receipt of the above goods are received in damages.</p>
 
                                 <div className="signature">
                                     <table className="signature-table">
                                         <thead>
-                                            <tr>
-                                                <th>Prepared by</th>
-                                                <th>Issued by</th>
-                                                <th>Company seal & sign</th>
-                                            </tr>
+                                            <tr> <th>Prepared by</th>  <th>Issued by</th> <th>Company seal & sign</th> </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
+                                            <tr> <td></td>  <td></td>  <td></td> </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -275,20 +350,10 @@ const Colkan = () => {
                             <form action="">
                                 <br />
                                 <label className='invoice-type-label' htmlFor="">Address</label>
-                                <input
-                                    type="checkbox"
-                                    name="address"
-                                    value="address"
-                                    onChange={handleAddress}
-                                />
+                                <input type="checkbox" name="address" value="address" onChange={handleAddress} />
                                 <br />
                                 <label className='invoice-type-label' htmlFor="">Bank</label>
-                                <input
-                                    type="checkbox"
-                                    name="bank"
-                                    value="bank"
-                                    onChange={handleBank}
-                                />
+                                <input type="checkbox" name="bank" value="bank" onChange={handleBank} />
                             </form>
                         </div>
                         <button onClick={handlePrint} className='btn btn-success'>Print Invoice</button>
@@ -301,4 +366,4 @@ const Colkan = () => {
     );
 };
 
-export default Colkan;
+export default InvoiceNote;

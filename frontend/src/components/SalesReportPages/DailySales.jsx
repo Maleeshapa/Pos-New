@@ -81,7 +81,6 @@ function DailySales() {
             btnName={btnName}
             onAdd={handleNewSale}
             showActions={false}
-            showDate={false}
             title={title}
             invoice={invoice}
           />

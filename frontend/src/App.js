@@ -16,9 +16,6 @@ import Rental from './Pages/Rental/Rental';
 import Login from './Pages/Login';
 import Header from './components/SideBar/Header';
 import SelectInvoice from './components/invoicePages/selectInvoice';
-import Colkan from './components/invoicePages/Colkan';
-import Haman from './components/invoicePages/Haman';
-import Terra from './components/invoicePages/Terra';
 import Upload from './Pages/Upload/Upload';
 import SalesDetails from './components/SalesPages/SalesDetails';
 import CostingTable from './Pages/Cost Table/CostingTable';
@@ -33,6 +30,7 @@ import SelectDN from './components/DelivaryPages/SelectDN';
 import ColkanProformaInvoice from './components/PerformaInvoice/ColkanProformaInvoice';
 import HamanProformaInvoice from './components/PerformaInvoice/HamanProformaInvoice';
 import TerraProformaInvoice from './components/PerformaInvoice/TerraProformaInvoice';
+import InvoiceNote from './components/invoicePages/InvoiceNote';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token');
@@ -74,9 +72,7 @@ function Layout() {
             <Route path="/TerraPF/:invoiceNo" element={<ProtectedRoute><TerraProformaInvoice /></ProtectedRoute>} />
 
             <Route path="/selectInvoice/:invoiceNo" element={<ProtectedRoute><SelectInvoice /></ProtectedRoute>} />
-            <Route path="/colkan/:invoiceNo" element={<ProtectedRoute><Colkan /></ProtectedRoute>} />
-            <Route path="/haman/:invoiceNo" element={<ProtectedRoute><Haman /></ProtectedRoute>} />
-            <Route path="/terra/:invoiceNo" element={<ProtectedRoute><Terra /></ProtectedRoute>} />
+            <Route path="/invoice/:store/:invoiceNo" element={<ProtectedRoute><InvoiceNote /></ProtectedRoute>} />
 
             <Route path="/selectDn/:invoiceNo" element={<ProtectedRoute><SelectDN /></ProtectedRoute>} />
             <Route path="/colkanDN/:invoiceNo" element={<ProtectedRoute><ColkanDN /></ProtectedRoute>} />
@@ -87,10 +83,7 @@ function Layout() {
             <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
             <Route path="/costing-table" element={<ProtectedRoute><CostingTable /></ProtectedRoute>} />
 
-            <Route path="/CreditNote/:id" element={<CreditNote />} />
             <Route path="/CreditNote/:store/:invoiceNo" element={<ColkanCR />} />
-            <Route path="/CreditNote/haman/:id" element={<HamanCR />} />
-            <Route path="/CreditNote/terra/:id" element={<TerraCR />} />
           </Routes>
         </div>
       </div>
