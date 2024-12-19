@@ -33,6 +33,10 @@ const Customer = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        cusStore: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
     },
     {
         tableName: "customer",

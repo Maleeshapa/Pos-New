@@ -11,7 +11,7 @@ const Form = ({ closeModal, onSave, cus }) => {
     company: '',
     phone: '',
     email: '',
-    
+    cusStore:'',
   });
 
   // UseEffect to populate the form with customer data if editing
@@ -22,9 +22,8 @@ const Form = ({ closeModal, onSave, cus }) => {
         jobPosition: cus.cusJob || '',
         company: cus.cusOffice || '',
         phone: cus.cusPhone || '',
-        email: cus.cusEmail || '',
-        
-        
+        email: cus.cusEmail || '', 
+        cusStore:cus.cusStore || '',
       });
     }
   }, [cus]);
@@ -74,7 +73,7 @@ const Form = ({ closeModal, onSave, cus }) => {
       cusOffice: formData.company,      
       cusAddress: formData.address,
       cusPhone: formData.phone,
-      
+      cusStore:formData.cusStore,
     };
 
     console.log('Customer data:', customerData);
@@ -183,7 +182,16 @@ const Form = ({ closeModal, onSave, cus }) => {
             />
             {formErrors.address && <span id="address-error" className="error-text">{formErrors.address}</span>}
           </div>
-
+          <div className="form-group">
+            <label htmlFor="cusStore">Store<span>*</span></label>
+           <select name="cusStore" id="cusStore" value={formData.cusStore} onChange={handleChange}  >
+            <option value="">select store</option>
+            <option value="colkan">Colkan</option>
+            <option value="haman">Haman</option>
+            <option value="terra">Terra</option>
+           </select>
+            {formErrors.cusStore && <span id="cusStore-error" className="error-text">{formErrors.cusStore}</span>}
+          </div>
          
          
 

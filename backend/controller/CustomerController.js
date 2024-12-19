@@ -3,10 +3,10 @@ const { Op } = require('sequelize');
 
 async function createCustomer(req, res) {
     try {
-        const { cusName, cusCode, cusAddress, cusPhone, cusJob, cusOffice } = req.body;
+        const { cusName, cusCode, cusAddress, cusPhone, cusJob, cusOffice,cusStore } = req.body;
 
         // Validate required fields
-        if (!cusName || !cusAddress) {
+        if (!cusName || !cusAddress || !cusStore) {
             return res.status(400).json({ error: "All fields are required." });
         }
 
@@ -23,7 +23,8 @@ async function createCustomer(req, res) {
             cusAddress,
             cusPhone,
             cusJob,
-            cusOffice
+            cusOffice,
+            cusStore
         });
 
         // Return success response
@@ -78,7 +79,8 @@ async function updateCustomer(req, res) {
             cusAddress,
             cusPhone,
             cusJob,
-            cusOffice
+            cusOffice,
+            cusStore
         } = req.body;
 
         const customer = await Customer.findByPk(id);
@@ -92,7 +94,8 @@ async function updateCustomer(req, res) {
             cusAddress,
             cusPhone,
             cusJob,
-            cusOffice
+            cusOffice,
+            cusStore
         });
 
         res.status(200).json(customer);
