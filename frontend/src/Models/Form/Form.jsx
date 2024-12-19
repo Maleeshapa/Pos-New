@@ -7,10 +7,11 @@ const Form = ({ closeModal, onSave, cus }) => {
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
+    jobPosition: '',
+    company: '',
     phone: '',
     email: '',
-    jobPosition: '',
-    company: ''
+    
   });
 
   // UseEffect to populate the form with customer data if editing
@@ -18,10 +19,12 @@ const Form = ({ closeModal, onSave, cus }) => {
     if (cus) {
       setFormData({
         name: cus.cusName || '',
-        phone: cus.cusPhone || '',
-        email: cus.cusEmail || '',
         jobPosition: cus.cusJob || '',
         company: cus.cusOffice || '',
+        phone: cus.cusPhone || '',
+        email: cus.cusEmail || '',
+        
+        
       });
     }
   }, [cus]);
@@ -65,12 +68,13 @@ const Form = ({ closeModal, onSave, cus }) => {
     }
 
     const customerData = {
-      cusName: formData.name,
       cusCode: generateCustomerCode(),
+      cusName: formData.name,
+      cusJob: formData.jobPosition,
+      cusOffice: formData.company,      
       cusAddress: formData.address,
       cusPhone: formData.phone,
-      cusJob: formData.jobPosition,
-      cusOffice: formData.company,
+      
     };
 
     console.log('Customer data:', customerData);
@@ -123,7 +127,8 @@ const Form = ({ closeModal, onSave, cus }) => {
       {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSubmitCus} className="form-container">
         <div className="form-group-1">
-          <div className="form-group">
+
+          <div className="form-group">            
             <label htmlFor="name">Name <span>*</span></label>
             <input
               id="name"
@@ -137,6 +142,18 @@ const Form = ({ closeModal, onSave, cus }) => {
             />
             {formErrors.name && <span id="name-error" className="error-text">{formErrors.name}</span>}
           </div>
+
+          <div className="form-group">
+            <label>Job Position</label>
+            <input type="text" name="jobPosition" value={formData.jobPosition} onChange={handleChange} placeholder="Enter Job Position" />
+          </div>
+
+          <div className="form-group">
+            <label>Company</label>
+            <input type="text" name="company" value={formData.company} onChange={handleChange} placeholder="Enter Workplace" />
+          </div>
+
+
           <div className="form-group">
             <label htmlFor="phone">Phone </label>
             <input
@@ -151,6 +168,7 @@ const Form = ({ closeModal, onSave, cus }) => {
             />
             {formErrors.phone && <span id="phone-error" className="error-text">{formErrors.phone}</span>}
           </div>
+
           <div className="form-group">
             <label htmlFor="address">Address <span>*</span></label>
             <input
@@ -166,15 +184,8 @@ const Form = ({ closeModal, onSave, cus }) => {
             {formErrors.address && <span id="address-error" className="error-text">{formErrors.address}</span>}
           </div>
 
-          <div className="form-group">
-            <label>Company</label>
-            <input type="text" name="company" value={formData.company} onChange={handleChange} placeholder="Enter Workplace" />
-          </div>
-
-          <div className="form-group">
-            <label>Job Position</label>
-            <input type="text" name="jobPosition" value={formData.jobPosition} onChange={handleChange} placeholder="Enter Job Position" />
-          </div>
+         
+         
 
           <div className="form-actions">
             <button type="button" onClick={closeModal}>Close</button>

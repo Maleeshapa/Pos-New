@@ -14,7 +14,7 @@ const CustomerList = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [deleteRowIndex, setDeleteRowIndex] = useState(null);
 
-  const columns = ['#', 'Customer Name', 'Customer Code', 'Customer Address', 'Customer Phone', 'Customer Job', 'Customer Office'];
+  const columns = ['#', 'Customer Code','Customer Name', 'Customer Job', 'Customer Office', 'Customer Address', 'Customer Phone', ];
 
   useEffect(() => {
     fetchCustomer();
@@ -31,12 +31,13 @@ const CustomerList = () => {
 
       const formattedData = customers.map(cus => [
         cus.cusId,
-        cus.cusName,
         cus.cusCode,
-        cus.cusAddress,
-        cus.cusPhone,
+        cus.cusName,
         cus.cusJob,
         cus.cusOffice,
+        cus.cusAddress,
+        cus.cusPhone,
+        
       ]);
       setData(formattedData);
       setIsLoading(false);
