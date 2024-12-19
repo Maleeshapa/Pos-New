@@ -175,7 +175,7 @@ const DeliveryNote = () => {
                             )}
 
                             <div className="type-head text-center">
-                                <h4>Delivery</h4>
+                                <h4>Delivery Note</h4>
                             </div>
                             <section className="billing-details">
                                 <div className="invoice-info">
@@ -186,12 +186,27 @@ const DeliveryNote = () => {
                                     <div className="details mb-2">
                                         <input type="text" className="form-input" name="cusJob" value={formData.cusJob} />
                                     </div>
-                                    <div className="details mb-2">
+
+                                    {/* <div className="details mb-2">
                                         <div className="details-box">
-                                            {/* <label htmlFor="">Pickup from</label> */}
+                                            <label htmlFor="">Pickup from</label>
                                             <input type="text" className="form-input" name="cusAddress" />
                                         </div>
-                                    </div>
+                                    </div> */}
+
+<div className="details mb-2">
+    <div className="details-box">
+        {/* <label htmlFor="">Pickup from</label> */}
+        <textarea 
+            className="form-input" 
+            name="cusAddress" 
+            rows="2" 
+            style={{ resize: "both" }} 
+        ></textarea>
+    </div>
+</div>
+
+
                                     {showAddress && (
                                         <div className="details mb-2">
                                             <input type="text" className="form-input" name="cusName" value={formData.cusAddress} />

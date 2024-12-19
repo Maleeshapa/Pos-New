@@ -606,7 +606,7 @@ const NewSales = ({ invoice }) => {
               <div className="customer">
                 <div className="subCaption">
                   <p><User />Customer Details</p>
-                  <button className='addCusBtn' type="button"><Link to={'/customer/customer-list'}><PlusCircle size={30} /></Link></button>
+                  <button className='addCusBtn btn-primary' type="button"><Link to={'/customer/customer-list'}> <PlusCircle size={30} /> </Link></button>
                 </div>
 
                 <div className="customer-details">

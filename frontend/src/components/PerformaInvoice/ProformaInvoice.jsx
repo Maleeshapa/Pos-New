@@ -295,7 +295,7 @@ const ProformaInvoice = () => {
                                             <tr>
                                                 <td >Payment mode:</td>
                                                 <td>:</td>
-                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c </td>
+                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c payee only</td>
                                             </tr>
                                             <tr>
                                                 <td>Bank </td>
@@ -328,7 +328,7 @@ const ProformaInvoice = () => {
                                             <tr>
                                                 <td >Payment mode:</td>
                                                 <td>:</td>
-                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Haman" and crossed a/c </td>
+                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Haman" and crossed a/c payee only</td>
                                             </tr>
                                             <tr>
                                                 <td>Bank </td>
@@ -361,7 +361,7 @@ const ProformaInvoice = () => {
                                             <tr>
                                                 <td >Payment mode:</td>
                                                 <td>:</td>
-                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Terra" and crossed a/c </td>
+                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Terra" and crossed a/c payee only</td>
                                             </tr>
                                             <tr>
                                                 <td>Bank </td>
@@ -387,8 +387,9 @@ const ProformaInvoice = () => {
                                     )}
                                 </>)}
                             <footer className="invoice-footer ">
-                                <p className='text-danger font-weight-bold'>Payment mode :  Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c.</p>
-                                <div className="signature">
+                                {/* <p className='text-danger font-weight-bold'>Payment mode :  Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c.</p> */}
+
+<div className="signature">
                                     <table className="signature-table">
                                         <thead>
                                             <tr>
