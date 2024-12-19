@@ -152,7 +152,6 @@ const Form = ({ closeModal, onSave, cus }) => {
             <input type="text" name="company" value={formData.company} onChange={handleChange} placeholder="Enter Workplace" />
           </div>
 
-
           <div className="form-group">
             <label htmlFor="phone">Phone </label>
             <input
