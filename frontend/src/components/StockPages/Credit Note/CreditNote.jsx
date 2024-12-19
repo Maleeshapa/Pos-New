@@ -288,9 +288,9 @@ const CreditNote = () => {
                                     {colkan && (
                                         <table>
                                             <tr>
-                                                <td >Payment mode:</td>
+                                                <td >Credit Advice:</td>
                                                 <td>:</td>
-                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c </td>
+                                                <td colSpan={2}>Kindly deduct this amount from the payment of the Invoice No.{formData.invoiceNo}</td>
                                             </tr>
                                             <tr>
                                                 <td>Bank </td>
@@ -321,9 +321,9 @@ const CreditNote = () => {
                                     {haman && (
                                         <table>
                                             <tr>
-                                                <td >Payment mode:</td>
+                                                <td >Credit Advice:</td>
                                                 <td>:</td>
-                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Haman" and crossed a/c </td>
+                                                <td colSpan={2}>Kindly deduct this amount from the payment of the Invoice No.{formData.invoiceNo}</td>
                                             </tr>
                                             <tr>
                                                 <td>Bank </td>
@@ -354,9 +354,9 @@ const CreditNote = () => {
                                     {terra && (
                                         <table>
                                             <tr>
-                                                <td >Payment mode:</td>
+                                                <td >Credit Advice:</td>
                                                 <td>:</td>
-                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Terra" and crossed a/c </td>
+                                                <td colSpan={2}>Kindly deduct this amount from the payment of the Invoice No.{formData.invoiceNo}</td>
                                             </tr>
                                             <tr>
                                                 <td>Bank </td>
@@ -383,7 +383,8 @@ const CreditNote = () => {
                                 </>)}
 
                             <footer className="invoice-footer ">
-                                <p className='text-danger font-weight-bold'>Payment mode :  Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c.</p>
+                                {/* <p className='text-danger font-weight-bold'>Payment mode :  Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c.</p>
+                                 */}
                                 <div className="signature">
                                     <table className="signature-table">
                                         <thead>

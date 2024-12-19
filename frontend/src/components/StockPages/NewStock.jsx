@@ -488,11 +488,11 @@ const NewStock = () => {
 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="" className='mb-1'>Manufacture Date </label>
-                  <input onChange={handleChange} type="date" name='mfd' id='' required onWheel={(e) => e.target.blur()} value={formData.mfd} className='form-control' />
+                  <input onChange={handleChange} type="date" name='mfd' id=''   onWheel={(e) => e.target.blur()} value={formData.mfd} className='form-control' />
                 </div>
                 <div className="col-md-6 mb-3">
                   <label htmlFor="" className='mb-1'>Expiration date</label>
-                  <input onChange={handleChange} type="date" name='exp' id='' required onWheel={(e) => e.target.blur()} value={formData.exp} className='form-control' />
+                  <input onChange={handleChange} type="date" name='exp' id=''   onWheel={(e) => e.target.blur()} value={formData.exp} className='form-control' />
                 </div>
 
                 <div className="col-md-4 mb-3">
