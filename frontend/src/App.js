@@ -20,9 +20,7 @@ import Upload from './Pages/Upload/Upload';
 import SalesDetails from './components/SalesPages/SalesDetails';
 import CostingTable from './Pages/Cost Table/CostingTable';
 import CreditNote from './components/StockPages/Credit Note/CreditNote';
-import ColkanCR from './components/StockPages/Credit Note/ColkanCR';
-import HamanCR from './components/StockPages/Credit Note/HamanCR';
-import TerraCR from './components/StockPages/Credit Note/Terra';
+import ColkanCR from './components/StockPages/Credit Note/CreditNote';
 import DeliveryNote from './components/DelivaryPages/DeliveryNote';
 import SelectDN from './components/DelivaryPages/SelectDN';
 import ColkanProformaInvoice from './components/PerformaInvoice/ColkanProformaInvoice';
@@ -79,7 +77,7 @@ function Layout() {
             <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
             <Route path="/costing-table" element={<ProtectedRoute><CostingTable /></ProtectedRoute>} />
 
-            <Route path="/CreditNote/:store/:invoiceNo" element={<ColkanCR />} />
+            <Route path="/creditNote/:store/:invoiceNo" element={<CreditNote />} />
           </Routes>
         </div>
       </div>
