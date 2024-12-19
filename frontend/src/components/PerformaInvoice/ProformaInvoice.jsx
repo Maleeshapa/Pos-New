@@ -1,20 +1,26 @@
 
 import React, { useEffect, useState } from 'react';
 import './ProformaInvoice.css';
+import one from '../../assets/1.jpg';
 import two from '../../assets/2.jpg';
+import three from '../../assets/3.jpg';
 import config from '../../config';
 import { jsPDF } from "jspdf";
 import { useParams } from 'react-router-dom';
 
-const HamanProformaInvoice = () => {
-    const { invoiceNo } = useParams();
+const ProformaInvoice = () => {
+    const { store, invoiceNo } = useParams();
+    const [colkan, setColkan] = useState(false)
+    const [haman, setHaman] = useState(false)
+    const [terra, setTerra] = useState(false)
     const [formData, setFormData] = useState({
         invoiceNo: '',
         invoiceDate: '',
-        PurchaseOrder: '',
+        purchaseOrder: '',
         cusName: '',
         cusJob: '',
         cusOffice: '',
+        cusAddress:'',
         proforma: ''
     });
     const [invoiceProducts, setInvoiceProducts] = useState([]);
@@ -33,21 +39,32 @@ const HamanProformaInvoice = () => {
             const response = await fetch(`${config.BASE_URL}/invoice/invoiceNo/${invoiceNo}`);
             if (response.ok) {
                 const invoiceData = await response.json();
-    
+
                 const generatedProformaNo = `PI-${invoiceData.invoiceNo}-${new Date().getFullYear().toString().slice(-2)}`;
-    
+
                 setFormData({
                     invoiceNo: invoiceData.invoiceNo,
                     invoiceDate: new Date(invoiceData.invoiceDate).toISOString().slice(0, 16),
                     cusName: invoiceData.customer.cusName,
                     cusJob: invoiceData.customer.cusJob,
                     cusOffice: invoiceData.customer.cusOffice,
+                    cusAddress:invoiceData.customer.cusAddress,
                     proforma: generatedProformaNo,
                 });
-    
+
                 if (invoiceData.invoiceId) {
                     fetchInvoiceProducts(invoiceData.invoiceId);
                     fetchTransaction(invoiceData.invoiceId);
+                }
+
+                if (store === 'colkan') {
+                    setColkan(true)
+                }
+                if (store === 'haman') {
+                    setHaman(true)
+                }
+                if (store === 'terra') {
+                    setTerra(true)
                 }
             } else {
                 alert('Invoice not found');
@@ -56,7 +73,7 @@ const HamanProformaInvoice = () => {
             console.error('Error fetching invoice data:', error);
             alert('An error occurred while fetching invoice data');
         }
-    };    
+    };
 
     const fetchInvoiceProducts = async (invoiceId) => {
         try {
@@ -124,19 +141,32 @@ const HamanProformaInvoice = () => {
     return (
         <div>
             <div className="scrolling-container">
-                <h4>Haman Profoma Invoice</h4>
+                <h4>Colkan Proforma invoice</h4>
                 <div className="invoice-page">
                     <div className="invoice">
                         <div id="invoice-card">
+                            {colkan && (
+                                <section className="invoice-header">
+                                    <img src={one} alt="" className="header-img" />
+                                </section>
+                            )}
+                            {haman && (
+                                <section className="invoice-header">
+                                    <img src={two} alt="" className="header-img" />
+                                </section>
 
-                            <section className="invoice-header">
-                                <img src={two} alt="" className="header-img" />
-                            </section>
-
+                            )}
+                            {terra && (
+                                <section className="invoice-header">
+                                    <img src={three} alt="" className="header-img" />
+                                </section>
+                            )}
+                            <div className="type-head text-center">
+                                <h4>Proforma Invoice</h4>
+                            </div>
                             <section className="billing-details">
                                 <div className="invoice-info">
-                                    <h3>Billing Details</h3>
-
+                                    <label>Billing Details</label>
                                     <div className="details mb-2">
                                         <input
                                             type="text"
@@ -145,19 +175,15 @@ const HamanProformaInvoice = () => {
                                             value={formData.cusName}
                                         />
                                     </div>
-
                                     <div className="details mb-2">
                                         <input type="text" className="form-input" name="cusJob" value={formData.cusJob} />
                                     </div>
-
                                     <div className="details mb-2">
                                         <input type="text" className="form-input" name="cusJob" value={formData.cusOffice} />
                                     </div>
-
                                     {showAddress && (
-                                        <div>
-                                            <p className="details">67 Norris Canal Road,</p>
-                                            <p className="details"> Colombo 10</p>
+                                        <div className="details mb-2">
+                                            <input type="text" className="form-input" name="cusName" value={formData.cusAddress} />
                                         </div>
                                     )}
                                 </div>
@@ -199,13 +225,12 @@ const HamanProformaInvoice = () => {
                                             type="text"
                                             className="form-input"
                                             name="purchaseOrder"
+                                            value={formData.purchaseOrder}
                                         />
                                     </div>
-
                                 </div>
-
                             </section>
-
+                            {/* product table---------------------------------------------------------------- */}
                             <table className="invoice-table">
                                 <thead>
                                     <tr>
@@ -226,11 +251,11 @@ const HamanProformaInvoice = () => {
                                             <tr key={index}
                                                 className={`table-row`}
                                             >
-                                                <td>{index + 1}</td>
-                                                <td>{invoiceProduct.product.productName}</td>
-                                                <td>{invoiceProduct.invoiceQty}</td>
-                                                <td>{invoiceProduct.product.productSellingPrice}</td>
-                                                <td>{(invoiceProduct.totalAmount)}</td>
+                                                <td id='table-sn'>{index + 1}</td>
+                                                <td id='tableDes'>{invoiceProduct.product.productName}</td>
+                                                <td id='table-sn'>{invoiceProduct.invoiceQty}</td>
+                                                <td id='table-sn' >{invoiceProduct.product.productSellingPrice}</td>
+                                                <td id='table-sn'>{(invoiceProduct.totalAmount)}</td>
                                             </tr>
                                         ))
                                     )}
@@ -262,17 +287,107 @@ const HamanProformaInvoice = () => {
                                     </tr>
                                 </tbody>
                             </table>
+                             {/*bank details-------------------------------------------------------------------*/}
+                             {showBank && (
+                                <>
+                                    {colkan && (
+                                        <table>
+                                            <tr>
+                                                <td >Payment mode:</td>
+                                                <td>:</td>
+                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Bank </td>
+                                                <td>:</td>
+                                                <td>HNB</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Account Number </td>
+                                                <td>:</td>
+                                                <td>250010032342</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Account Name </td>
+                                                <td>:</td>
+                                                <td>Colkan Holdings (Pvt) LTD</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Branch Name </td>
+                                                <td>:</td>
+                                                <td>Colkan</td>
+                                            </tr>
+                                        </table>
+                                    )}
+                                </>)}
+
+                            {showBank && (
+                                <>
+                                    {haman && (
+                                        <table>
+                                            <tr>
+                                                <td >Payment mode:</td>
+                                                <td>:</td>
+                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Haman" and crossed a/c </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Bank </td>
+                                                <td>:</td>
+                                                <td>BOC</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Account Number </td>
+                                                <td>:</td>
+                                                <td>93829087</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Account Name </td>
+                                                <td>:</td>
+                                                <td>Haman</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Branch Name </td>
+                                                <td>:</td>
+                                                <td>Wellewathe</td>
+                                            </tr>
+                                        </table>
+                                    )}
+                                </>)}
+
+                            {showBank && (
+                                <>
+                                    {terra && (
+                                        <table>
+                                            <tr>
+                                                <td >Payment mode:</td>
+                                                <td>:</td>
+                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Terra" and crossed a/c </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Bank </td>
+                                                <td>:</td>
+                                                <td>Sampath Bank</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Account Number </td>
+                                                <td>:</td>
+                                                <td>0117 1000 1407</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Account Name </td>
+                                                <td>:</td>
+                                                <td>Terra walkers</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Branch Name </td>
+                                                <td>:</td>
+                                                <td>Kirulapona</td>
+                                            </tr>
+                                        </table>
+                                    )}
+                                </>)}
                             <footer className="invoice-footer ">
                                 <p className='text-danger font-weight-bold'>Payment mode :  Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c.</p>
-                                {/* <p className='text-danger font-weight-bold'>Payment mode :  Cash or cheque. All cheques are to be drawn in favour of "TERRA WALKERS" and crossed a/c.</p> */}
-                                {/* <p className='text-danger font-weight-bold'>Payment mode :  Cash or cheque. All cheques are to be drawn in favour of "TERRA WALKERS" and crossed a/c.</p> */}
-
-
-                                {showBank && (
-                                    <p className="bank-details">
-                                        HNB Bank | Account Number: 25001003234 | COLKAN HOLDINGS (PVT) LTE | 250 | COLKANH.HANEEF
-                                    </p>
-                                )}
                                 <div className="signature">
                                     <table className="signature-table">
                                         <thead>
@@ -326,4 +441,4 @@ const HamanProformaInvoice = () => {
     );
 };
 
-export default HamanProformaInvoice;
+export default ProformaInvoice;

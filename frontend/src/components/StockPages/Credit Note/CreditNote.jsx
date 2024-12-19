@@ -140,7 +140,7 @@ const CreditNote = () => {
     return (
         <div>
             <div className="scrolling-container">
-                <h4>Proforma invoice</h4>
+                <h4>Credit Note</h4>
                 <div className="invoice-page">
                     <div className="invoice">
                         <div id="invoice-card">
@@ -282,13 +282,15 @@ const CreditNote = () => {
                                     </tr>
                                 </tbody>
                             </table>
-                             {/*bank details-------------------------------------------------------------------*/}
-                             {showBank && (
+                            {/*bank details-------------------------------------------------------------------*/}
+                            {showBank && (
                                 <>
                                     {colkan && (
                                         <table>
                                             <tr>
-                                                <td colSpan={3}>Payment mode :  Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c </td>
+                                                <td >Payment mode:</td>
+                                                <td>:</td>
+                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c </td>
                                             </tr>
                                             <tr>
                                                 <td>Bank </td>
@@ -319,6 +321,11 @@ const CreditNote = () => {
                                     {haman && (
                                         <table>
                                             <tr>
+                                                <td >Payment mode:</td>
+                                                <td>:</td>
+                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Haman" and crossed a/c </td>
+                                            </tr>
+                                            <tr>
                                                 <td>Bank </td>
                                                 <td>:</td>
                                                 <td>BOC</td>
@@ -346,6 +353,11 @@ const CreditNote = () => {
                                 <>
                                     {terra && (
                                         <table>
+                                            <tr>
+                                                <td >Payment mode:</td>
+                                                <td>:</td>
+                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Terra" and crossed a/c </td>
+                                            </tr>
                                             <tr>
                                                 <td>Bank </td>
                                                 <td>:</td>

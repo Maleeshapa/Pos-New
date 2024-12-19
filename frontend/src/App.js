@@ -20,12 +20,9 @@ import Upload from './Pages/Upload/Upload';
 import SalesDetails from './components/SalesPages/SalesDetails';
 import CostingTable from './Pages/Cost Table/CostingTable';
 import CreditNote from './components/StockPages/Credit Note/CreditNote';
-import ColkanCR from './components/StockPages/Credit Note/CreditNote';
 import DeliveryNote from './components/DelivaryPages/DeliveryNote';
 import SelectDN from './components/DelivaryPages/SelectDN';
-import ColkanProformaInvoice from './components/PerformaInvoice/ColkanProformaInvoice';
-import HamanProformaInvoice from './components/PerformaInvoice/HamanProformaInvoice';
-import TerraProformaInvoice from './components/PerformaInvoice/TerraProformaInvoice';
+import ProformaInvoice from './components/PerformaInvoice/ProformaInvoice';
 import InvoiceNote from './components/invoicePages/InvoiceNote';
 
 const ProtectedRoute = ({ children }) => {
@@ -63,21 +60,14 @@ function Layout() {
             <Route path="/stock-reports/*" element={<ProtectedRoute><StockReports /></ProtectedRoute>} />
             <Route path="/staff/*" element={<ProtectedRoute><Staff /></ProtectedRoute>} />
 
-            <Route path="/colkanPF/:invoiceNo" element={<ProtectedRoute><ColkanProformaInvoice /></ProtectedRoute>} />
-            <Route path="/hamanPF/:invoiceNo" element={<ProtectedRoute><HamanProformaInvoice /></ProtectedRoute>} />
-            <Route path="/TerraPF/:invoiceNo" element={<ProtectedRoute><TerraProformaInvoice /></ProtectedRoute>} />
-
-            <Route path="/selectInvoice/:invoiceNo" element={<ProtectedRoute><SelectInvoice /></ProtectedRoute>} />
+            <Route path="/proformaInvoice/:store/:invoiceNo" element={<ProtectedRoute><ProformaInvoice /></ProtectedRoute>} />
             <Route path="/invoice/:store/:invoiceNo" element={<ProtectedRoute><InvoiceNote /></ProtectedRoute>} />
-
-            <Route path="/selectDn/:invoiceNo" element={<ProtectedRoute><SelectDN /></ProtectedRoute>} />
             <Route path="/delivery/:store/:invoiceNo" element={<ProtectedRoute><DeliveryNote /></ProtectedRoute>} />
-
+            <Route path="/creditNote/:store/:invoiceNo" element={<ProtectedRoute><CreditNote /></ProtectedRoute>} />
             <Route path="/salesDetails/:store/:invoiceNo" element={<ProtectedRoute><SalesDetails /></ProtectedRoute>} />
+
             <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
             <Route path="/costing-table" element={<ProtectedRoute><CostingTable /></ProtectedRoute>} />
-
-            <Route path="/creditNote/:store/:invoiceNo" element={<CreditNote />} />
           </Routes>
         </div>
       </div>

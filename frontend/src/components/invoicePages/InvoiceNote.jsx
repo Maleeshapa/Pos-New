@@ -248,6 +248,11 @@ const InvoiceNote = () => {
                                     {colkan && (
                                         <table>
                                             <tr>
+                                                <td >Payment mode:</td>
+                                                <td>:</td>
+                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c </td>
+                                            </tr>
+                                            <tr>
                                                 <td>Bank </td>
                                                 <td>:</td>
                                                 <td>HNB</td>
@@ -276,6 +281,11 @@ const InvoiceNote = () => {
                                     {haman && (
                                         <table>
                                             <tr>
+                                                <td >Payment mode:</td>
+                                                <td>:</td>
+                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Hamn" and crossed a/c </td>
+                                            </tr>
+                                            <tr>
                                                 <td>Bank </td>
                                                 <td>:</td>
                                                 <td>BOC</td>
@@ -303,6 +313,11 @@ const InvoiceNote = () => {
                                 <>
                                     {terra && (
                                         <table>
+                                            <tr>
+                                                <td >Payment mode:</td>
+                                                <td>:</td>
+                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Terra" and crossed a/c </td>
+                                            </tr>
                                             <tr>
                                                 <td>Bank </td>
                                                 <td>:</td>
