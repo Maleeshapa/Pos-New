@@ -23,9 +23,7 @@ import CreditNote from './components/StockPages/Credit Note/CreditNote';
 import ColkanCR from './components/StockPages/Credit Note/ColkanCR';
 import HamanCR from './components/StockPages/Credit Note/HamanCR';
 import TerraCR from './components/StockPages/Credit Note/Terra';
-import ColkanDN from './components/DelivaryPages/ColkanDN';
-import HamanDN from './components/DelivaryPages/HamanDN';
-import TerraDN from './components/DelivaryPages/TerraDN'
+import DeliveryNote from './components/DelivaryPages/DeliveryNote';
 import SelectDN from './components/DelivaryPages/SelectDN';
 import ColkanProformaInvoice from './components/PerformaInvoice/ColkanProformaInvoice';
 import HamanProformaInvoice from './components/PerformaInvoice/HamanProformaInvoice';
@@ -75,9 +73,7 @@ function Layout() {
             <Route path="/invoice/:store/:invoiceNo" element={<ProtectedRoute><InvoiceNote /></ProtectedRoute>} />
 
             <Route path="/selectDn/:invoiceNo" element={<ProtectedRoute><SelectDN /></ProtectedRoute>} />
-            <Route path="/colkanDN/:invoiceNo" element={<ProtectedRoute><ColkanDN /></ProtectedRoute>} />
-            <Route path="/hamanDN/:invoiceNo" element={<ProtectedRoute><HamanDN /></ProtectedRoute>} />
-            <Route path="/terraDN/:invoiceNo" element={<ProtectedRoute><TerraDN /></ProtectedRoute>} />
+            <Route path="/delivery/:store/:invoiceNo" element={<ProtectedRoute><DeliveryNote /></ProtectedRoute>} />
 
             <Route path="/salesDetails/:store/:invoiceNo" element={<ProtectedRoute><SalesDetails /></ProtectedRoute>} />
             <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />

@@ -57,7 +57,7 @@ const Delivery = () => {
           transactionPrice,
           transactiondue,
           <div>
-            <Link to={`/${invoice.store}DN/${invoice.invoiceNo}`}><button className="btn btn-primary">Delivery Note</button></Link>
+            <Link to={`/delivery/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-primary">Delivery Note</button></Link>
             <Link to={`/salesDetails/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye/></button></Link>
           </div>,
         ];

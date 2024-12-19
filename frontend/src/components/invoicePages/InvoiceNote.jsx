@@ -18,7 +18,6 @@ const InvoiceNote = () => {
         PurchaseOrder: '',
         cusName: '',
         cusJob: '',
-        delivaryNo: '',
         cusAddress: ''
     });
     const [invoiceProducts, setInvoiceProducts] = useState([]);
@@ -206,11 +205,11 @@ const InvoiceNote = () => {
                                             <tr key={index}
                                                 className={`table-row`}
                                             >
-                                                <td>{index + 1}</td>
-                                                <td>{invoiceProduct.product.productName}</td>
-                                                <td>{invoiceProduct.invoiceQty}</td>
-                                                <td>{invoiceProduct.product.productSellingPrice}</td>
-                                                <td>{(invoiceProduct.totalAmount)}</td>
+                                                <td id='table-sn'>{index + 1}</td>
+                                                <td id='tableDes'>{invoiceProduct.product.productName}</td>
+                                                <td id='table-sn'>{invoiceProduct.invoiceQty}</td>
+                                                <td id='table-sn' >{invoiceProduct.product.productSellingPrice}</td>
+                                                <td id='table-sn'>{(invoiceProduct.totalAmount)}</td>
                                             </tr>
                                         ))
                                     )}

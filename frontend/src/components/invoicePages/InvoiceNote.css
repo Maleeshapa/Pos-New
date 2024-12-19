@@ -118,8 +118,11 @@
   padding: 3px;
 }
 
-.table-content{
-  outline: none;
+#table-sn{
+  width: 5%;
+}
+#tableDes{
+width: 100%;
 }
 
 .table-row {
