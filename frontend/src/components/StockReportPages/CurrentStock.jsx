@@ -93,6 +93,7 @@ function CurrentStock() {
             onMarkOutOfStock={null}
             title={title}
             invoice={invoice}
+            showDate={false}
           />
         )}
       </div>

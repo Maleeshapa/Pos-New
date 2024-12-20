@@ -83,6 +83,7 @@ function DailySales() {
             showActions={false}
             title={title}
             invoice={invoice}
+            showDate={false}
           />
         )}
       </div>

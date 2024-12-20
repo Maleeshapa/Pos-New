@@ -21,22 +21,29 @@ function StockHistory() {
       }
       const stock = await response.json();
 
-      const formattedData = stock.map(stock => [
-        stock.stockHistoryId,
-        stock.stock?.stockName,
-        stock.stock?.stockDate,
-        stock.product?.productName || "Unknown",
-        stock.stock?.mfd,
-        stock.stock?.exp,
-        stock.product?.productBuyingPrice,
-        stock.stockHistoryQty,
-        stock.stock?.stockPrice || "-",
-        stock.stock?.vat || "-",
-        stock.stock?.total || "-",
-        stock.stock?.cashAmount || stock.stock?.chequeAmount || '-',
-        stock.stock?.due || '-',
-        stock.stock.stockDescription || '-',
-      ]);
+      const formattedData = stock.map(stock => {
+
+        const stockDate = new Date(stock.stock?.stockDate);
+        // Format dates to "YYYY-MM-DD HH:mm"
+        const formattedStockDate = `${stockDate.getFullYear()}-${String(stockDate.getMonth() + 1).padStart(2, '0')}-${String(stockDate.getDate()).padStart(2, '0')} ${String(stockDate.getHours()).padStart(2, '0')}:${String(stockDate.getMinutes()).padStart(2, '0')}`;
+
+        return [
+          stock.stockHistoryId,
+          stock.stock?.stockName,
+          formattedStockDate,
+          stock.product?.productName || "Unknown",
+          stock.stock?.mfd,
+          stock.stock?.exp,
+          stock.product?.productBuyingPrice,
+          stock.stockHistoryQty,
+          stock.stock?.stockPrice || "-",
+          stock.stock?.vat || "-",
+          stock.stock?.total || "-",
+          stock.stock?.cashAmount || stock.stock?.chequeAmount || '-',
+          stock.stock?.due || '-',
+          stock.stock.stockDescription || '-',
+        ];
+      });
       setData(formattedData);
       setIsLoading(false);
     } catch (err) {
