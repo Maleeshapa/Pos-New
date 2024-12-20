@@ -59,6 +59,7 @@ const NewSales = ({ invoice }) => {
     note: '',
     invoiceDate: DateTime().date + " " + DateTime().time,
     invoiceNo: '',
+    purchaseNo: '',
     salesPerson: '',
     cusJob: '',
     cusOffice: ''
@@ -108,13 +109,15 @@ const NewSales = ({ invoice }) => {
       console.log('err');
     }
   };
-  
+
   useEffect(() => {
     if (!formData.user) {
       fetchUserId();
     }
   }, [formData.user]);
-  
+
+  const[customerStore,setCustomerStore]=useState('');
+
   const fetchCustomerData = async (cusName) => {
     try {
       const response = await fetch(`${config.BASE_URL}/customer/cusName/${cusName}`);
@@ -128,6 +131,8 @@ const NewSales = ({ invoice }) => {
           cusOffice: customerData.cusOffice,
           cusAddress: customerData.cusAddress
         }));
+        setCustomerStore(customerData.cusStore)
+        setSelectedStore(customerData.cusStore);
       }
     } catch (error) {
       console.error('Error fetching customer data:', error);
@@ -309,7 +314,10 @@ const NewSales = ({ invoice }) => {
   const [delivary, setDelivary] = useState('invoice')
 
   const handleInvoice = (e) => {
-    setSelectedStore(e.target.value);
+    const store = e.target.value;
+    setSelectedStore(store);
+    setCustomerStore(store);
+    
   };
 
   const handleDelivary = (e) => {
@@ -348,6 +356,7 @@ const NewSales = ({ invoice }) => {
       const invoiceData = {
         invoiceDate: DateTime().date + " " + DateTime().time,
         status: invoiceStatus,
+        purchaseNo: formData.purchaseNo,
         store: selectedStore,
         cusId: cusId,
       };
@@ -482,13 +491,13 @@ const NewSales = ({ invoice }) => {
         navigate('/sales/new')
       }
       else if (delivary === 'notDelivered') {
-        navigate(`/${selectedStore}DN/${invoiceResult.invoiceNo}`)
+        navigate(`/delivery/${selectedStore}/${invoiceResult.invoiceNo}`)
       }
       else if (!selectedStore) {
         alert('Select Department')
       }
       else {
-        navigate(`/${selectedStore}/${invoiceResult.invoiceNo}`)
+        navigate(`/invoice/${selectedStore}/${invoiceResult.invoiceNo}`)
       }
       setTableData([]);
       resetForm();
@@ -500,6 +509,7 @@ const NewSales = ({ invoice }) => {
   };
 
   const resetForm = () => {
+    setCustomerStore('');
     setFormData({
       cusName: '',
       cusNic: '',
@@ -525,6 +535,7 @@ const NewSales = ({ invoice }) => {
       discountPrice: '',
       cusJob: '',
       cusOffice: '',
+      purchaseNo: '',
       cusAddress: ''
     });
   };
@@ -561,6 +572,7 @@ const NewSales = ({ invoice }) => {
     }));
   };
   const clear = () => {
+    setCustomerStore('');
     setTableData([]);
     setFormData({
       cusName: '',
@@ -587,6 +599,7 @@ const NewSales = ({ invoice }) => {
       discountPrice: '',
       cusJob: '',
       cusOffice: '',
+      purchaseNo: '',
       cusAddress: ''
     });
     resetSalesPerson();
@@ -610,7 +623,7 @@ const NewSales = ({ invoice }) => {
                 </div>
 
                 <div className="customer-details">
-                  <input onChange={handleChange} value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" />
+                  <input onChange={handleChange}  value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" />
                 </div>
                 <div className="customer-details">
                   <input onChange={handleChange} value={formData.cusJob} type="text" className="form-control" name="cusJob" id="cusJob" placeholder="Customer Job Position" />
@@ -620,6 +633,32 @@ const NewSales = ({ invoice }) => {
                 </div>
                 <div className="customer-details">
                   <input onChange={handleChange} value={formData.cusAddress} type="text" className="form-control" name="cusAddress" id="cusAddress" placeholder="Customer Address" />
+                </div>
+                <div className="seltction_options">
+                  <div className="store">
+
+                    <div className="payment-details">
+                      <div className="payment-details-amount">
+                        <input type="radio" name="store" value='colkan' id="colkan" checked={customerStore==='colkan'} onChange={handleInvoice} style={{ width: '20px' }}  />
+                        <label className='payment-lable' htmlFor="">Colkan</label>
+                      </div>
+                    </div>
+
+                    <div className="payment-details">
+                      <div className="payment-details-amount">
+                        <input type="radio" name="store" value='terra' id="terra" checked={customerStore==='terra'} onChange={handleInvoice}  />
+                        <label className='payment-lable' htmlFor="">Terra</label>
+                      </div>
+                    </div>
+
+                    <div className="payment-details">
+                      <div className="payment-details-amount">
+                        <input type="radio" name="store" value='haman' id="haman" checked={customerStore==='haman'} onChange={handleInvoice}  />
+                        <label className='payment-lable' htmlFor="">Haman</label>
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
               </div>
 
@@ -694,7 +733,11 @@ const NewSales = ({ invoice }) => {
                   <input type="datetime-local" className="form-control" name="invoiceDate" onChange={handleChange} value={formData.invoiceDate} id="date" />
                 </div>
                 <div className="sales-person">
-                  <label id='label'>Invoice </label>
+                  <label id='label'>Purchase Order No</label>
+                  <input type="text" className="form-control" name="purchaseNo" id='purchaseNo' value={formData.purchaseNo} onChange={handleChange} />
+                </div>
+                <div className="sales-person">
+                  <label id='label'>Purchase Order Image</label>
                   <input type="file" className="form-control" onChange={handleFileChange} accept="image/*,.pdf" />
                 </div>
               </div>
@@ -779,29 +822,6 @@ const NewSales = ({ invoice }) => {
 
                 <div className="seltction_options">
                   <div className="store">
-
-                    <div className="payment-details">
-                      <div className="payment-details-amount">
-                        <input type="radio" name="store" value='colkan' id="colkan" onChange={handleInvoice} style={{ width: '20px' }} required />
-                        <label className='payment-lable' htmlFor="">Colkan</label>
-                      </div>
-                    </div>
-
-                    <div className="payment-details">
-                      <div className="payment-details-amount">
-                        <input type="radio" name="store" value='terra' id="terra" onChange={handleInvoice} required />
-                        <label className='payment-lable' htmlFor="">Terra</label>
-                      </div>
-                    </div>
-
-                    <div className="payment-details">
-                      <div className="payment-details-amount">
-                        <input type="radio" name="store" value='haman' id="haman" onChange={handleInvoice} required />
-                        <label className='payment-lable' htmlFor="">Haman</label>
-                      </div>
-                    </div>
-
-
                     <div className="payment-details-amount">
                       <input type="checkbox" name="notDelivered" value='notDelivered' id="notDelivered" onChange={handleDelivary} />
                       <label className='payment-lable' htmlFor="">Delivey</label>

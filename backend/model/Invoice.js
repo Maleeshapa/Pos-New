@@ -26,6 +26,10 @@ const Invoice = sequelize.define(
             type: DataTypes.STRING,
             allowNull: true,
         },
+        purchaseNo:{
+            type: DataTypes.STRING,
+            allowNull: false,   
+        },
         store: {
             type: DataTypes.STRING,
             allowNull: false,

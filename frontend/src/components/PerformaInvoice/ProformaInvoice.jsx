@@ -16,7 +16,7 @@ const ProformaInvoice = () => {
     const [formData, setFormData] = useState({
         invoiceNo: '',
         invoiceDate: '',
-        purchaseOrder: '',
+        PurchaseOrder: '',
         cusName: '',
         cusJob: '',
         cusOffice: '',
@@ -50,6 +50,7 @@ const ProformaInvoice = () => {
                     cusOffice: invoiceData.customer.cusOffice,
                     cusAddress:invoiceData.customer.cusAddress,
                     proforma: generatedProformaNo,
+                    PurchaseOrder: invoiceData.purchaseNo,
                 });
 
                 if (invoiceData.invoiceId) {
@@ -225,7 +226,7 @@ const ProformaInvoice = () => {
                                             type="text"
                                             className="form-input"
                                             name="purchaseOrder"
-                                            value={formData.purchaseOrder}
+                                            value={formData.PurchaseOrder}
                                         />
                                     </div>
                                 </div>
