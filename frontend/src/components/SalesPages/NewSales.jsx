@@ -116,6 +116,8 @@ const NewSales = ({ invoice }) => {
     }
   }, [formData.user]);
 
+  const[customerStore,setCustomerStore]=useState('');
+
   const fetchCustomerData = async (cusName) => {
     try {
       const response = await fetch(`${config.BASE_URL}/customer/cusName/${cusName}`);
@@ -129,6 +131,8 @@ const NewSales = ({ invoice }) => {
           cusOffice: customerData.cusOffice,
           cusAddress: customerData.cusAddress
         }));
+        setCustomerStore(customerData.cusStore)
+        setSelectedStore(customerData.cusStore);
       }
     } catch (error) {
       console.error('Error fetching customer data:', error);
@@ -310,7 +314,10 @@ const NewSales = ({ invoice }) => {
   const [delivary, setDelivary] = useState('invoice')
 
   const handleInvoice = (e) => {
-    setSelectedStore(e.target.value);
+    const store = e.target.value;
+    setSelectedStore(store);
+    setCustomerStore(store);
+    
   };
 
   const handleDelivary = (e) => {
@@ -502,6 +509,7 @@ const NewSales = ({ invoice }) => {
   };
 
   const resetForm = () => {
+    setCustomerStore('');
     setFormData({
       cusName: '',
       cusNic: '',
@@ -564,6 +572,7 @@ const NewSales = ({ invoice }) => {
     }));
   };
   const clear = () => {
+    setCustomerStore('');
     setTableData([]);
     setFormData({
       cusName: '',
@@ -614,7 +623,7 @@ const NewSales = ({ invoice }) => {
                 </div>
 
                 <div className="customer-details">
-                  <input onChange={handleChange} value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" />
+                  <input onChange={handleChange}  value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" />
                 </div>
                 <div className="customer-details">
                   <input onChange={handleChange} value={formData.cusJob} type="text" className="form-control" name="cusJob" id="cusJob" placeholder="Customer Job Position" />
@@ -624,6 +633,32 @@ const NewSales = ({ invoice }) => {
                 </div>
                 <div className="customer-details">
                   <input onChange={handleChange} value={formData.cusAddress} type="text" className="form-control" name="cusAddress" id="cusAddress" placeholder="Customer Address" />
+                </div>
+                <div className="seltction_options">
+                  <div className="store">
+
+                    <div className="payment-details">
+                      <div className="payment-details-amount">
+                        <input type="radio" name="store" value='colkan' id="colkan" checked={customerStore==='colkan'} onChange={handleInvoice} style={{ width: '20px' }}  />
+                        <label className='payment-lable' htmlFor="">Colkan</label>
+                      </div>
+                    </div>
+
+                    <div className="payment-details">
+                      <div className="payment-details-amount">
+                        <input type="radio" name="store" value='terra' id="terra" checked={customerStore==='terra'} onChange={handleInvoice}  />
+                        <label className='payment-lable' htmlFor="">Terra</label>
+                      </div>
+                    </div>
+
+                    <div className="payment-details">
+                      <div className="payment-details-amount">
+                        <input type="radio" name="store" value='haman' id="haman" checked={customerStore==='haman'} onChange={handleInvoice}  />
+                        <label className='payment-lable' htmlFor="">Haman</label>
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
               </div>
 
@@ -787,29 +822,6 @@ const NewSales = ({ invoice }) => {
 
                 <div className="seltction_options">
                   <div className="store">
-
-                    <div className="payment-details">
-                      <div className="payment-details-amount">
-                        <input type="radio" name="store" value='colkan' id="colkan" onChange={handleInvoice} style={{ width: '20px' }} required />
-                        <label className='payment-lable' htmlFor="">Colkan</label>
-                      </div>
-                    </div>
-
-                    <div className="payment-details">
-                      <div className="payment-details-amount">
-                        <input type="radio" name="store" value='terra' id="terra" onChange={handleInvoice} required />
-                        <label className='payment-lable' htmlFor="">Terra</label>
-                      </div>
-                    </div>
-
-                    <div className="payment-details">
-                      <div className="payment-details-amount">
-                        <input type="radio" name="store" value='haman' id="haman" onChange={handleInvoice} required />
-                        <label className='payment-lable' htmlFor="">Haman</label>
-                      </div>
-                    </div>
-
-
                     <div className="payment-details-amount">
                       <input type="checkbox" name="notDelivered" value='notDelivered' id="notDelivered" onChange={handleDelivary} />
                       <label className='payment-lable' htmlFor="">Delivey</label>
