@@ -10,12 +10,6 @@ async function createCustomer(req, res) {
             return res.status(400).json({ error: "All fields are required." });
         }
 
-        // Check if the customer name already exists
-        const existingCustomer = await Customer.findOne({ where: { cusCode } });
-        if (existingCustomer) {
-            return res.status(409).json({ error: "Customer already exists." });
-        }
-
         // Create new Customer
         const newCustomer = await Customer.create({
             cusName,
