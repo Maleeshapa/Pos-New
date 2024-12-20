@@ -59,6 +59,7 @@ const NewSales = ({ invoice }) => {
     note: '',
     invoiceDate: DateTime().date + " " + DateTime().time,
     invoiceNo: '',
+    purchaseNo: '',
     salesPerson: '',
     cusJob: '',
     cusOffice: ''
@@ -108,13 +109,13 @@ const NewSales = ({ invoice }) => {
       console.log('err');
     }
   };
-  
+
   useEffect(() => {
     if (!formData.user) {
       fetchUserId();
     }
   }, [formData.user]);
-  
+
   const fetchCustomerData = async (cusName) => {
     try {
       const response = await fetch(`${config.BASE_URL}/customer/cusName/${cusName}`);
@@ -348,6 +349,7 @@ const NewSales = ({ invoice }) => {
       const invoiceData = {
         invoiceDate: DateTime().date + " " + DateTime().time,
         status: invoiceStatus,
+        purchaseNo: formData.purchaseNo,
         store: selectedStore,
         cusId: cusId,
       };
@@ -482,13 +484,13 @@ const NewSales = ({ invoice }) => {
         navigate('/sales/new')
       }
       else if (delivary === 'notDelivered') {
-        navigate(`/${selectedStore}DN/${invoiceResult.invoiceNo}`)
+        navigate(`/delivery/${selectedStore}/${invoiceResult.invoiceNo}`)
       }
       else if (!selectedStore) {
         alert('Select Department')
       }
       else {
-        navigate(`/${selectedStore}/${invoiceResult.invoiceNo}`)
+        navigate(`/invoice/${selectedStore}/${invoiceResult.invoiceNo}`)
       }
       setTableData([]);
       resetForm();
@@ -525,6 +527,7 @@ const NewSales = ({ invoice }) => {
       discountPrice: '',
       cusJob: '',
       cusOffice: '',
+      purchaseNo: '',
       cusAddress: ''
     });
   };
@@ -587,6 +590,7 @@ const NewSales = ({ invoice }) => {
       discountPrice: '',
       cusJob: '',
       cusOffice: '',
+      purchaseNo: '',
       cusAddress: ''
     });
     resetSalesPerson();
@@ -694,7 +698,11 @@ const NewSales = ({ invoice }) => {
                   <input type="datetime-local" className="form-control" name="invoiceDate" onChange={handleChange} value={formData.invoiceDate} id="date" />
                 </div>
                 <div className="sales-person">
-                  <label id='label'>Invoice </label>
+                  <label id='label'>Purchase Order No</label>
+                  <input type="text" className="form-control" name="purchaseNo" id='purchaseNo' value={formData.purchaseNo} onChange={handleChange} />
+                </div>
+                <div className="sales-person">
+                  <label id='label'>Purchase Order Image</label>
                   <input type="file" className="form-control" onChange={handleFileChange} accept="image/*,.pdf" />
                 </div>
               </div>

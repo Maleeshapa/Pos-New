@@ -50,6 +50,7 @@ const CreditNote = () => {
                     cusOffice: invoiceData.customer.cusOffice,
                     cusAddress: invoiceData.customer.cusAddress,
                     proforma: generatedProformaNo,
+                    PurchaseOrder: invoiceData.purchaseNo,
                 });
 
                 if (invoiceData.invoiceId) {
@@ -220,7 +221,7 @@ const CreditNote = () => {
                                             type="text"
                                             className="form-input"
                                             name="purchaseOrder"
-                                            value={formData.purchaseOrder}
+                                            value={formData.PurchaseOrder}
                                         />
                                     </div>
                                 </div>

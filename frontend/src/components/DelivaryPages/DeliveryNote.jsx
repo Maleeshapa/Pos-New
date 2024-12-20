@@ -47,6 +47,7 @@ const DeliveryNote = () => {
                     cusName: invoiceData.customer.cusName,
                     cusJob: invoiceData.customer.cusJob,
                     cusAddress: invoiceData.customer.cusAddress,
+                    PurchaseOrder: invoiceData.purchaseNo,
                 });
 
                 if (invoiceData.invoiceId) {
@@ -186,32 +187,21 @@ const DeliveryNote = () => {
                                     <div className="details mb-2">
                                         <input type="text" className="form-input" name="cusJob" value={formData.cusJob} />
                                     </div>
-
-                                    {/* <div className="details mb-2">
-                                        <div className="details-box">
-                                            <label htmlFor="">Pickup from</label>
-                                            <input type="text" className="form-input" name="cusAddress" />
-                                        </div>
-                                    </div> */}
-
-<div className="details mb-2">
-    <div className="details-box">
-        {/* <label htmlFor="">Pickup from</label> */}
-        <textarea 
-            className="form-input" 
-            name="cusAddress" 
-            rows="2" 
-            style={{ resize: "both" }} 
-        ></textarea>
-    </div>
-</div>
-
-
                                     {showAddress && (
                                         <div className="details mb-2">
-                                            <input type="text" className="form-input" name="cusName" value={formData.cusAddress} />
+                                            <div className="details-box">
+                                                {/* <label htmlFor="">Pickup from</label> */}
+                                                <textarea
+                                                    className="form-input"
+                                                    name="cusAddress"
+                                                    rows="2"
+                                                    style={{ resize: "both" }}
+                                                    value={formData.cusAddress}
+                                                ></textarea>
+                                            </div>
                                         </div>
                                     )}
+
                                 </div>
                                 <div className="invoice-info">
                                     <div className="details mb-2">

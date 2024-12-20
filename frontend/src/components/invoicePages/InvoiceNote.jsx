@@ -42,7 +42,8 @@ const InvoiceNote = () => {
                     invoiceDate: new Date(invoiceData.invoiceDate).toISOString().slice(0, 16),
                     cusName: invoiceData.customer.cusName,
                     cusJob: invoiceData.customer.cusJob,
-                    cusAddress: invoiceData.customer.cusAddress
+                    cusAddress: invoiceData.customer.cusAddress,
+                    PurchaseOrder: invoiceData.purchaseNo,
                 });
 
                 if (invoiceData.invoiceId) {
@@ -177,11 +178,16 @@ const InvoiceNote = () => {
                                         <label htmlFor="">Invoice No</label>
                                         <input type="text" className="form-input" name="invoiceNo" value={formData.invoiceNo} />
                                     </div>
-                                    <div className="details">
+                                    <div className="details mb-2">
                                         <label htmlFor="">Date</label>
                                         <input type="datetime-local" className="form-input date" name="invoiceDate" value={formData.invoiceDate} />
                                     </div>
+                                    <div className="details ">
+                                        <label htmlFor="">Purchase Order</label>
+                                        <input type="text" className="form-input" name="PurchaseOrder" value={formData.PurchaseOrder}/>
+                                    </div>
                                 </div>
+                                
                             </section>
 
                             {/* product table---------------------------------------------------------------- */}
