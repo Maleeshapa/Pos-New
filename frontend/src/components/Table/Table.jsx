@@ -4,7 +4,7 @@ import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import DatePicker from "react-datepicker";
-import { isValid, parseISO, format } from "date-fns";
+import { isValid, format } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Table.css";
 
@@ -42,22 +42,18 @@ const Table = ({
         setTableColumns(columns);
     }, [columns]);
 
-    // Filter the data based on the selected date range
     const filteredData = tableData.filter((tableDatum) => {
         const query = searchQuery.toLowerCase();
 
-        // Extract date from the table data
         const tableDate = tableDatum[2] ? new Date(tableDatum[2]) : null;
         const formattedTableDate = isValid(tableDate)
-            ? format(tableDate, "yyyy-MM-dd") // Format date without time
+            ? format(tableDate, "yyyy-MM-dd")
             : null;
 
-        // Filter by search query
         const matchesQuery = tableDatum.some((item) =>
             item != null && item.toString().toLowerCase().includes(query)
         );
 
-        // Filter by selected date range
         const matchesDateRange =
             (!startDate || !endDate ||
                 (formattedTableDate >= format(startDate, "yyyy-MM-dd") &&
@@ -99,6 +95,11 @@ const Table = ({
         });
 
         doc.save(invoice);
+    };
+
+    const resetFilters = () => {
+        setStartDate(null);
+        setEndDate(null);
     };
 
     return (
@@ -154,6 +155,13 @@ const Table = ({
                                         className="form-control"
                                         dateFormat="yyyy-MM-dd"
                                     />
+                                </div>
+                                <div>
+                                    <button className="btn btn-danger" onClick={resetFilters}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"></path>
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         )}
