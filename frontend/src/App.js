@@ -24,6 +24,7 @@ import DeliveryNote from './components/DelivaryPages/DeliveryNote';
 import SelectDN from './components/DelivaryPages/SelectDN';
 import ProformaInvoice from './components/PerformaInvoice/ProformaInvoice';
 import InvoiceNote from './components/invoicePages/InvoiceNote';
+import DraftSales from './components/SalesPages/DraftSales';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token');
@@ -65,6 +66,8 @@ function Layout() {
             <Route path="/delivery/:store/:invoiceNo" element={<ProtectedRoute><DeliveryNote /></ProtectedRoute>} />
             <Route path="/creditNote/:store/:invoiceNo" element={<ProtectedRoute><CreditNote /></ProtectedRoute>} />
             <Route path="/salesDetails/:store/:invoiceNo" element={<ProtectedRoute><SalesDetails /></ProtectedRoute>} />
+
+            <Route path="/DraftSales/:invoiceId/:invoiceNo" element={<ProtectedRoute><DraftSales /></ProtectedRoute>} />
 
             <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
             <Route path="/costing-table" element={<ProtectedRoute><CostingTable /></ProtectedRoute>} />

@@ -5,7 +5,7 @@ import './NewSales.css';
 import Table from '../Table/Table'
 import config from '../../config';
 
-const NewSales = ({ invoice }) => {
+const DraftSales = ({ invoice }) => {
   const [tableData, setTableData] = useState([]);
   const [users, setUsers] = useState([]);
   const [productId, setProductId] = useState('');
@@ -65,6 +65,10 @@ const NewSales = ({ invoice }) => {
     cusOffice: ''
   });
 
+  // const SelectInvoice = () => {
+  //   navigate('/selectInvoice')
+  // }
+
   useEffect(() => {
     const fetchLastInvoiceNumber = async () => {
       try {
@@ -84,8 +88,10 @@ const NewSales = ({ invoice }) => {
         console.error('Error fetching last invoice number:', error);
       }
     };
+
     fetchLastInvoiceNumber();
     fetchUserId();
+
   }, []);
 
   const fetchUserId = async () => {
@@ -136,9 +142,11 @@ const NewSales = ({ invoice }) => {
   const handleChange = async (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
     if (name === 'cusName') {
       fetchCustomerData(value);
     }
+
     if (name === 'productNo' || name === 'productName') {
       try {
         const response = await fetch(`${config.BASE_URL}/product/codeOrName/${value}`);
@@ -175,12 +183,13 @@ const NewSales = ({ invoice }) => {
     }
 
     if (name === 'salesPerson') {
-      const selectedUserId = value;
+      const selectedUserId = value; // Assuming value contains the user ID
       setFormData(prevData => ({
         ...prevData,
         salesPerson: selectedUserId
       }));
     }
+
   };
 
   const fetchStockData = async (productId) => {
@@ -203,6 +212,7 @@ const NewSales = ({ invoice }) => {
   };
 
   useEffect(() => {
+
     const discountedPrice = (formData.productPrice || 0) * (1 - (formData.discount || 0) / 100);
     const newTotalPrice = discountedPrice * (formData.qty || 1);
     setFormData(prevData => ({ ...prevData, totalPrice: newTotalPrice }));
@@ -211,6 +221,7 @@ const NewSales = ({ invoice }) => {
   const discount = (e) => {
     const { name, value } = e.target;
     const numericValue = parseFloat(value) || 0;
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: numericValue,
@@ -219,6 +230,7 @@ const NewSales = ({ invoice }) => {
     const productPrice = parseFloat(formData.productPrice) || 0;
     const qty = parseFloat(formData.qty) || 1;
     const discountRs = name === "discountRs" ? numericValue : parseFloat(formData.discountRs) || 0;
+
     const discountedPrice = productPrice - discountRs;
     const newTotalPrice = discountedPrice * qty;
 
@@ -230,10 +242,12 @@ const NewSales = ({ invoice }) => {
 
   const handleAddProduct = (e) => {
     e.preventDefault();
+
     if (!formData.productNo || !formData.productName || !formData.productPrice || !formData.qty) {
       alert("Please fill in all the product details.");
       return;
     }
+
     const newRow = [
       formData.cusName,
       formData.cusAddress,
@@ -280,6 +294,7 @@ const NewSales = ({ invoice }) => {
       totalDiscount += discount;
       payableAmount += totalPrice;
     });
+
     setFormData((prevData) => ({
       ...prevData,
       totalAmount: totalAmount.toFixed(2),
@@ -297,10 +312,12 @@ const NewSales = ({ invoice }) => {
 
   const [selectedStore, setSelectedStore] = useState('');
   const [delivary, setDelivary] = useState('invoice')
+
   const handleInvoice = (e) => {
     const store = e.target.value;
     setSelectedStore(store);
     setCustomerStore(store);
+    
   };
 
   const handleDelivary = (e) => {
@@ -492,8 +509,8 @@ const NewSales = ({ invoice }) => {
   };
 
   const resetForm = () => {
-    setCustomerStore('');
     setTableData([]);
+    setCustomerStore('');
     setFormData({
       cusName: '',
       cusNic: '',
@@ -557,7 +574,7 @@ const NewSales = ({ invoice }) => {
   };
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]); // Capture the selected file
+    setFile(event.target.files[0]);
   };
 
   return (
@@ -572,7 +589,6 @@ const NewSales = ({ invoice }) => {
                   <p><User />Customer Details</p>
                   <button className='addCusBtn btn-primary' type="button"><Link to={'/customer/customer-list'}> <PlusCircle size={30} /> </Link></button>
                 </div>
-
                 <div className="customer-details">
                   <input onChange={handleChange}  value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" />
                 </div>
@@ -587,21 +603,18 @@ const NewSales = ({ invoice }) => {
                 </div>
                 <div className="seltction_options">
                   <div className="store">
-
                     <div className="payment-details">
                       <div className="payment-details-amount">
                         <input type="radio" name="store" value='colkan' id="colkan" checked={customerStore==='colkan'} onChange={handleInvoice} style={{ width: '20px' }}  />
                         <label className='payment-lable' htmlFor="">Colkan</label>
                       </div>
                     </div>
-
                     <div className="payment-details">
                       <div className="payment-details-amount">
                         <input type="radio" name="store" value='terra' id="terra" checked={customerStore==='terra'} onChange={handleInvoice}  />
                         <label className='payment-lable' htmlFor="">Terra</label>
                       </div>
                     </div>
-
                     <div className="payment-details">
                       <div className="payment-details-amount">
                         <input type="radio" name="store" value='haman' id="haman" checked={customerStore==='haman'} onChange={handleInvoice}  />
@@ -612,7 +625,6 @@ const NewSales = ({ invoice }) => {
                   </div>
                 </div>
               </div>
-
               <div className="product">
                 <div className="subCaption d-flex justify-content-between align-items-center">
                   <p className="mb-0 d-flex align-items-center">
@@ -624,7 +636,6 @@ const NewSales = ({ invoice }) => {
                     size={24} // Optional: Adjust the size of the icon
                   />
                 </div>
-
                 <div className="row">
                   <div className="product-details col-md-4 mb-2">
                     <input onChange={handleChange} value={formData.productNo} type="text" name="productNo" className="form-control" id="productNo" placeholder="Product Code" />
@@ -657,7 +668,6 @@ const NewSales = ({ invoice }) => {
               <button className="btn btn-primary btn-md" onClick={handleAddProduct}>Add Product</button>
             </div>
           </div>
-
           <div className="product-table">
             <Table
               data={tableData}
@@ -670,11 +680,9 @@ const NewSales = ({ invoice }) => {
               showPDF={false}
             />
           </div>
-
           <div className="payment-form">
             <div className="payment-form-group">
               <div className="sales-person-box">
-
                 <div className="sales-person">
                   <label id='label'>Cashier</label>
                   <input type="text" name="userName" value={formData.userName} onChange={handleChange} className="form-control" readOnly />
@@ -692,7 +700,6 @@ const NewSales = ({ invoice }) => {
                   <input type="file" className="form-control" onChange={handleFileChange} accept="image/*,.pdf" />
                 </div>
               </div>
-
               <div className="amount-box">
                 <div className="amount-group">
                   <label htmlFor="" id='label'>Total Amount</label>
@@ -704,7 +711,6 @@ const NewSales = ({ invoice }) => {
                 </div>
               </div>
             </div>
-
             <div className="payment-form-group">
               <div className="payment-details-box">
                 <div className="payment-details">
@@ -728,7 +734,6 @@ const NewSales = ({ invoice }) => {
                   </div>
                   {showCard && (
                     <input type="number" className="form-control" id='' name='card' onChange={handlePaymentChange} value={formData.card} placeholder='Card Payment' onWheel={(e) => e.target.blur()} />
-
                   )}
                 </div>
                 <div className="payment-details">
@@ -736,7 +741,6 @@ const NewSales = ({ invoice }) => {
                     <input type="checkbox" name="credit" id="credit" onChange={handleCredit} />
                     <label htmlFor="" id='label'>Credit Payment</label>
                   </div>
-
                   {showCredit && (
                     <input type="number" className="form-control" id='payment' name='credit' value={formData.credit} onChange={handlePaymentChange} placeholder='credit Amount' onWheel={(e) => e.target.blur()} />
                   )}
@@ -760,7 +764,6 @@ const NewSales = ({ invoice }) => {
                   )}
                 </div>
               </div>
-
               <div className="amount-box">
                 <div className="amount-group">
                   <label htmlFor="" id='label'>Paid Amount</label>
@@ -770,7 +773,6 @@ const NewSales = ({ invoice }) => {
                   <label htmlFor="" id='label'>Due Amount</label>
                   <input className="form-control" type="number" value={formData.dueAmount} onWheel={(e) => e.target.blur()} name="discount" id="readOnly" readOnly />
                 </div>
-
                 <div className="seltction_options">
                   <div className="store">
                     <div className="payment-details-amount">
@@ -779,14 +781,12 @@ const NewSales = ({ invoice }) => {
                     </div>
                   </div>
                 </div>
-
                 <div className="btn-pos mt-4">
                   <div className="payment-form-button d-grid d-md-flex me-md-2 justify-content-end px-5">
                     <button className='btn btn-warning mb-2' type='submit' onClick={changeStatus}>Draft</button>
-
                   </div>
                   <div className="payment-form-button  d-grid d-md-flex me-md-2 justify-content-end px-5">
-                    <button className='btn btn-danger btn-md mb-2' type='reset' onClick={resetForm} >Cancel</button>
+                    <button className='btn btn-danger btn-md mb-2' type='reset' onClick={resetForm}>Cancel</button>
                     <button className='btn btn-primary btn-md mb-2' type='submit'>Create invoice</button>
                   </div>
                 </div>
@@ -797,6 +797,6 @@ const NewSales = ({ invoice }) => {
       </div >
     </div >
   )
-}
+};
 
-export default NewSales
+export default DraftSales;
