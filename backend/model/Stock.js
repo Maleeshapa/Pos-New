@@ -17,14 +17,6 @@ const Stock = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        stockDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        stockQty: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
         mfd: {
             type: DataTypes.DATE,
             allowNull: true,
@@ -33,32 +25,12 @@ const Stock = sequelize.define(
             type: DataTypes.DATE,
             allowNull: true,
         },
-        billImage: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
         stockPrice: {
             type: DataTypes.FLOAT,
             allowNull: false,
         },
-        due: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
-        },
-        vat: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
-        },
-        total: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
-        },
-        cashAmount: {
-            type: DataTypes.FLOAT,
-            allowNull: true,
-        },
-        chequeAmount: {
-            type: DataTypes.FLOAT,
+        stockQty: {
+            type: DataTypes.INTEGER,
             allowNull: true,
         },
         stockDescription: {

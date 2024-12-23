@@ -12,6 +12,7 @@ const UserController = require("./controller/UserController");
 const CategoryController = require("./controller/CategoryController");
 const ProductController = require("./controller/ProductController");
 const StockController = require("./controller/StockController");
+const StockPaymentController = require("./controller/StockPaymenTController");
 const InvoiceController = require("./controller/InvoiceController");
 const TransactionController = require("./controller/TransactionController");
 const StoreController = require("./controller/StoreController");
@@ -80,9 +81,14 @@ app.get('/products/suggestions', ProductController.getProductSuggestions);
 app.post("/stock", StockController.createStock);
 app.get("/stocks", StockController.getAllStocks);
 app.get("/stock/:id", StockController.getStockById);
+app.get('/stock/product/:products_productId', StockController.getStockIdUsingProductId);
 app.put("/stock/:id", StockController.updateStock);
 app.delete("/stock/:id", StockController.deleteStock);
-app.get('/stock/product/:products_productId', StockController.getStockIdUsingProductId);
+
+//stockPayment routes
+app.post("/stockPayment", StockPaymentController.createStockPayment);
+app.get("/stockPayments", StockPaymentController.getAllStockPayments);
+app.get("/stockPayment/:id", StockPaymentController.getStockPaymentById);
 
 //Stock History routes
 app.get('/stockHistory', StockHistoryController.getAllStockHistory);

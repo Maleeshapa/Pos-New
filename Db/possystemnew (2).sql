@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 20, 2024 at 03:24 PM
+-- Generation Time: Dec 22, 2024 at 04:41 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -66,7 +66,9 @@ CREATE TABLE `customer` (
 INSERT INTO `customer` (`cusId`, `cusName`, `cusCode`, `cusAddress`, `cusPhone`, `cusJob`, `cusOffice`, `cusStore`) VALUES
 (5, 'Buddhika', 'cus001', 'kandy', '1234567890', 'no job', 'Abc', 'haman'),
 (6, 'kavindu', 'cus002', 'Hunnasgiriya', '1234567895', 'kada himiya', 'kavindu stores', 'terra'),
-(8, 'maleesha', 'cus004', 'katugasthota', '1234567823', 'accounting ex', 'avcd', 'colkan');
+(8, 'maleesha', 'cus004', 'katugasthota', '1234567823', 'accounting ex', 'avcd', 'colkan'),
+(10, 'vidun jetman', 'cus001', 'napane', '1234567897', 'bank', 'banks', 'colkan'),
+(11, 'branch 2', 'cus001', 'sssq', '1234567894', 'bhalla', 'Abc', 'colkan');
 
 -- --------------------------------------------------------
 
@@ -121,7 +123,16 @@ CREATE TABLE `invoice` (
 INSERT INTO `invoice` (`invoiceId`, `invoiceNo`, `invoiceDate`, `status`, `store`, `purchaseNo`, `image`, `cusId`) VALUES
 (374, '1500', '2024-12-20 13:53:02', 'delivery', 'haman', '', NULL, 5),
 (375, '1501', '2024-12-20 13:55:23', 'delivery', 'terra', '', NULL, 6),
-(376, '1502', '2024-12-20 14:13:26', 'Invoice', 'haman', 'purchaseNo', NULL, 5);
+(376, '1502', '2024-12-20 14:13:26', 'Invoice', 'haman', 'purchaseNo', NULL, 5),
+(380, '1503', '2024-12-20 15:09:40', 'Invoice', '', 'purchaseNo6', NULL, 5),
+(381, '1504', '2024-12-20 15:10:58', 'Invoice', '', '', NULL, 5),
+(382, '1505', '2024-12-20 15:11:42', 'Invoice', '', '', NULL, 5),
+(383, '1506', '2024-12-20 15:14:46', 'Invoice', 'terra', 'purchaseNo', NULL, 6),
+(384, '1507', '2024-12-20 15:19:02', 'Invoice', 'colkan', '', NULL, 5),
+(385, '1508', '2024-12-20 15:19:43', 'Invoice', 'haman', '', NULL, 5),
+(386, '1509', '2024-12-22 12:26:48', 'draft', 'haman', '', NULL, 5),
+(387, '1510', '2024-12-22 13:30:15', 'Invoice', 'haman', '', NULL, 5),
+(388, '1511', '2024-12-22 14:13:40', 'draft', 'haman', 'purchaseNo', NULL, 5);
 
 -- --------------------------------------------------------
 
@@ -153,7 +164,19 @@ INSERT INTO `invoiceproduct` (`id`, `invoiceId`, `invoiceNo`, `productId`, `stoc
 (283, 375, '1501', 2, 3, '10', '1200', 'notDelivered'),
 (284, 375, '1501', 3, 4, '5', '500', 'notDelivered'),
 (285, 375, '1501', 1, 1, '100', '10000', 'notDelivered'),
-(286, 376, '1502', 1, 1, '1', '100', 'invoice');
+(286, 376, '1502', 1, 1, '1', '100', 'invoice'),
+(290, 380, '1503', 2, 3, '1', '120', 'invoice'),
+(291, 382, '1505', 1, 1, '1', '100', 'invoice'),
+(292, 383, '1506', 1, 1, '1', '100', 'invoice'),
+(293, 384, '1507', 1, 1, '1', '100', 'invoice'),
+(294, 385, '1508', 2, 3, '1', '120', 'invoice'),
+(295, 386, '1509', 1, 1, '1', '100', 'invoice'),
+(296, 386, '1509', 2, 3, '1', '120', 'invoice'),
+(297, 387, '1510', 2, 3, '1', '120', 'invoice'),
+(298, 388, '1511', 2, 3, '1', '120', 'invoice'),
+(299, 388, '1511', 1, 1, '1', '100', 'invoice'),
+(300, 388, '1511', 3, 4, '1', '100', 'invoice'),
+(301, 388, '1511', 6, 4, '1', '90', 'invoice');
 
 -- --------------------------------------------------------
 
@@ -241,9 +264,9 @@ CREATE TABLE `stock` (
 --
 
 INSERT INTO `stock` (`stockId`, `stockName`, `stockdate`, `billImage`, `stockPrice`, `due`, `vat`, `total`, `stockQty`, `mfd`, `exp`, `cashAmount`, `chequeAmount`, `stockDescription`, `stockStatus`, `products_productId`, `supplier_supplierId`, `store_storeId`, `category_categoryId`) VALUES
-(1, 'stock1', '2024-10-16 17:09:18', NULL, 100, 1, 1, 100, 863, '2024-10-16', '2024-10-31', 500, NULL, 'note', '', 1, 1, 1, 1),
-(3, 'stock 2', '2024-10-17 01:28:56', NULL, 100, 1, 1, 1, 2147483565, '2024-10-17', '2024-10-31', 500, 211, 'booo', '', 2, 1, 1, 1),
-(4, '5', '2024-10-18 09:01:00', NULL, 10000, 0, 0, 0, 791081, '2024-10-18', '2024-10-17', 98, NULL, NULL, 'In stock', 3, 1, 1, 1),
+(1, 'stock1', '2024-10-16 17:09:18', NULL, 100, 1, 1, 100, 856, '2024-10-16', '2024-10-31', 500, NULL, 'note', '', 1, 1, 1, 1),
+(3, 'stock 2', '2024-10-17 01:28:56', NULL, 100, 1, 1, 1, 1000, '2024-10-17', '2024-10-31', 500, 211, 'booo', '', 2, 1, 1, 1),
+(4, '5', '2024-10-18 09:01:00', NULL, 10000, 0, 0, 0, 1000, '2024-10-18', '2024-10-17', 98, NULL, NULL, 'In stock', 3, 1, 1, 1),
 (5, '1', '2024-12-19 07:42:00', 'http://localhost:5000/uploads/stock/1_1733663580933.png', 500, 0, 0, 0, 5, '2024-12-26', '2024-12-18', 120, NULL, '5', 'In stock', 3, 1, 1, 1),
 (6, '5', '2024-12-10 07:09:00', 'http://localhost:5000/uploads/stock/5_1733747989746.png', 200, 0, 0, 0, 2, '2024-12-10', '2024-12-16', 112, 121, NULL, 'In stock', 1, 2, 1, 1),
 (7, 'ww', '2024-12-10 07:14:00', NULL, 500, 0, 0, 0, 5, '2024-12-12', '2024-12-11', 122, NULL, NULL, 'In stock', 1, 1, 1, 1),
@@ -272,6 +295,27 @@ INSERT INTO `stockhistory` (`stockHistoryId`, `stockHistoryQty`, `stock_stockId`
 (3, 2, 6, 1),
 (4, 5, 7, 1),
 (5, 5, 8, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stockpayment`
+--
+
+CREATE TABLE `stockpayment` (
+  `id` int(11) NOT NULL,
+  `cashAmount` varchar(255) NOT NULL,
+  `chequeAmount` varchar(255) NOT NULL,
+  `stockPrice` varchar(255) NOT NULL,
+  `due` varchar(255) NOT NULL,
+  `vat` varchar(255) NOT NULL,
+  `total` varchar(255) NOT NULL,
+  `stockQty` varchar(255) NOT NULL,
+  `stockDescription` varchar(255) NOT NULL,
+  `stockStatus` varchar(255) NOT NULL,
+  `productId` int(11) NOT NULL,
+  `stockId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -362,7 +406,15 @@ CREATE TABLE `transaction` (
 INSERT INTO `transaction` (`transactionId`, `transactionType`, `price`, `discount`, `dateTime`, `note`, `paid`, `due`, `invoice_invoiceId`, `user_userId`) VALUES
 (257, 'cash', '1760', 0, '2024-12-20 13:53:03', '', 1760, 0, 374, 1),
 (258, 'card', '11700', 0, '2024-12-20 13:55:24', '', 11700, 0, 375, 1),
-(259, 'cash', '100', 0, '2024-12-20 14:13:26', '', 100, 0, 376, 1);
+(259, 'cash', '100', 0, '2024-12-20 14:13:26', '', 100, 0, 376, 1),
+(263, 'cash', '120', 0, '2024-12-20 15:09:40', '', 120, 0, 380, 1),
+(264, 'cash', '100', 0, '2024-12-20 15:11:43', '', 0, 0, 382, 1),
+(265, 'cash', '100', 0, '2024-12-20 15:14:47', '', 100, 0, 383, 1),
+(266, 'cash', '100', 0, '2024-12-20 15:19:02', '', 0, 0, 384, 1),
+(267, 'cash', '120', 0, '2024-12-20 15:19:43', '', 0, 0, 385, 1),
+(268, '', '220', 0, '2024-12-22 12:26:48', '', 0, 0, 386, 1),
+(269, '', '120', 0, '2024-12-22 13:30:15', '', 0, 0, 387, 1),
+(270, 'cash', '410', 0, '2024-12-22 14:13:41', '', 410, 0, 388, 1);
 
 -- --------------------------------------------------------
 
@@ -479,6 +531,14 @@ ALTER TABLE `stockhistory`
   ADD KEY `fk_stockHistory_products1_idx` (`products_productId`);
 
 --
+-- Indexes for table `stockpayment`
+--
+ALTER TABLE `stockpayment`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `productId` (`productId`),
+  ADD KEY `stockId` (`stockId`);
+
+--
 -- Indexes for table `store`
 --
 ALTER TABLE `store`
@@ -526,7 +586,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `cusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `cusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -544,13 +604,13 @@ ALTER TABLE `expensescat`
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `invoiceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=377;
+  MODIFY `invoiceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=389;
 
 --
 -- AUTO_INCREMENT for table `invoiceproduct`
 --
 ALTER TABLE `invoiceproduct`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=287;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=302;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -577,6 +637,12 @@ ALTER TABLE `stockhistory`
   MODIFY `stockHistoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `stockpayment`
+--
+ALTER TABLE `stockpayment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `store`
 --
 ALTER TABLE `store`
@@ -598,7 +664,7 @@ ALTER TABLE `switch`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transactionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=260;
+  MODIFY `transactionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=271;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -661,6 +727,13 @@ ALTER TABLE `stock`
 ALTER TABLE `stockhistory`
   ADD CONSTRAINT `fk_stockHistory_products1` FOREIGN KEY (`products_productId`) REFERENCES `products` (`productId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_stockHistory_stock1` FOREIGN KEY (`stock_stockId`) REFERENCES `stock` (`stockId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `stockpayment`
+--
+ALTER TABLE `stockpayment`
+  ADD CONSTRAINT `stockpayment_ibfk_1` FOREIGN KEY (`productId`) REFERENCES `products` (`productId`),
+  ADD CONSTRAINT `stockpayment_ibfk_2` FOREIGN KEY (`stockId`) REFERENCES `stock` (`stockId`);
 
 --
 -- Constraints for table `transaction`
