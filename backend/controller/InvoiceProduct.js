@@ -110,8 +110,7 @@ const getAllInvoiceProducts = async (req, res) => {
 const getInvoiceById = async (req, res) => {
   try {
     const { invoiceId } = req.params;
-
-    // Fetch invoice products along with associated product and stock details
+    
     const invoiceProducts = await InvoiceProduct.findAll({
       where: { invoiceId },
       include: [

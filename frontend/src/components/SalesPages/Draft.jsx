@@ -2,18 +2,19 @@ import { useEffect, useState } from "react";
 import Table from '../Table/Table';
 import config from '../../config';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Link,useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom';
 import { Eye } from 'lucide-react';
 
 const Draft = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const columns = ["ID", "Invoice No", 'Type', "Customer","store", 'address', "Date/time", "Transaction Type", "Total Amount", "Due", "invoice"];
+  const columns = ["ID", "Invoice No", 'Type', "Customer", "store", 'address', "Date/time", "Transaction Type", "Total Amount", "Due", "invoice"];
 
   useEffect(() => {
     fetchSalesHistory();
   }, []);
+
   const fetchSalesHistory = async () => {
     try {
       const response = await fetch(`${config.BASE_URL}/invoices`);
@@ -56,8 +57,7 @@ const Draft = () => {
           transactionPrice,
           transactiondue,
           <div>
-            {/* <Link to={`/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-primary">Draft Invoice</button></Link> */}
-            <Link to={`/salesDetails/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye/></button></Link>
+            <Link to={`/salesDetails/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye /></button></Link>
           </div>,
         ];
       });
@@ -128,7 +128,7 @@ const Draft = () => {
             onEdit={(rowIndex) => {
               const invoiceId = data[rowIndex][0];
               const invoiceNo = data[rowIndex][1];
-              navigate(`/draft/${invoiceId}/${invoiceNo}`);
+              navigate(`/DraftSales/${invoiceId}/${invoiceNo}`);
             }}
             showButton={false}
             onDelete={handleDelete}

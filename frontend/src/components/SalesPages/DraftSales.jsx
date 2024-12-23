@@ -5,7 +5,7 @@ import './NewSales.css';
 import Table from '../Table/Table'
 import config from '../../config';
 
-const NewSales = ({ invoice }) => {
+const DraftSales = ({ invoice }) => {
   const [tableData, setTableData] = useState([]);
   const [users, setUsers] = useState([]);
   const [productId, setProductId] = useState('');
@@ -13,6 +13,7 @@ const NewSales = ({ invoice }) => {
   const [invoiceStatus, setInvoiceStatus] = useState('Invoice');
   const [cusId, setCusId] = useState('');
   const [file, setFile] = useState(null);
+  const { invoiceId, invoiceNo } = useParams();
 
   const DateTime = () => {
     const now = new Date();
@@ -65,28 +66,77 @@ const NewSales = ({ invoice }) => {
     cusOffice: ''
   });
 
-  // useEffect(() => {
-  //   const fetchLastInvoiceNumber = async () => {
-  //     try {
-  //       const response = await fetch(`${config.BASE_URL}/invoice/last`);
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         const nextInvoiceNo = data.lastInvoiceNo + 1;
-  //         setFormData(prevData => ({
-  //           ...prevData,
-  //           invoiceNo: nextInvoiceNo.toString()
-  //         }));
-  //         console.log(nextInvoiceNo.toString());
-  //         console.log(data);
-  //       }
+// In the DraftSales component
+useEffect(() => {
+  const fetchInvoiceData = async () => {
+    try {
+      const response = await fetch(`${config.BASE_URL}/invoice/${invoiceId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch invoice data');
+      }
+      const invoiceData = await response.json();
 
-  //     } catch (error) {
-  //       console.error('Error fetching last invoice number:', error);
-  //     }
-  //   };
-  //   fetchLastInvoiceNumber();
-  //   fetchUserId();
-  // }, []);
+      // Fetch transactions
+      const transactionResponse = await fetch(`${config.BASE_URL}/transaction/invoice/${invoiceId}`);
+      if (!transactionResponse.ok) {
+        throw new Error('Failed to fetch transaction data');
+      }
+      const transactions = await transactionResponse.json();
+
+      // Fetch products associated with the invoice
+      const productResponse = await fetch(`${config.BASE_URL}/invoiceProducts/${invoiceId}`);
+      if (!productResponse.ok) {
+        throw new Error('Failed to fetch product data');
+      }
+      const products = await productResponse.json();
+
+      // Populate the form data
+      setFormData(prevData => ({
+        ...prevData,
+        invoiceNo: invoiceData.invoiceNo,
+        cusName: invoiceData.customer.cusName,
+        purchaseNo: invoiceData.purchaseNo,
+      }));
+
+      // Populate the table data
+      const tableRows = products.map((product) => {
+        return [
+          invoiceData.customer.cusName,
+          invoiceData.customer.cusAddress,
+          product.product.productCode,
+          product.product.productName,
+          product.product.productSellingPrice,
+          product.invoiceQty,
+          product.discount,
+          product.totalAmount,
+          product.product.productWarranty,
+          product.productId,
+          product.stockId,
+        ];
+      });
+      setTableData(tableRows);
+
+      // Calculate totals and other necessary fields
+      const totalAmount = transactions.reduce((total, transaction) => total + transaction.paid, 0);
+      const dueAmount = transactions.reduce((total, transaction) => total + transaction.due, 0);
+      setFormData({
+        ...formData,
+        totalAmount: totalAmount.toFixed(2),
+        dueAmount: dueAmount.toFixed(2),
+        // Other fields as needed
+      });
+
+      // Set other state variables as necessary
+      setInvoiceStatus(invoiceData.status);
+      setSelectedStore(invoiceData.store);
+      setDelivary(invoiceData.delivary);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchInvoiceData();
+}, [invoiceId, invoiceNo]);
 
   const fetchUserId = async () => {
     const userName = localStorage.getItem('userName');
@@ -136,9 +186,11 @@ const NewSales = ({ invoice }) => {
   const handleChange = async (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
     if (name === 'cusName') {
       fetchCustomerData(value);
     }
+
     if (name === 'productNo' || name === 'productName') {
       try {
         const response = await fetch(`${config.BASE_URL}/product/codeOrName/${value}`);
@@ -175,12 +227,13 @@ const NewSales = ({ invoice }) => {
     }
 
     if (name === 'salesPerson') {
-      const selectedUserId = value;
+      const selectedUserId = value; // Assuming value contains the user ID
       setFormData(prevData => ({
         ...prevData,
         salesPerson: selectedUserId
       }));
     }
+
   };
 
   const fetchStockData = async (productId) => {
@@ -203,6 +256,7 @@ const NewSales = ({ invoice }) => {
   };
 
   useEffect(() => {
+
     const discountedPrice = (formData.productPrice || 0) * (1 - (formData.discount || 0) / 100);
     const newTotalPrice = discountedPrice * (formData.qty || 1);
     setFormData(prevData => ({ ...prevData, totalPrice: newTotalPrice }));
@@ -211,6 +265,7 @@ const NewSales = ({ invoice }) => {
   const discount = (e) => {
     const { name, value } = e.target;
     const numericValue = parseFloat(value) || 0;
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: numericValue,
@@ -219,6 +274,7 @@ const NewSales = ({ invoice }) => {
     const productPrice = parseFloat(formData.productPrice) || 0;
     const qty = parseFloat(formData.qty) || 1;
     const discountRs = name === "discountRs" ? numericValue : parseFloat(formData.discountRs) || 0;
+
     const discountedPrice = productPrice - discountRs;
     const newTotalPrice = discountedPrice * qty;
 
@@ -230,10 +286,12 @@ const NewSales = ({ invoice }) => {
 
   const handleAddProduct = (e) => {
     e.preventDefault();
+
     if (!formData.productNo || !formData.productName || !formData.productPrice || !formData.qty) {
       alert("Please fill in all the product details.");
       return;
     }
+
     const newRow = [
       formData.cusName,
       formData.cusAddress,
@@ -280,6 +338,7 @@ const NewSales = ({ invoice }) => {
       totalDiscount += discount;
       payableAmount += totalPrice;
     });
+
     setFormData((prevData) => ({
       ...prevData,
       totalAmount: totalAmount.toFixed(2),
@@ -297,10 +356,12 @@ const NewSales = ({ invoice }) => {
 
   const [selectedStore, setSelectedStore] = useState('');
   const [delivary, setDelivary] = useState('invoice')
+
   const handleInvoice = (e) => {
     const store = e.target.value;
     setSelectedStore(store);
     setCustomerStore(store);
+    
   };
 
   const handleDelivary = (e) => {
@@ -492,8 +553,8 @@ const NewSales = ({ invoice }) => {
   };
 
   const resetForm = () => {
-    setCustomerStore('');
     setTableData([]);
+    setCustomerStore('');
     setFormData({
       cusName: '',
       cusNic: '',
@@ -557,7 +618,7 @@ const NewSales = ({ invoice }) => {
   };
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]); // Capture the selected file
+    setFile(event.target.files[0]);
   };
 
   return (
@@ -572,7 +633,6 @@ const NewSales = ({ invoice }) => {
                   <p><User />Customer Details</p>
                   <button className='addCusBtn btn-primary' type="button"><Link to={'/customer/customer-list'}> <PlusCircle size={30} /> </Link></button>
                 </div>
-
                 <div className="customer-details">
                   <input onChange={handleChange}  value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" />
                 </div>
@@ -587,21 +647,18 @@ const NewSales = ({ invoice }) => {
                 </div>
                 <div className="seltction_options">
                   <div className="store">
-
                     <div className="payment-details">
                       <div className="payment-details-amount">
                         <input type="radio" name="store" value='colkan' id="colkan" checked={customerStore==='colkan'} onChange={handleInvoice} style={{ width: '20px' }}  />
                         <label className='payment-lable' htmlFor="">Colkan</label>
                       </div>
                     </div>
-
                     <div className="payment-details">
                       <div className="payment-details-amount">
                         <input type="radio" name="store" value='terra' id="terra" checked={customerStore==='terra'} onChange={handleInvoice}  />
                         <label className='payment-lable' htmlFor="">Terra</label>
                       </div>
                     </div>
-
                     <div className="payment-details">
                       <div className="payment-details-amount">
                         <input type="radio" name="store" value='haman' id="haman" checked={customerStore==='haman'} onChange={handleInvoice}  />
@@ -612,7 +669,6 @@ const NewSales = ({ invoice }) => {
                   </div>
                 </div>
               </div>
-
               <div className="product">
                 <div className="subCaption d-flex justify-content-between align-items-center">
                   <p className="mb-0 d-flex align-items-center">
@@ -624,7 +680,6 @@ const NewSales = ({ invoice }) => {
                     size={24} // Optional: Adjust the size of the icon
                   />
                 </div>
-
                 <div className="row">
                   <div className="product-details col-md-4 mb-2">
                     <input onChange={handleChange} value={formData.productNo} type="text" name="productNo" className="form-control" id="productNo" placeholder="Product Code" />
@@ -657,7 +712,6 @@ const NewSales = ({ invoice }) => {
               <button className="btn btn-primary btn-md" onClick={handleAddProduct}>Add Product</button>
             </div>
           </div>
-
           <div className="product-table">
             <Table
               data={tableData}
@@ -670,11 +724,9 @@ const NewSales = ({ invoice }) => {
               showPDF={false}
             />
           </div>
-
           <div className="payment-form">
             <div className="payment-form-group">
               <div className="sales-person-box">
-
                 <div className="sales-person">
                   <label id='label'>Cashier</label>
                   <input type="text" name="userName" value={formData.userName} onChange={handleChange} className="form-control" readOnly />
@@ -692,7 +744,6 @@ const NewSales = ({ invoice }) => {
                   <input type="file" className="form-control" onChange={handleFileChange} accept="image/*,.pdf" />
                 </div>
               </div>
-
               <div className="amount-box">
                 <div className="amount-group">
                   <label htmlFor="" id='label'>Total Amount</label>
@@ -704,7 +755,6 @@ const NewSales = ({ invoice }) => {
                 </div>
               </div>
             </div>
-
             <div className="payment-form-group">
               <div className="payment-details-box">
                 <div className="payment-details">
@@ -780,7 +830,7 @@ const NewSales = ({ invoice }) => {
                     <button className='btn btn-warning mb-2' type='submit' onClick={changeStatus}>Draft</button>
                   </div>
                   <div className="payment-form-button  d-grid d-md-flex me-md-2 justify-content-end px-5">
-                    <button className='btn btn-danger btn-md mb-2' type='reset' onClick={resetForm} >Cancel</button>
+                    <button className='btn btn-danger btn-md mb-2' type='reset' onClick={resetForm}>Cancel</button>
                     <button className='btn btn-primary btn-md mb-2' type='submit'>Create invoice</button>
                   </div>
                 </div>
@@ -791,6 +841,6 @@ const NewSales = ({ invoice }) => {
       </div >
     </div >
   )
-}
+};
 
-export default NewSales
+export default DraftSales;
