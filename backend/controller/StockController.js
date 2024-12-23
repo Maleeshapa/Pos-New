@@ -47,7 +47,7 @@ async function createStock(req, res) {
                 stockPrice,
                 stockQty,
                 stockDescription,
-                stockStatus,
+                stockStatus: 'In Stock',
                 products_productId,
                 supplier_supplierId,
                 store_storeId,
