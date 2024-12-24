@@ -474,15 +474,15 @@ const NewStock = () => {
 
                 <div className="col-md-4 mb-3">
                   <label htmlFor="price" className="form-label">Price</label>
-                  <input type="number" name="price" value={formData.price} className="form-control" onChange={handleChange} readOnly />
+                  <input type="number" name="price" value={formData.price} className="form-control" onChange={handleChange} placeholder='0.00' readOnly />
                 </div>
                 <div className="col-md-4 mb-3">
                   <label htmlFor="qty" className="form-label">Quantity</label>
-                  <input type="number" name="qty" value={formData.qty} required className="form-control" onChange={handleChange} />
+                  <input type="number" name="qty" value={formData.qty} required className="form-control" onChange={handleChange} placeholder='0' />
                 </div>
                 <div className="col-md-4 mb-3">
                   <label htmlFor="totalPrice" className="form-label">Total Price</label>
-                  <input type="text" name="totalPrice" value={formData.totalPrice} className="form-control" readOnly />
+                  <input type="text" name="totalPrice" value={formData.totalPrice} className="form-control" placeholder='0.00' readOnly />
                 </div>
               </div>
 
@@ -523,23 +523,23 @@ const NewStock = () => {
           <div className='row mt-3'>
             <div className="col-md-2 mb-3">
               <label htmlFor="totalPrice" className="form-label">Vat</label>
-              <input type="number" name="vat" value={formData.vat} className="form-control" onChange={handleChange} />
+              <input type="number" name="vat" value={formData.vat} className="form-control" onChange={handleChange} placeholder='%' />
             </div>
             <div className="col-md-2 mb-3">
               <label htmlFor="totalPrice" className="form-label">Vat + Total</label>
-              <input type="number" name="vatWithTotal" value={formData.vatWithTotal} className="form-control" onChange={handleChange} />
+              <input type="number" name="vatWithTotal" value={formData.vatWithTotal} className="form-control" onChange={handleChange} placeholder='0.00' readOnly/>
             </div>
             <div className="col-md-3 mb-3">
               <label className="form-label">Cash Amount</label>
-              <input type="number" name="cashAmount" value={formData.cashAmount} className="form-control" onChange={handleChange} />
+              <input type="number" name="cashAmount" value={formData.cashAmount} className="form-control" onChange={handleChange} placeholder='0.00' />
             </div>
             <div className="col-md-3 mb-3">
               <label htmlFor="qty" className="form-label">Cheque Amount</label>
-              <input type="number" name="chequeAmount" value={formData.chequeAmount} required className="form-control" onChange={handleChange} />
+              <input type="number" name="chequeAmount" value={formData.chequeAmount} required className="form-control" onChange={handleChange} placeholder='0.00' />
             </div>
             <div className="col-md-2 mb-3">
               <label htmlFor="qty" className="form-label">due</label>
-              <input type="number" name="due" value={formData.due} required className="form-control" onChange={handleChange} readOnly />
+              <input type="number" name="due" value={formData.due} required className="form-control" onChange={handleChange} readOnly  placeholder='0.00'/>
             </div>
           </div>
 
