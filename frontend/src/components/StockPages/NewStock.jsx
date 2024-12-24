@@ -20,7 +20,7 @@ const NewStock = () => {
   const [tableData, setTableData] = useState(data || []);
 
 
-  const columns = ['Stock Name', 'Supplier Name', 'Store', 'Product Name', 'Category', 'M Date', 'Exp Date', 'Unit Price', 'Quantity', 'Description', 'Total Price'];
+  const columns = ['Stock Name', 'Supplier Name', 'Store', 'Product Name', 'Category', 'Mfd Date', 'Exp Date', 'Unit Price', 'Quantity', 'Description', 'Total Price'];
 
   const [formData, setFormData] = useState({
     stockName: '',
@@ -34,6 +34,14 @@ const NewStock = () => {
     qty: '',
     description: '',
     totalPrice: '',
+
+    totalQty: '',
+    total: '',
+    vat: '',
+    cashAmount: '',
+    chequeAmount: '',
+    due: '',
+    vatWithTotal: '',
   });
 
   const initialFormState = {
@@ -47,7 +55,15 @@ const NewStock = () => {
     price: '',
     qty: '',
     description: '',
+
     totalPrice: '',
+    totalQty: '',
+    total: '',
+    vat: '',
+    cashAmount: '',
+    chequeAmount: '',
+    due: '',
+    vatWithTotal: '',
   };
 
   useEffect(() => {
@@ -210,15 +226,32 @@ const NewStock = () => {
     setFormData((prevData) => {
       const newData = { ...prevData, [name]: value };
 
+      // Calculate totalPrice when price or qty changes
       if (name === 'price' || name === 'qty') {
         const price = parseFloat(newData.price) || 0;
         const qty = parseFloat(newData.qty) || 0;
         newData.totalPrice = (price * qty).toFixed(2);
       }
 
+      // Calculate VAT and total price with VAT
+      if (name === 'vat' || name === 'total') {
+        const vat = parseFloat(newData.vat) || 0;
+        const total = parseFloat(newData.total) || 0;
+        const vatAmount = (vat / 100) * total;
+        newData.vatWithTotal = (total + vatAmount).toFixed(2);
+      }
+
+      // Calculate due amount
+      const cashAmount = parseFloat(newData.cashAmount) || 0;
+      const chequeAmount = parseFloat(newData.chequeAmount) || 0;
+      const totalPaidAmount = cashAmount + chequeAmount;
+
+      newData.due = (parseFloat(newData.vatWithTotal) - totalPaidAmount).toFixed(2);
+
       return newData;
     });
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -269,6 +302,7 @@ const NewStock = () => {
       setSuccessMessage('Stock data submitted successfully!');
       setError(null);
       resetForm();
+      setTableData([]);
     } catch (error) {
       console.error('Error submitting stock data:', error);
       setError('Failed to create new stock. Please try again.');
@@ -299,6 +333,21 @@ const NewStock = () => {
 
     setTableData(prevData => [...prevData, newRow]);
     resetForm();
+  };
+
+  useEffect(() => {
+    const totalQuantity = tableData.reduce((sum, row) => sum + parseInt(row[8] || 0, 10), 0);
+    const totalAmount = tableData.reduce((sum, row) => sum + parseFloat(row[10] || 0), 0);
+
+    setFormData((prevData) => ({
+      ...prevData,
+      totalQty: totalQuantity,
+      total: totalAmount.toFixed(2),
+    }));
+  }, [tableData]);
+
+  const handleDelete = (rowIndex) => {
+    setTableData(prevData => prevData.filter((_, index) => index !== rowIndex));
   };
 
   return (
@@ -450,12 +499,48 @@ const NewStock = () => {
               data={tableData}
               columns={columns}
               showButton={false}
-              showActions={false}
+              showActions={true}
               showSearch={false}
               showPDF={false}
               showDate={false}
               showRow={false}
+              showEdit={false}
+              onDelete={handleDelete}
             />
+          </div>
+
+          <div className='row mt-3 justify-content-end'>
+            <div className="col-md-2 mb-3">
+              <label htmlFor="qty" className="form-label">Total Quantity</label>
+              <input type="number" name="totalQty" value={formData.totalQty} required className="form-control" onChange={handleChange} readOnly />
+            </div>
+            <div className="col-md-2 mb-3">
+              <label className="form-label">Total Amount</label>
+              <input type="number" name="total" value={formData.total} className="form-control" onChange={handleChange} readOnly />
+            </div>
+          </div>
+
+          <div className='row mt-3'>
+            <div className="col-md-2 mb-3">
+              <label htmlFor="totalPrice" className="form-label">Vat</label>
+              <input type="number" name="vat" value={formData.vat} className="form-control" onChange={handleChange} />
+            </div>
+            <div className="col-md-2 mb-3">
+              <label htmlFor="totalPrice" className="form-label">Vat + Total</label>
+              <input type="number" name="vatWithTotal" value={formData.vatWithTotal} className="form-control" onChange={handleChange} />
+            </div>
+            <div className="col-md-3 mb-3">
+              <label className="form-label">Cash Amount</label>
+              <input type="number" name="cashAmount" value={formData.cashAmount} className="form-control" onChange={handleChange} />
+            </div>
+            <div className="col-md-3 mb-3">
+              <label htmlFor="qty" className="form-label">Cheque Amount</label>
+              <input type="number" name="chequeAmount" value={formData.chequeAmount} required className="form-control" onChange={handleChange} />
+            </div>
+            <div className="col-md-2 mb-3">
+              <label htmlFor="qty" className="form-label">due</label>
+              <input type="number" name="due" value={formData.due} required className="form-control" onChange={handleChange} readOnly />
+            </div>
           </div>
 
           {/* Footer Buttons */}
@@ -463,6 +548,7 @@ const NewStock = () => {
             <button type="reset" className="btn btn-danger me-2" onClick={resetForm}>Clear</button>
             <button type="submit" className="btn btn-success" onClick={handleSubmit}>New Stock</button>
           </div>
+
         </form>
       </div>
     </div>
