@@ -1,4 +1,5 @@
 const Supplier = require("../model/Supplier");
+const { Op } = require('sequelize');
 
 const createSupplier = async (req, res) => {
     try {
@@ -80,6 +81,23 @@ const getSupplierById = async (req, res) => {
     }
 };
 
+const getSupplierByName = async (req, res) => {
+    try {
+        const { name } = req.params;
+
+        const supplier = await Supplier.findOne({
+            where: { supplierName: name }
+        });
+
+        if (!supplier) {
+            return res.status(404).json({ message: "Supplier not found" });
+        } supplier
+        res.status(200).json(supplier);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 // Update a Supplier
 const updateSupplier = async (req, res) => {
     try {
@@ -130,10 +148,46 @@ const deleteSupplier = async (req, res) => {
     }
 };
 
+const getSupplierSuggestions = async (req, res) => {
+    try {
+        const { query } = req.query;
+
+        // Validate the query
+        if (!query || query.trim().length < 2) {
+            return res.status(400).json({ error: 'Query must be at least 2 characters long.' });
+        }
+
+        // Fetch suggestions from the database
+        const suppliers = await Supplier.findAll({
+            where: {
+                supplierName: {
+                    [Op.like]: `%${query.trim()}%`, // Trim to avoid unnecessary spaces
+                },
+            },
+            attributes: ['supplierName'], // Only return supplierName
+            limit: 10, // Restrict the number of results
+        });
+
+        // If no suppliers found, return a helpful message
+        if (suppliers.length === 0) {
+            return res.status(404).json({ message: 'No suppliers found matching the query.' });
+        }
+
+        // Respond with the found suppliers
+        res.status(200).json(suppliers);
+    } catch (error) {
+        console.error('Error fetching supplier suggestions:', error);
+        res.status(500).json({ error: 'An error occurred while fetching supplier suggestions.' });
+    }
+};
+
+
 module.exports = {
     createSupplier,
     getAllSuppliers,
     getSupplierById,
+    getSupplierByName,
     updateSupplier,
     deleteSupplier,
+    getSupplierSuggestions
 }

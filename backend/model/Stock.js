@@ -15,7 +15,7 @@ const Stock = sequelize.define(
         },
         stockName: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         mfd: {
             type: DataTypes.DATE,
@@ -27,7 +27,7 @@ const Stock = sequelize.define(
         },
         stockPrice: {
             type: DataTypes.FLOAT,
-            allowNull: false,
+            allowNull: true,
         },
         stockQty: {
             type: DataTypes.INTEGER,
