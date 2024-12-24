@@ -47,8 +47,10 @@ app.post("/userLogin", UserController.userLogin);
 app.post("/supplier", SupplierController.createSupplier);
 app.get("/suppliers", SupplierController.getAllSuppliers);
 app.get("/supplier/:id", SupplierController.getSupplierById);
+app.get("/supplier/supplierName/:name", SupplierController.getSupplierByName);
 app.put("/supplier/:id", SupplierController.updateSupplier);
 app.delete("/supplier/:id", SupplierController.deleteSupplier);
+app.get('/suppliers/suggestions', SupplierController.getSupplierSuggestions);
 
 //category routes
 app.post("/category", CategoryController.createCategory);

@@ -111,7 +111,7 @@ const Sidebar = () => {
             path: '/customer',
             submenus: [
                 { title: 'Customer List', path: '/customer/customer-list' },
-                // { title: 'Job Due Payment', path: '/customer/jobDue-payment' },
+                { title: 'Due Customers', path: '/customer/jobDue-payment' },
                 // { title: 'Sale Due Payment', path: '/customer/sale-due-payment' },
             ]
         },
