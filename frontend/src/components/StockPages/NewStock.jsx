@@ -405,14 +405,13 @@ const NewStock = () => {
 
                 <div className="col-md-6">
                   <label htmlFor="category" className="form-label">Product Category</label>
-                  <select name="category" value={formData.category} onChange={handleChange} className="form-select">
-                    <option value="">Select Category</option>
-                    {categories.map((category) => (
-                      <option key={category.categoryId} value={category.categoryId}>
-                        {category.categoryName}
-                      </option>
-                    ))}
-                  </select>
+                  <input
+                    type="text"
+                    name="category"
+                    value={categories.find(c => c.categoryId === formData.category)?.categoryName || ''}
+                    className="form-control"
+                    readOnly
+                  />
                 </div>
 
                 <div className="col-md-6 mb-3">
