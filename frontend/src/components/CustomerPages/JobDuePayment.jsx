@@ -6,7 +6,7 @@ const JobDuePayment = () => {
   const [data,] = useState([
     [],
   ]);
-  const Columns = ['Invoice Number','Customer', 'Total Amount','Due Amount'];
+  const Columns = ['Invoice Number','Customer Code','Customer Name', 'Total Amount','Due Amount'];
 
   return (
     <div>
