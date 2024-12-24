@@ -361,23 +361,23 @@ const NewSales = ({ invoice }) => {
       const invoiceResult = await invoiceResponse.json();
       console.log('Invoice created:', invoiceResult);
 
-      // //image
-      // const formData = new FormData();
-      // formData.append("image", file);
+      //image
+      const formDataImage = new FormData();
+      formDataImage.append("image", file);
 
-      // const imageResponse = await fetch(`${config.BASE_URL}/invoice/${invoiceResult.invoiceId}`, {
-      //   method: "POST",
-      //   body: formData,
-      // });
+      const imageResponse = await fetch(`${config.BASE_URL}/invoice/${invoiceResult.invoiceId}`, {
+        method: "POST",
+        body: formDataImage,
+      });
 
-      // if (!imageResponse.ok) {
-      //   const errorData = await imageResponse.json();
-      //   console.error("Image upload error details:", errorData);
-      //   throw new Error(errorData.error || "Failed to upload image");
-      // }
+      if (!imageResponse.ok) {
+        const errorData = await imageResponse.json();
+        console.error("Image upload error details:", errorData);
+        throw new Error(errorData.error || "Failed to upload image");
+      }
 
-      // const imageResult = await imageResponse.json();
-      // console.log("Image uploaded successfully:", imageResult);
+      const imageResult = await imageResponse.json();
+      console.log("Image uploaded successfully:", imageResult);
 
       //product------------------------------------------------------------------------------------------
       const invalidProducts = tableData.filter(row => !row[3]);
@@ -793,4 +793,4 @@ const NewSales = ({ invoice }) => {
   )
 }
 
-export default NewSales
+export default NewSales;
