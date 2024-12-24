@@ -111,6 +111,7 @@ app.get('/invoiceProducts', InvoiceProductController.getAllInvoiceProducts);
 app.get('/invoiceProducts/:invoiceId', InvoiceProductController.getInvoiceById)
 app.delete('/invoiceProduct/:invoiceId', InvoiceProductController.deleteInvoiceProduct)
 app.get('/invoiceProduct/:num', InvoiceProductController.getInvoiceProductsByNo);
+app.put('/invoiceProduct/:id', InvoiceProductController.updateInvoiceProductStatus);
 
 //transaction routes
 app.post("/transaction", TransactionController.createTransaction);

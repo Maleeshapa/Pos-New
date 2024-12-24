@@ -180,6 +180,7 @@ const SalesDetails = () => {
                                         <th>Qty</th>
                                         <th>Unit Price</th>
                                         <th>Total LKR</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -195,6 +196,9 @@ const SalesDetails = () => {
                                                 <td>{product.invoiceQty}</td>
                                                 <td>{product.product.productSellingPrice}</td>
                                                 <td>{product.totalAmount}</td>
+                                                <td className={product.invoiceProductStatus === 'notDelivered' ? 'not-delivery' : 'delivery'}>
+                                                    {product.invoiceProductStatus}
+                                                </td>
                                             </tr>
                                         ))
                                     )}
