@@ -78,7 +78,8 @@ const DeliveryNote = () => {
             const response = await fetch(`${config.BASE_URL}/invoiceProducts/${invoiceId}`);
             if (response.ok) {
                 const data = await response.json();
-                setInvoiceProducts(data);
+                const filteredProducts = data.filter(product => product.invoiceProductStatus !== 'Delivered');
+                setInvoiceProducts(filteredProducts);
             } else {
                 alert('No invoice products found');
             }
@@ -87,6 +88,7 @@ const DeliveryNote = () => {
             alert('An error occurred while fetching invoice products');
         }
     };
+
 
     const generateDeliveryNo = () => {
         const currentYear = new Date().getFullYear().toString().slice(-2);
@@ -98,7 +100,6 @@ const DeliveryNote = () => {
             delivaryNo: deliveryNo,
         }));
     };
-
 
     const fetchTransaction = async (invoiceId) => {
         try {
@@ -119,14 +120,50 @@ const DeliveryNote = () => {
         setInvoiceProducts(prevProducts => prevProducts.filter((_, i) => i !== index));
     };
 
-    const handlePrint = () => {
+    const updateProductStatusToDelivered = async () => {
+        try {
+            const updatePromises = invoiceProducts.map(async (product) => {
+                console.log(`Updating product with ID: ${product.id}`); // Log the ID to check it
+                const response = await fetch(`${config.BASE_URL}/invoiceProducts/${product.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ invoiceProductStatus: 'Delivered' }),
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to update product ${product.id}`);
+                }
+                return response.json();
+            });
+    
+            await Promise.all(updatePromises);
+            console.log('All product statuses updated.');
+    
+            setInvoiceProducts((prevProducts) =>
+                prevProducts.map((product) => ({
+                    ...product,
+                    invoiceProductStatus: 'Delivered',
+                }))
+            );
+        } catch (error) {
+            console.error('Error updating product statuses:', error);
+            alert('An error occurred while updating product statuses.');
+        }
+    };    
+    
+    const handlePrint = async () => {
         const printContent = document.getElementById('invoice-card');
-
+    
         if (printContent) {
             const doc = new jsPDF();
-
+    
+            // Update the product statuses in the database before printing
+            await updateProductStatusToDelivered();
+    
+            // Now, render the PDF with updated data
             doc.html(printContent, {
-                callback: function (doc) {
+                callback: async function (doc) {
                     doc.autoPrint();
                     window.open(doc.output('bloburl'), '_blank');
                     doc.save('invoice.pdf');
@@ -140,7 +177,7 @@ const DeliveryNote = () => {
             console.error('Invoice card not found!');
         }
     };
-
+    
     const [showAddress, setShowAddress] = useState(false)
     const [showBank, setShowBank] = useState(false)
 
@@ -252,6 +289,7 @@ const DeliveryNote = () => {
                                         <th>Qty</th>
                                         {/* <th>Unit Price</th>
                                         <th>Total LKR</th> */}
+                                        <th>Status</th>  {/* New column for status */}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -270,6 +308,7 @@ const DeliveryNote = () => {
                                                 <td id='table-sn'>{index + 1}</td>
                                                 <td id='tableDes'>{invoiceProduct.product.productName}</td>
                                                 <td id='table-sn'>{invoiceProduct.invoiceQty}</td>
+                                                <td>{invoiceProduct.invoiceProductStatus}</td> {/* Show status here */}
                                             </tr>
                                         ))
                                     )}

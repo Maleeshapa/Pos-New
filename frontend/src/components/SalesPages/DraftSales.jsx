@@ -66,77 +66,76 @@ const DraftSales = ({ invoice }) => {
     cusOffice: ''
   });
 
-// In the DraftSales component
-useEffect(() => {
-  const fetchInvoiceData = async () => {
-    try {
-      const response = await fetch(`${config.BASE_URL}/invoice/${invoiceId}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch invoice data');
+  // In the DraftSales component
+  useEffect(() => {
+    const fetchInvoiceData = async () => {
+      try {
+        const response = await fetch(`${config.BASE_URL}/invoice/${invoiceId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch invoice data');
+        }
+        const invoiceData = await response.json();
+        
+        setFormData(prevData => ({
+          ...prevData,
+          invoiceNo: invoiceData.invoiceNo,
+          cusName: invoiceData.customer.cusName,
+          purchaseNo: invoiceData.purchaseNo,
+        }));
+
+        // Fetch transactions
+        const transactionResponse = await fetch(`${config.BASE_URL}/transaction/invoice/${invoiceId}`);
+        if (!transactionResponse.ok) {
+          throw new Error('Failed to fetch transaction data');
+        }
+        const transactions = await transactionResponse.json();
+
+        // Fetch products associated with the invoice
+        const productResponse = await fetch(`${config.BASE_URL}/invoiceProducts/${invoiceId}`);
+        if (!productResponse.ok) {
+          throw new Error('Failed to fetch product data');
+        }
+        const products = await productResponse.json();
+
+        // Populate the table data
+        const tableRows = products.map((product) => {
+          return [
+            invoiceData.customer.cusName,
+            invoiceData.customer.cusAddress,
+            product.product.productCode,
+            product.product.productName,
+            product.product.productSellingPrice,
+            product.invoiceQty,
+            product.discount,
+            product.totalAmount,
+            product.product.productWarranty,
+            product.productId,
+            product.stockId,
+          ];
+        });
+        setTableData(tableRows);
+
+        // Calculate totals and other necessary fields
+        const totalAmount = transactions.reduce((total, transaction) => total + transaction.paid, 0);
+        const dueAmount = transactions.reduce((total, transaction) => total + transaction.due, 0);
+        setFormData({
+          ...formData,
+          totalAmount: totalAmount.toFixed(2),
+          dueAmount: dueAmount.toFixed(2),
+          
+        });
+
+        // Set other state variables as necessary
+        setInvoiceStatus(invoiceData.status);
+        setSelectedStore(invoiceData.store);
+        setDelivary(invoiceData.delivary);
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
-      const invoiceData = await response.json();
+    };
 
-      // Fetch transactions
-      const transactionResponse = await fetch(`${config.BASE_URL}/transaction/invoice/${invoiceId}`);
-      if (!transactionResponse.ok) {
-        throw new Error('Failed to fetch transaction data');
-      }
-      const transactions = await transactionResponse.json();
-
-      // Fetch products associated with the invoice
-      const productResponse = await fetch(`${config.BASE_URL}/invoiceProducts/${invoiceId}`);
-      if (!productResponse.ok) {
-        throw new Error('Failed to fetch product data');
-      }
-      const products = await productResponse.json();
-
-      // Populate the form data
-      setFormData(prevData => ({
-        ...prevData,
-        invoiceNo: invoiceData.invoiceNo,
-        cusName: invoiceData.customer.cusName,
-        purchaseNo: invoiceData.purchaseNo,
-      }));
-
-      // Populate the table data
-      const tableRows = products.map((product) => {
-        return [
-          invoiceData.customer.cusName,
-          invoiceData.customer.cusAddress,
-          product.product.productCode,
-          product.product.productName,
-          product.product.productSellingPrice,
-          product.invoiceQty,
-          product.discount,
-          product.totalAmount,
-          product.product.productWarranty,
-          product.productId,
-          product.stockId,
-        ];
-      });
-      setTableData(tableRows);
-
-      // Calculate totals and other necessary fields
-      const totalAmount = transactions.reduce((total, transaction) => total + transaction.paid, 0);
-      const dueAmount = transactions.reduce((total, transaction) => total + transaction.due, 0);
-      setFormData({
-        ...formData,
-        totalAmount: totalAmount.toFixed(2),
-        dueAmount: dueAmount.toFixed(2),
-        // Other fields as needed
-      });
-
-      // Set other state variables as necessary
-      setInvoiceStatus(invoiceData.status);
-      setSelectedStore(invoiceData.store);
-      setDelivary(invoiceData.delivary);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  fetchInvoiceData();
-}, [invoiceId, invoiceNo]);
+    fetchInvoiceData();
+  }, [invoiceId, invoiceNo]);
 
   const fetchUserId = async () => {
     const userName = localStorage.getItem('userName');
@@ -160,7 +159,7 @@ useEffect(() => {
     }
   }, [formData.user]);
 
-  const[customerStore,setCustomerStore]=useState('');
+  const [customerStore, setCustomerStore] = useState('');
 
   const fetchCustomerData = async (cusName) => {
     try {
@@ -361,7 +360,7 @@ useEffect(() => {
     const store = e.target.value;
     setSelectedStore(store);
     setCustomerStore(store);
-    
+
   };
 
   const handleDelivary = (e) => {
@@ -624,7 +623,7 @@ useEffect(() => {
   return (
     <div>
       <div className="scrolling-container">
-        <h4>Sales Invoice</h4>
+        <h4>Draft  Sales Invoice</h4>
         <form action="" onSubmit={handleSubmit} >
           <div className="customer-form">
             <div className="sales-add-form">
@@ -634,7 +633,7 @@ useEffect(() => {
                   <button className='addCusBtn btn-primary' type="button"><Link to={'/customer/customer-list'}> <PlusCircle size={30} /> </Link></button>
                 </div>
                 <div className="customer-details">
-                  <input onChange={handleChange}  value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" />
+                  <input onChange={handleChange} value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" />
                 </div>
                 <div className="customer-details">
                   <input onChange={handleChange} value={formData.cusJob} type="text" className="form-control" name="cusJob" id="cusJob" placeholder="Customer Job Position" />
@@ -649,19 +648,19 @@ useEffect(() => {
                   <div className="store">
                     <div className="payment-details">
                       <div className="payment-details-amount">
-                        <input type="radio" name="store" value='colkan' id="colkan" checked={customerStore==='colkan'} onChange={handleInvoice} style={{ width: '20px' }}  />
+                        <input type="radio" name="store" value='colkan' id="colkan" checked={customerStore === 'colkan'} onChange={handleInvoice} style={{ width: '20px' }} />
                         <label className='payment-lable' htmlFor="">Colkan</label>
                       </div>
                     </div>
                     <div className="payment-details">
                       <div className="payment-details-amount">
-                        <input type="radio" name="store" value='terra' id="terra" checked={customerStore==='terra'} onChange={handleInvoice}  />
+                        <input type="radio" name="store" value='terra' id="terra" checked={customerStore === 'terra'} onChange={handleInvoice} />
                         <label className='payment-lable' htmlFor="">Terra</label>
                       </div>
                     </div>
                     <div className="payment-details">
                       <div className="payment-details-amount">
-                        <input type="radio" name="store" value='haman' id="haman" checked={customerStore==='haman'} onChange={handleInvoice}  />
+                        <input type="radio" name="store" value='haman' id="haman" checked={customerStore === 'haman'} onChange={handleInvoice} />
                         <label className='payment-lable' htmlFor="">Haman</label>
                       </div>
                     </div>

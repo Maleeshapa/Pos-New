@@ -15,7 +15,7 @@ const createInvoiceProduct = async (req, res) => {
     const insufficientStockProducts = [];
 
     for (const invoiceProduct of invoiceProducts) {
-      const { productId, stockId, invoiceId,invoiceNo, totalAmount, invoiceQty,invoiceProductStatus } = invoiceProduct;
+      const { productId, stockId, invoiceId, invoiceNo, totalAmount, invoiceQty, invoiceProductStatus } = invoiceProduct;
 
       // Check if the product exists
       const product = await Product.findByPk(productId);
@@ -56,7 +56,7 @@ const createInvoiceProduct = async (req, res) => {
     // Process invoice products if all stock is sufficient
     const createdInvoiceProducts = [];
     for (const invoiceProduct of invoiceProducts) {
-      const { productId, stockId, invoiceId,invoiceNo, totalAmount, invoiceQty,invoiceProductStatus } = invoiceProduct;
+      const { productId, stockId, invoiceId, invoiceNo, totalAmount, invoiceQty, invoiceProductStatus } = invoiceProduct;
 
       // Find stock and update quantity
       const stock = await Stock.findByPk(stockId);
@@ -110,7 +110,7 @@ const getAllInvoiceProducts = async (req, res) => {
 const getInvoiceById = async (req, res) => {
   try {
     const { invoiceId } = req.params;
-    
+
     const invoiceProducts = await InvoiceProduct.findAll({
       where: { invoiceId },
       include: [
@@ -186,10 +186,30 @@ const deleteInvoiceProduct = async (req, res) => {
   }
 };
 
+const updateInvoiceProductStatus = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { invoiceProductStatus: 'Delivered' },
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.status(200).json(updatedProduct);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating product status', error });
+  }
+};
+
 module.exports = {
   createInvoiceProduct,
   getAllInvoiceProducts,
   deleteInvoiceProduct,
   getInvoiceById,
-  getInvoiceProductsByNo 
+  getInvoiceProductsByNo,
+  updateInvoiceProductStatus,
 };
