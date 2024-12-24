@@ -65,28 +65,28 @@ const NewSales = ({ invoice }) => {
     cusOffice: ''
   });
 
-  useEffect(() => {
-    const fetchLastInvoiceNumber = async () => {
-      try {
-        const response = await fetch(`${config.BASE_URL}/invoice/last`);
-        if (response.ok) {
-          const data = await response.json();
-          const nextInvoiceNo = data.lastInvoiceNo + 1;
-          setFormData(prevData => ({
-            ...prevData,
-            invoiceNo: nextInvoiceNo.toString()
-          }));
-          console.log(nextInvoiceNo.toString());
-          console.log(data);
-        }
+  // useEffect(() => {
+  //   const fetchLastInvoiceNumber = async () => {
+  //     try {
+  //       const response = await fetch(`${config.BASE_URL}/invoice/last`);
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         const nextInvoiceNo = data.lastInvoiceNo + 1;
+  //         setFormData(prevData => ({
+  //           ...prevData,
+  //           invoiceNo: nextInvoiceNo.toString()
+  //         }));
+  //         console.log(nextInvoiceNo.toString());
+  //         console.log(data);
+  //       }
 
-      } catch (error) {
-        console.error('Error fetching last invoice number:', error);
-      }
-    };
-    fetchLastInvoiceNumber();
-    fetchUserId();
-  }, []);
+  //     } catch (error) {
+  //       console.error('Error fetching last invoice number:', error);
+  //     }
+  //   };
+  //   fetchLastInvoiceNumber();
+  //   fetchUserId();
+  // }, []);
 
   const fetchUserId = async () => {
     const userName = localStorage.getItem('userName');
@@ -728,7 +728,6 @@ const NewSales = ({ invoice }) => {
                   </div>
                   {showCard && (
                     <input type="number" className="form-control" id='' name='card' onChange={handlePaymentChange} value={formData.card} placeholder='Card Payment' onWheel={(e) => e.target.blur()} />
-
                   )}
                 </div>
                 <div className="payment-details">
@@ -736,7 +735,6 @@ const NewSales = ({ invoice }) => {
                     <input type="checkbox" name="credit" id="credit" onChange={handleCredit} />
                     <label htmlFor="" id='label'>Credit Payment</label>
                   </div>
-
                   {showCredit && (
                     <input type="number" className="form-control" id='payment' name='credit' value={formData.credit} onChange={handlePaymentChange} placeholder='credit Amount' onWheel={(e) => e.target.blur()} />
                   )}
@@ -760,7 +758,6 @@ const NewSales = ({ invoice }) => {
                   )}
                 </div>
               </div>
-
               <div className="amount-box">
                 <div className="amount-group">
                   <label htmlFor="" id='label'>Paid Amount</label>
@@ -770,7 +767,6 @@ const NewSales = ({ invoice }) => {
                   <label htmlFor="" id='label'>Due Amount</label>
                   <input className="form-control" type="number" value={formData.dueAmount} onWheel={(e) => e.target.blur()} name="discount" id="readOnly" readOnly />
                 </div>
-
                 <div className="seltction_options">
                   <div className="store">
                     <div className="payment-details-amount">
@@ -779,11 +775,9 @@ const NewSales = ({ invoice }) => {
                     </div>
                   </div>
                 </div>
-
                 <div className="btn-pos mt-4">
                   <div className="payment-form-button d-grid d-md-flex me-md-2 justify-content-end px-5">
                     <button className='btn btn-warning mb-2' type='submit' onClick={changeStatus}>Draft</button>
-
                   </div>
                   <div className="payment-form-button  d-grid d-md-flex me-md-2 justify-content-end px-5">
                     <button className='btn btn-danger btn-md mb-2' type='reset' onClick={resetForm} >Cancel</button>

@@ -1,257 +1,207 @@
 import React, { useState } from 'react';
-import { Trash2, Plus, PlusSquare } from 'lucide-react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const CostingTable = () => {
-  const [columns, setColumns] = useState([
-    { id: 'customer', title: 'Customer', type: 'text' },
-    { id: 'productCode', title: 'Product Code', type: 'text' },
-    { id: 'description', title: 'Description', type: 'text' },
-    { id: 'warranty', title: 'Warranty', type: 'text' },
-    { id: 'supplier', title: 'Supplier', type: 'text' },
-    { id: 'unitCost', title: 'Unit Cost', type: 'number' },
-    { id: 'marginPercentage', title: 'Margin %', type: 'number' },
-    { id: 'marginValue', title: 'Margin Value', type: 'calculated' },
-    { id: 'otherMarginPercentage', title: 'Other Margin %', type: 'number' },
-    { id: 'otherMarginValue', title: 'Other Margin Value', type: 'calculated' },
-    { id: 'pricePlusMargin', title: 'Price + Margin', type: 'calculated' },
-    { id: 'sellingRate', title: 'Selling Rate', type: 'calculated' },
-    { id: 'roundedSellingRate', title: 'Rounded Selling Rate', type: 'calculated' },
-    { id: 'uom', title: 'UOM', type: 'text' },
-    { id: 'qty', title: 'Qty', type: 'number' },
-    { id: 'discountPercentage', title: 'Discount %', type: 'number' },
-    { id: 'discountValue', title: 'Discount Value', type: 'calculated' },
-    { id: 'discountedPrice', title: 'Discounted Price', type: 'calculated' },
-    { id: 'amount', title: 'Amount', type: 'calculated' },
-    { id: 'profit', title: 'Profit', type: 'calculated' }
-  ]);
-
-  const [data, setData] = useState([createEmptyRow()]);
-  const [activeCell, setActiveCell] = useState({ rowIndex: null, colId: null });
-  const [editValue, setEditValue] = useState('');
-
-  function createEmptyRow() {
-    return columns.reduce((acc, col) => {
-      acc[col.id] = col.type === 'calculated' ? 0 : '';
-      return acc;
-    }, { id: Date.now() });
-  }
-
-  function calculateRow(row) {
-    const unitCost = parseFloat(row.unitCost) || 0;
-    const marginPercentage = parseFloat(row.marginPercentage) || 0;
-    const otherMarginPercentage = parseFloat(row.otherMarginPercentage) || 0;
-    const qty = parseFloat(row.qty) || 0;
-    const discountPercentage = parseFloat(row.discountPercentage) || 0;
-
-    const marginValue = unitCost * (marginPercentage / 100);
-    const otherMarginValue = unitCost * (otherMarginPercentage / 100);
-    const pricePlusMargin = unitCost + marginValue + otherMarginValue;
-    const sellingRate = pricePlusMargin;
-    const roundedSellingRate = Math.round(sellingRate / 10) * 10;
-    const discountValue = sellingRate * (discountPercentage / 100);
-    const discountedPrice = sellingRate - discountValue;
-    const amount = discountedPrice * qty;
-    const profit = amount - (unitCost * qty);
-
-    return {
-      ...row,
-      marginValue,
-      otherMarginValue,
-      pricePlusMargin,
-      sellingRate,
-      roundedSellingRate,
-      discountValue,
-      discountedPrice,
-      amount,
-      profit
-    };
-  }
-
-  function handleCellClick(rowIndex, colId) {
-    const col = columns.find(c => c.id === colId);
-    if (col.type !== 'calculated') {
-      setActiveCell({ rowIndex, colId });
-      setEditValue(data[rowIndex][colId]);
-    }
-  }
-
-  function handleCellChange(e) {
-    setEditValue(e.target.value);
-  }
-
-  function handleCellBlur() {
-    if (activeCell.rowIndex !== null) {
-      const newData = [...data];
-      newData[activeCell.rowIndex] = {
-        ...newData[activeCell.rowIndex],
-        [activeCell.colId]: editValue
-      };
-      newData[activeCell.rowIndex] = calculateRow(newData[activeCell.rowIndex]);
-      setData(newData);
-      setActiveCell({ rowIndex: null, colId: null });
-    }
-  }
-
-  function addRow() {
-    setData([...data, createEmptyRow()]);
-  }
-
-  function deleteRow(index) {
-    const newData = data.filter((_, i) => i !== index);
-    setData(newData);
-  }
-
-  function addColumn() {
-    const newColumnId = `column${columns.length + 1}`;
-    setColumns([...columns, {
-      id: newColumnId,
-      title: `Column ${columns.length + 1}`,
-      type: 'text'
-    }]);
-    setData(data.map(row => ({ ...row, [newColumnId]: '' })));
-  }
-
-  function deleteColumn(colId) {
-    const newColumns = columns.filter(col => col.id !== colId);
-    const newData = data.map(row => {
-      const newRow = { ...row };
-      delete newRow[colId];
-      return newRow;
+    const [entries, setEntries] = useState([]);
+    const [formData, setFormData] = useState({
+        descriptionCustomer: '',
+        productCode: '',
+        description: '',
+        warranty: '',
+        supplier: '',
+        unitCost: 0,
+        ourMarginPercentage: 0,
+        ourMarginValue: 0,
+        otherMarginPercentage: 0,
+        otherMarginValue: 0,
+        pricePlusMargin: 0,
+        sellingRate: 0,
+        sellingRateRounded: 0,
+        uom: '',
+        qty: 1,
+        unitPrice: 0,
+        discountPercentage: 0,
+        discountValue: 0,
+        discountedPrice: 0,
+        amount: 0,
+        profit: 0,
     });
-    setColumns(newColumns);
-    setData(newData);
-  }
 
-  const tableStyles = {
-    container: {
-      padding: '1rem',
-      backgroundColor: 'white',
-      borderRadius: '8px',
-      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-      margin: '1rem'
-    },
-    buttonContainer: {
-      marginBottom: '1rem',
-      display: 'flex',
-      gap: '0.5rem'
-    },
-    button: {
-      padding: '0.5rem 1rem',
-      backgroundColor: '#4F46E5',
-      color: 'white',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem'
-    },
-    deleteButton: {
-      padding: '0.25rem',
-      backgroundColor: 'transparent',
-      color: '#EF4444',
-      border: 'none',
-      cursor: 'pointer'
-    },
-    table: {
-      width: '100%',
-      borderCollapse: 'collapse',
-      fontSize: '0.875rem'
-    },
-    th: {
-      padding: '0.75rem 1rem',
-      backgroundColor: '#F9FAFB',
-      borderBottom: '1px solid #E5E7EB',
-      textAlign: 'left',
-      fontWeight: '600',
-      position: 'relative'
-    },
-    td: {
-      padding: '0.75rem 1rem',
-      borderBottom: '1px solid #E5E7EB'
-    },
-    input: {
-      width: '100%',
-      padding: '0.25rem 0.5rem',
-      border: '1px solid #E5E7EB',
-      borderRadius: '4px'
-    }
-  };
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        const updatedData = { ...formData, [name]: value };
 
-  return (
-    <div style={tableStyles.container}>
-      <div style={tableStyles.buttonContainer}>
-        <button style={tableStyles.button} onClick={addRow}>
-          <Plus size={16} /> Add Row
-        </button>
-        <button style={tableStyles.button} onClick={addColumn}>
-          <PlusSquare size={16} /> Add Column
-        </button>
-      </div>
-      <div style={{ overflowX: 'auto' }}>
-        <table style={tableStyles.table}>
-          <thead>
-            <tr>
-              {columns.map(col => (
-                <th key={col.id} style={tableStyles.th}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    {col.title}
-                    {col.type !== 'calculated' && (
-                      <button
-                        onClick={() => deleteColumn(col.id)}
-                        style={tableStyles.deleteButton}
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    )}
-                  </div>
-                </th>
-              ))}
-              <th style={tableStyles.th}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row, rowIndex) => (
-              <tr key={row.id}>
-                {columns.map(col => (
-                  <td key={col.id} style={tableStyles.td}>
-                    {activeCell.rowIndex === rowIndex && activeCell.colId === col.id ? (
-                      <input
-                        type={col.type}
-                        value={editValue}
-                        onChange={handleCellChange}
-                        onBlur={handleCellBlur}
-                        style={tableStyles.input}
-                        autoFocus
-                      />
-                    ) : (
-                      <div
-                        onClick={() => handleCellClick(rowIndex, col.id)}
-                        style={{ cursor: col.type === 'calculated' ? 'default' : 'text' }}
-                      >
-                        {col.type === 'calculated' ? 
-                          parseFloat(row[col.id]).toFixed(2) : 
-                          row[col.id]}
-                      </div>
-                    )}
-                  </td>
-                ))}
-                <td style={tableStyles.td}>
-                  <button
-                    onClick={() => deleteRow(rowIndex)}
-                    style={tableStyles.deleteButton}
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+        // Auto-calculated fields
+        const unitCost = parseFloat(updatedData.unitCost) || 0;
+        const ourMarginPercentage = parseFloat(updatedData.ourMarginPercentage) || 0;
+        const otherMarginPercentage = parseFloat(updatedData.otherMarginPercentage) || 0;
+        const qty = parseInt(updatedData.qty) || 1;
+        const discountPercentage = parseFloat(updatedData.discountPercentage) || 0;
+
+        updatedData.ourMarginValue = (unitCost * ourMarginPercentage) / 100;
+        updatedData.otherMarginValue = (unitCost * otherMarginPercentage) / 100;
+        updatedData.pricePlusMargin = updatedData.ourMarginValue + updatedData.otherMarginValue;
+        updatedData.sellingRate = updatedData.pricePlusMargin / 0.9; // Selling Rate Before Discount Calculation
+        updatedData.sellingRateRounded = Math.ceil(updatedData.sellingRate / 10) * 10; // Round to nearest 10 (upwards)
+        updatedData.unitPrice = updatedData.sellingRateRounded; // Unit Price matches Selling Rate Rounded
+        updatedData.discountValue = (updatedData.sellingRateRounded * discountPercentage) / 100;
+        updatedData.discountedPrice = updatedData.sellingRateRounded - updatedData.discountValue;
+        updatedData.amount = updatedData.discountedPrice * qty;
+        updatedData.profit = (updatedData.ourMarginValue + parseFloat(updatedData.otherMarginPercentage)) * qty;
+
+        setFormData(updatedData);
+    };
+
+    const handleSubmit = () => {
+        // Make sure all necessary data is present
+        if (
+            formData.unitCost > 0 &&
+            formData.qty > 0 &&
+            formData.profit >= 0
+        ) {
+            setEntries([...entries, formData]);
+            setFormData({
+                descriptionCustomer: '',
+                productCode: '',
+                description: '',
+                warranty: '',
+                supplier: '',
+                unitCost: 0,
+                ourMarginPercentage: 0,
+                ourMarginValue: 0,
+                otherMarginPercentage: 0,
+                otherMarginValue: 0,
+                pricePlusMargin: 0,
+                sellingRate: 0,
+                sellingRateRounded: 0,
+                uom: '',
+                qty: 1,
+                unitPrice: 0,
+                discountPercentage: 0,
+                discountValue: 0,
+                discountedPrice: 0,
+                amount: 0,
+                profit: 0,
+            });
+        } else {
+            alert("Please fill in all the fields correctly.");
+        }
+    };
+
+    const handleDelete = (index) => {
+        setEntries(entries.filter((_, i) => i !== index));
+    };
+
+    return (
+        <div className="container-fluid mt-4">
+            <button className="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#entryModal">
+                + Add Entry
+            </button>
+
+            <table className="table table-bordered table-striped">
+                <thead className="table-warning">
+                    <tr>
+                        <th>Description Customer</th>
+                        <th>Product Code</th>
+                        <th>Description</th>
+                        <th>Warranty</th>
+                        <th>Supplier</th>
+                        <th>Unit Cost</th>
+                        <th>Our Margin %</th>
+                        <th>Our Margin Value</th>
+                        <th>Other Margin %</th>
+                        <th>Other Margin Value</th>
+                        <th>Price + Margin</th>
+                        <th>Selling Rate</th>
+                        <th>Selling Rate (Rounded)</th>
+                        <th>UOM</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Discount %</th>
+                        <th>Discount Value</th>
+                        <th>Discounted Price</th>
+                        <th>Amount</th>
+                        <th>Profit</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+    {entries.map((entry, index) => (
+        <tr key={index}>
+            {/* Render all form data values including 'profit' */}
+            {Object.entries(entry).map(([key, value], i) => {
+                // Exclude 'profit' and 'action' from automatic mapping
+                if (key !== 'profit' && key !== 'action') {
+                    return <td key={i}>{value}</td>;
+                }
+                return null;
+            })}
+            {/* Render 'Profit' explicitly */}
+            <td>{entry.profit}</td>
+            {/* Render 'Action' column for the delete button */}
+            <td>
+                <button className="btn btn-danger btn-sm" onClick={() => handleDelete(index)}>
+                    🗑️
+                </button>
+            </td>
+        </tr>
+    ))}
+</tbody>
+
+            </table>
+
+            {/* Modal */}
+            <div className="modal fade" id="entryModal" tabIndex="-1">
+                <div className="modal-dialog modal-lg">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">Add Entry</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="row">
+                                {Object.keys(formData).map((key) => (
+                                    <div className="col-md-6 mb-3" key={key}>
+                                        <label className="form-label text-capitalize">
+                                            {key.replace(/([A-Z])/g, ' $1')}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className={`form-control ${
+                                                key.includes('Value') || key.includes('Price') || key === 'profit'
+                                                    ? 'bg-warning'
+                                                    : ''
+                                            }`}
+                                            name={key}
+                                            value={formData[key]}
+                                            onChange={handleInputChange}
+                                            readOnly={
+                                                key.includes('Value') ||
+                                                key.includes('Price') ||
+                                                key === 'profit'
+                                            }
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button className="btn btn-secondary" data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+                            <button
+                                className="btn btn-primary"
+                                data-bs-dismiss="modal"
+                                onClick={handleSubmit}
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
- 
 
 export default CostingTable;

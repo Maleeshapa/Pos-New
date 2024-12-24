@@ -128,7 +128,7 @@ const Draft = () => {
             onEdit={(rowIndex) => {
               const invoiceId = data[rowIndex][0];
               const invoiceNo = data[rowIndex][1];
-              navigate(`/DraftSales/${invoiceId}/${invoiceNo}`, { state: { invoiceId, invoiceNo } });
+              navigate(`/DraftSales/${invoiceId}/${invoiceNo}`);
             }}
             showButton={false}
             onDelete={handleDelete}

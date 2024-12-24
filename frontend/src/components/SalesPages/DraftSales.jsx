@@ -13,6 +13,7 @@ const DraftSales = ({ invoice }) => {
   const [invoiceStatus, setInvoiceStatus] = useState('Invoice');
   const [cusId, setCusId] = useState('');
   const [file, setFile] = useState(null);
+  const { invoiceId, invoiceNo } = useParams();
 
   const DateTime = () => {
     const now = new Date();
@@ -65,34 +66,77 @@ const DraftSales = ({ invoice }) => {
     cusOffice: ''
   });
 
-  // const SelectInvoice = () => {
-  //   navigate('/selectInvoice')
-  // }
-
-  useEffect(() => {
-    const fetchLastInvoiceNumber = async () => {
-      try {
-        const response = await fetch(`${config.BASE_URL}/invoice/last`);
-        if (response.ok) {
-          const data = await response.json();
-          const nextInvoiceNo = data.lastInvoiceNo + 1;
-          setFormData(prevData => ({
-            ...prevData,
-            invoiceNo: nextInvoiceNo.toString()
-          }));
-          console.log(nextInvoiceNo.toString());
-          console.log(data);
-        }
-
-      } catch (error) {
-        console.error('Error fetching last invoice number:', error);
+// In the DraftSales component
+useEffect(() => {
+  const fetchInvoiceData = async () => {
+    try {
+      const response = await fetch(`${config.BASE_URL}/invoice/${invoiceId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch invoice data');
       }
-    };
+      const invoiceData = await response.json();
 
-    fetchLastInvoiceNumber();
-    fetchUserId();
+      // Fetch transactions
+      const transactionResponse = await fetch(`${config.BASE_URL}/transaction/invoice/${invoiceId}`);
+      if (!transactionResponse.ok) {
+        throw new Error('Failed to fetch transaction data');
+      }
+      const transactions = await transactionResponse.json();
 
-  }, []);
+      // Fetch products associated with the invoice
+      const productResponse = await fetch(`${config.BASE_URL}/invoiceProducts/${invoiceId}`);
+      if (!productResponse.ok) {
+        throw new Error('Failed to fetch product data');
+      }
+      const products = await productResponse.json();
+
+      // Populate the form data
+      setFormData(prevData => ({
+        ...prevData,
+        invoiceNo: invoiceData.invoiceNo,
+        cusName: invoiceData.customer.cusName,
+        purchaseNo: invoiceData.purchaseNo,
+      }));
+
+      // Populate the table data
+      const tableRows = products.map((product) => {
+        return [
+          invoiceData.customer.cusName,
+          invoiceData.customer.cusAddress,
+          product.product.productCode,
+          product.product.productName,
+          product.product.productSellingPrice,
+          product.invoiceQty,
+          product.discount,
+          product.totalAmount,
+          product.product.productWarranty,
+          product.productId,
+          product.stockId,
+        ];
+      });
+      setTableData(tableRows);
+
+      // Calculate totals and other necessary fields
+      const totalAmount = transactions.reduce((total, transaction) => total + transaction.paid, 0);
+      const dueAmount = transactions.reduce((total, transaction) => total + transaction.due, 0);
+      setFormData({
+        ...formData,
+        totalAmount: totalAmount.toFixed(2),
+        dueAmount: dueAmount.toFixed(2),
+        // Other fields as needed
+      });
+
+      // Set other state variables as necessary
+      setInvoiceStatus(invoiceData.status);
+      setSelectedStore(invoiceData.store);
+      setDelivary(invoiceData.delivary);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchInvoiceData();
+}, [invoiceId, invoiceNo]);
 
   const fetchUserId = async () => {
     const userName = localStorage.getItem('userName');
