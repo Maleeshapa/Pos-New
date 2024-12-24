@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Trash } from 'lucide-react';
 
 const CostingTable = () => {
     const [entries, setEntries] = useState([]);
@@ -99,21 +100,21 @@ const CostingTable = () => {
             </button>
 
             <table className="table table-bordered table-striped">
-                <thead className="table-warning">
+                <thead>
                     <tr>
-                        <th>Description Customer</th>
+                        <th  className="table-warning">Description Customer</th>
                         <th>Product Code</th>
                         <th>Description</th>
                         <th>Warranty</th>
-                        <th>Supplier</th>
-                        <th>Unit Cost</th>
-                        <th>Our Margin %</th>
-                        <th>Our Margin Value</th>
-                        <th>Other Margin %</th>
-                        <th>Other Margin Value</th>
-                        <th>Price + Margin</th>
-                        <th>Selling Rate</th>
-                        <th>Selling Rate (Rounded)</th>
+                        <th className="table-warning">Supplier</th>
+                        <th className="table-warning">Unit Cost</th>
+                        <th className="table-warning">Our Margin %</th>
+                        <th  className="table-warning">Our Margin Value</th>
+                        <th  className="table-warning">Other Margin %</th>
+                        <th  className="table-warning">Other Margin Value</th>
+                        <th  className="table-warning">Price + Margin</th>
+                        <th  className="table-warning">Selling Rate</th>
+                        <th  className="table-warning">Selling Rate (Rounded)</th>
                         <th>UOM</th>
                         <th>Qty</th>
                         <th>Unit Price</th>
@@ -121,32 +122,44 @@ const CostingTable = () => {
                         <th>Discount Value</th>
                         <th>Discounted Price</th>
                         <th>Amount</th>
-                        <th>Profit</th>
+                        <th  className="table-warning">Profit</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
     {entries.map((entry, index) => (
         <tr key={index}>
-            {/* Render all form data values including 'profit' */}
             {Object.entries(entry).map(([key, value], i) => {
-                // Exclude 'profit' and 'action' from automatic mapping
-                if (key !== 'profit' && key !== 'action') {
-                    return <td key={i}>{value}</td>;
-                }
-                return null;
+                // Check if the key corresponds to a "table-warning" header
+                const isWarningColumn = [
+                    'descriptionCustomer',
+                    'supplier',
+                    'unitCost',
+                    'ourMarginPercentage',
+                    'ourMarginValue',
+                    'otherMarginPercentage',
+                    'otherMarginValue',
+                    'pricePlusMargin',
+                    'sellingRate',
+                    'sellingRateRounded',
+                    'profit',
+                ].includes(key);
+
+                return (
+                    <td key={i} className={isWarningColumn ? 'table-warning' : ''}>
+                        {value}
+                    </td>
+                );
             })}
-            {/* Render 'Profit' explicitly */}
-            <td>{entry.profit}</td>
-            {/* Render 'Action' column for the delete button */}
             <td>
                 <button className="btn btn-danger btn-sm" onClick={() => handleDelete(index)}>
-                    🗑️
+                    <Trash size={16} />
                 </button>
             </td>
         </tr>
     ))}
 </tbody>
+
 
             </table>
 
