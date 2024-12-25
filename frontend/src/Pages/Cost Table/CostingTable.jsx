@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CostingModal from './CostingModal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Trash } from 'lucide-react';
+import axios from 'axios';
 
 const CostingTable = () => {
     const [entries, setEntries] = useState([]);
@@ -73,14 +74,35 @@ const CostingTable = () => {
         setEntries(entries.filter((_, i) => i !== index));
     };
 
+    const calculateTotals = () => {
+        return entries.reduce((acc, entry) => ({
+            totalAmount: acc.totalAmount + parseFloat(entry.amount),
+            totalProfit: acc.totalProfit + parseFloat(entry.profit)
+        }), { totalAmount: 0, totalProfit: 0 });
+    };
+
+    const handleSave = async () => {
+       
+    };
+
     return (
         <div className="container-fluid mt-4">
-            <button
-                className="btn btn-primary mb-3"
-                onClick={() => setShowModal(true)}
-            >
-                + Add Entry
-            </button>
+            <div className="d-flex justify-content-between mb-3">
+                <button
+                    className="btn btn-primary"
+                    onClick={() => setShowModal(true)}
+                >
+                    + Add Entry
+                </button>
+                
+                <button
+                    className="btn btn-success"
+                    onClick={handleSave}
+                    disabled={entries.length === 0}
+                >
+                    Save Costing Data
+                </button>
+            </div>
 
             <table className="table table-bordered table-striped">
                 <thead>

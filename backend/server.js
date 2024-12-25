@@ -24,6 +24,8 @@ const ProductNStockController = require("./controller/Reports/ProductStockContro
 const StockHistoryController = require('./controller/StockHistoryController');
 const InvoiceProductController = require('./controller/InvoiceProduct');
 const CustomerController = require('./controller/CustomerController');
+// const CostingController = require("./controller/CostingController");
+// const CostingController = require("./controller/");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -176,6 +178,10 @@ app.get('/download/invoice/:filename', (req, res) => {
     }
 });
 
+
+// app.post("/api/costing", CostingController.createCosting);
+// app.get("/api/costings", CostingController.getAllCostings);
+// app.get("/api/costing/:id", CostingController.getCostingById);
 
 // Start the server
 app.listen(PORT, () => {
