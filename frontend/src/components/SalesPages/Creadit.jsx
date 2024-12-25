@@ -9,7 +9,7 @@ const Credit = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const columns = ["ID", "Invoice No","Type","Customer", 'address',"store", "Date/time", "Transaction Type", "Total Amount","Creadit Pay", "Due", "invoice"];
+  const columns = ["ID", "Invoice No","Type","Customer", 'address',"Purchase Order No","store", "Date/time", "Transaction Type", "Total Amount","Creadit Pay", "Due", "invoice","Purchase Order img/pdf"];
 
   useEffect(() => {
     fetchSalesHistory();
@@ -47,12 +47,15 @@ const Credit = () => {
         const transactionPrice = creditTransactions.reduce((total, transaction) => total + transaction.price, '');
         const transactionTypes = creditTransactions.map((transaction) => transaction.transactionType).join(', ') || "Unknown";
 
+        const filename = invoice.image ? invoice.image.split('/').pop() : null;
+
         return [
           invoice.invoiceId,
           invoice.invoiceNo,
           invoice.status,
           invoice.customer.cusName,
           invoice.customer.cusAddress,
+          invoice.purchaseNo,
           invoice.store,
           formattedInvoiceDate,
           transactionTypes,
@@ -63,6 +66,13 @@ const Credit = () => {
             <Link to={`/proformaInvoice/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-primary">proforma Invoice</button></Link>
             <Link to={`/salesDetails/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye/></button></Link>
           </div>,
+          filename ? (
+            <a href={`${config.BASE_URL}/download/invoice/${filename}`} download>
+                <button className="btn btn-success">Download</button>
+            </a>
+        ) : (
+            "No Image"
+        ),
         ];
       }).filter(Boolean);
 

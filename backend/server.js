@@ -160,6 +160,23 @@ sequelize
         console.error("Error synchronizing database:", err);
     });
 
+
+app.get('/download/invoice/:filename', (req, res) => {
+    const { filename } = req.params;
+    const filePath = path.join(__dirname, 'uploads', 'invoice', filename);
+
+    if (fs.existsSync(filePath)) {
+        res.download(filePath, filename, (err) => {
+            if (err) {
+                res.status(500).json({ error: "Error downloading the file" });
+            }
+        });
+    } else {
+        res.status(404).json({ error: "File not found" });
+    }
+});
+
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

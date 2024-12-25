@@ -32,7 +32,7 @@ const DraftSales = ({ invoice }) => {
     return { date: date.split('/').reverse().join('-'), time };
   };
 
-  const Columns = ["Customer Code", 'Customer Name', 'Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty', 'Product ID', 'Stock ID'];
+  const Columns = ["Customer Code", 'Customer Name', 'Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty', 'Product ID', 'Stock ID',"Image"];
   const [formData, setFormData] = useState({
     cusName: '',
     cusNic: '',

@@ -59,6 +59,11 @@ const createInvoice = async (req, res) => {
             cusId,
         } = req.body;
 
+        const existingInvoice = await Invoice.findOne({ where: { purchaseNo } });
+        if (existingInvoice) {
+            return res.status(400).json({ error: "Purchase number already exist" });
+        }
+
         const invoiceNo = req.body.invoiceNo || await generateNextInvoiceNumber();
 
         const newInvoice = await Invoice.create({
