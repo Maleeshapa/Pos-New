@@ -166,7 +166,7 @@ const DeliveryNote = () => {
                 callback: async function (doc) {
                     doc.autoPrint();
                     window.open(doc.output('bloburl'), '_blank');
-                    doc.save('invoice.pdf');
+                    doc.save('Delivery.pdf');
                 },
                 x: 10,
                 y: 10,
