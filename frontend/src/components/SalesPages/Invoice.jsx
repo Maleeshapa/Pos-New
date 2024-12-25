@@ -10,8 +10,8 @@ const Invoice = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const columns = [
-    "ID", "Invoice No", "Type", "Customer", "Address", "Store", "Date/Time", 
-    "Transaction Type", "Total Amount", "Due", "Invoice", "Image"
+    "ID", "Invoice No", "Type", "Customer", "Address","Purchase Order No", "Store", "Date/Time", 
+    "Transaction Type", "Total Amount", "Due", "Invoice", "Purchase Order img/pdf"
   ];
 
   useEffect(() => {
@@ -56,6 +56,7 @@ const Invoice = () => {
           invoice.status,
           invoice.customer.cusName,
           invoice.customer.cusAddress,
+          invoice.purchaseNo,
           invoice.store,
           formattedInvoiceDate,
           transactionTypes,
