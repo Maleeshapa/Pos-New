@@ -188,20 +188,22 @@ const deleteInvoiceProduct = async (req, res) => {
 
 const updateInvoiceProductStatus = async (req, res) => {
   try {
-    const productId = req.params.id;
-    const updatedProduct = await Product.findByIdAndUpdate(
-      productId,
-      { invoiceProductStatus: 'Delivered' },
-      { new: true }
-    );
+    const { id } = req.params; 
+    const { status } = req.body;
 
-    if (!updatedProduct) {
-      return res.status(404).json({ message: 'Product not found' });
+    const invoiceProduct = await InvoiceProduct.findByPk(id);
+
+    if (!invoiceProduct) {
+      return res.status(404).json({ message: 'Invoice product not found' });
     }
 
-    res.status(200).json(updatedProduct);
+    invoiceProduct.invoiceProductStatus = status || 'Delivered';
+    await invoiceProduct.save();
+
+    res.status(200).json({ message: 'Invoice product status updated successfully', invoiceProduct });
   } catch (error) {
-    res.status(500).json({ message: 'Error updating product status', error });
+    console.error('Error updating invoice product status:', error);
+    res.status(500).json({ message: 'Error updating invoice product status', error: error.message });
   }
 };
 

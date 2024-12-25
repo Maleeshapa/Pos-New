@@ -123,7 +123,7 @@ const DeliveryNote = () => {
     const updateProductStatusToDelivered = async () => {
         try {
             const updatePromises = invoiceProducts.map(async (product) => {
-                console.log(`Updating product with ID: ${product.id}`); // Log the ID to check it
+                console.log(`Updating product with ID: ${product.id}`); 
                 const response = await fetch(`${config.BASE_URL}/invoiceProducts/${product.id}`, {
                     method: 'PUT',
                     headers: {
@@ -354,105 +354,6 @@ const DeliveryNote = () => {
                                     </tr>
                                 </tbody>
                             </table>
-                            {/*bank details-------------------------------------------------------------------*/}
-                            {/* {showBank && (
-                                <>
-                                    {colkan && (
-                                        <table>
-                                            <tr>
-                                                <td >Payment mode:</td>
-                                                <td>:</td>
-                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Bank </td>
-                                                <td>:</td>
-                                                <td>HNB</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Account Number </td>
-                                                <td>:</td>
-                                                <td>250010032342</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Account Name </td>
-                                                <td>:</td>
-                                                <td>Colkan Holdings (Pvt) LTD</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Branch Name </td>
-                                                <td>:</td>
-                                                <td>Colkan</td>
-                                            </tr>
-                                        </table>
-                                    )}
-                                </>)}
-
-                            {showBank && (
-                                <>
-                                    {haman && (
-                                        <table>
-                                            <tr>
-                                                <td >Payment mode:</td>
-                                                <td>:</td>
-                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Haman" and crossed a/c </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Bank </td>
-                                                <td>:</td>
-                                                <td>BOC</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Account Number </td>
-                                                <td>:</td>
-                                                <td>93829087</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Account Name </td>
-                                                <td>:</td>
-                                                <td>Haman</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Branch Name </td>
-                                                <td>:</td>
-                                                <td>Wellewathe</td>
-                                            </tr>
-                                        </table>
-                                    )}
-                                </>)}
-
-                            {showBank && (
-                                <>
-                                    {terra && (
-                                        <table>
-                                            <tr>
-                                                <td >Payment mode:</td>
-                                                <td>:</td>
-                                                <td colSpan={2}>Cash or cheque. All cheques are to be drawn in favour of "Terra" and crossed a/c </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Bank </td>
-                                                <td>:</td>
-                                                <td>Sampath Bank</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Account Number </td>
-                                                <td>:</td>
-                                                <td>0117 1000 1407</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Account Name </td>
-                                                <td>:</td>
-                                                <td>Terra walkers</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Branch Name </td>
-                                                <td>:</td>
-                                                <td>Kirulapona</td>
-                                            </tr>
-                                        </table>
-                                    )}
-                                </>)} */}
 
                             <footer className="invoice-footer ">
                                 <p className='font-weight-bold'>I / We hereby acknowledge the receipt of the above goods are received in damages.</p>
