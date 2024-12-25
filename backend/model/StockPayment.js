@@ -34,13 +34,13 @@ const StockPayment = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        stockId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: Stock,
-                key: "stockId",
-            },
-        },
+        // stockId: {
+        //     type: DataTypes.INTEGER,
+        //     references: {
+        //         model: Stock,
+        //         key: "stockId",
+        //     },
+        // },
     },
     {
         tableName: "stock_payments",
@@ -48,9 +48,9 @@ const StockPayment = sequelize.define(
     }
 );
 
-StockPayment.belongsTo(Stock, {
-    foreignKey: "stockId",
-    as: "stock"
-});
+// StockPayment.belongsTo(Stock, {
+//     foreignKey: "stockId",
+//     as: "stock"
+// });
 
 module.exports = StockPayment;
