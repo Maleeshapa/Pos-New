@@ -233,7 +233,7 @@ const InvoiceNote = () => {
                                         <td id="table-content" colSpan={3} rowSpan={3}>
                                         {showBank && (
                                                 <>
-                                                    Payment mode : Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c<br></br>
+                                                    Payment mode : Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c payee only<br></br>
                                                     {colkan && (
                                                         <>
                                                             Bank:HNB<br></br>
