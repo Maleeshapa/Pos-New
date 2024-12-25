@@ -50,6 +50,7 @@ const NewSales = ({ invoice }) => {
     amount: '',
     card: '',
     cheque: '',
+    online: '',
     bank: '',
     cash: '',
     user: '',
@@ -110,7 +111,7 @@ const NewSales = ({ invoice }) => {
     }
   }, [formData.user]);
 
-  const[customerStore,setCustomerStore]=useState('');
+  const [customerStore, setCustomerStore] = useState('');
 
   const fetchCustomerData = async (cusName) => {
     try {
@@ -316,6 +317,7 @@ const NewSales = ({ invoice }) => {
   const [showCredit, setCredit] = useState(false);
   const [showCheque, setCheque] = useState(false);
   const [showBank, setBank] = useState(false);
+  const [showOnline, setOnline] = useState(false);
 
   const handleCard = (e) => {
     setCard(e.target.checked)
@@ -331,6 +333,9 @@ const NewSales = ({ invoice }) => {
   }
   const handleBank = (e) => {
     setBank(e.target.checked)
+  }
+  const handleOnlinePay = (e) => {
+    setOnline(e.target.checked)
   }
 
   const handleSubmit = async (e) => {
@@ -370,11 +375,11 @@ const NewSales = ({ invoice }) => {
         body: formDataImage,
       });
 
-      if (!imageResponse.ok) {
-        const errorData = await imageResponse.json();
-        console.error("Image upload error details:", errorData);
-        throw new Error(errorData.error || "Failed to upload image");
-      }
+      // if (!imageResponse.ok) {
+      //   const errorData = await imageResponse.json();
+      //   console.error("Image upload error details:", errorData);
+      //   throw new Error(errorData.error || "Failed to upload image");
+      // }
 
       const imageResult = await imageResponse.json();
       console.log("Image uploaded successfully:", imageResult);
@@ -436,6 +441,7 @@ const NewSales = ({ invoice }) => {
           showCash && 'cash',
           showCredit && 'credit',
           showCheque && 'cheque',
+          showOnline && 'online',
           showBank && 'bank'
         ].filter(Boolean).join(' '),
         price: parseFloat(formData.amount) || 0,
@@ -510,6 +516,7 @@ const NewSales = ({ invoice }) => {
       amount: '',
       card: '',
       cheque: '',
+      online: '',
       bank: '',
       cash: '',
       paidAmount: '',
@@ -574,7 +581,7 @@ const NewSales = ({ invoice }) => {
                 </div>
 
                 <div className="customer-details">
-                  <input onChange={handleChange}  value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" />
+                  <input onChange={handleChange} value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" />
                 </div>
                 <div className="customer-details">
                   <input onChange={handleChange} value={formData.cusJob} type="text" className="form-control" name="cusJob" id="cusJob" placeholder="Customer Job Position" />
@@ -590,21 +597,21 @@ const NewSales = ({ invoice }) => {
 
                     <div className="payment-details">
                       <div className="payment-details-amount">
-                        <input type="radio" name="store" value='colkan' id="colkan" checked={customerStore==='colkan'} onChange={handleInvoice} style={{ width: '20px' }}  />
+                        <input type="radio" name="store" value='colkan' id="colkan" checked={customerStore === 'colkan'} onChange={handleInvoice} style={{ width: '20px' }} />
                         <label className='payment-lable' htmlFor="">Colkan</label>
                       </div>
                     </div>
 
                     <div className="payment-details">
                       <div className="payment-details-amount">
-                        <input type="radio" name="store" value='terra' id="terra" checked={customerStore==='terra'} onChange={handleInvoice}  />
+                        <input type="radio" name="store" value='terra' id="terra" checked={customerStore === 'terra'} onChange={handleInvoice} />
                         <label className='payment-lable' htmlFor="">Terra</label>
                       </div>
                     </div>
 
                     <div className="payment-details">
                       <div className="payment-details-amount">
-                        <input type="radio" name="store" value='haman' id="haman" checked={customerStore==='haman'} onChange={handleInvoice}  />
+                        <input type="radio" name="store" value='haman' id="haman" checked={customerStore === 'haman'} onChange={handleInvoice} />
                         <label className='payment-lable' htmlFor="">Haman</label>
                       </div>
                     </div>
@@ -746,6 +753,15 @@ const NewSales = ({ invoice }) => {
                   </div>
                   {showCheque && (
                     <input type="number" className="form-control" id='' name='cheque' value={formData.cheque} onChange={handlePaymentChange} placeholder='Cheque Payment' onWheel={(e) => e.target.blur()} />
+                  )}
+                </div>
+                <div className="payment-details">
+                  <div className="payment-details-amount">
+                    <input type="checkbox" name="online" id="online" onChange={handleOnlinePay} />
+                    <label htmlFor="" id='label'>Online Payment</label>
+                  </div>
+                  {showOnline && (
+                    <input type="number" className="form-control" id='' name='online' value={formData.online} onChange={handlePaymentChange} placeholder='online Payment' onWheel={(e) => e.target.blur()} />
                   )}
                 </div>
                 <div className="payment-details">
