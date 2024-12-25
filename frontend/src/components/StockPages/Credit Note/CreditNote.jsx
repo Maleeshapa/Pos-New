@@ -128,7 +128,7 @@ const CreditNote = () => {
         }
     };
 
-    const [showAddress, setShowAddress] = useState(false)
+    const [showAddress, setShowAddress] = useState(true)
     const [showBank, setShowBank] = useState(false)
 
     const handleAddress = (e) => {
@@ -183,7 +183,15 @@ const CreditNote = () => {
                                     </div>
                                     {showAddress && (
                                         <div className="details mb-2">
-                                            <input type="text" className="form-input" name="cusName" value={formData.cusAddress} />
+                                            <div className="details-box">
+                                                <textarea
+                                                    className="form-input"
+                                                    name="cusAddress"
+                                                    rows="2"
+                                                    style={{ resize: "both" }}
+                                                    value={formData.cusAddress}
+                                                ></textarea>
+                                            </div>
                                         </div>
                                     )}
                                 </div>
@@ -259,7 +267,7 @@ const CreditNote = () => {
                                 <tbody>
                                     <tr>
                                         <td colSpan={3} rowSpan={3}>
-                                        {showBank && (
+                                            {showBank && (
                                                 <>
                                                     Payment mode : Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c<br></br>
                                                     {colkan && (
@@ -445,6 +453,7 @@ const CreditNote = () => {
                                     type="checkbox"
                                     name="address"
                                     value="address"
+                                    checked={showAddress}
                                     onChange={handleAddress}
                                 />
                                 <br />
@@ -453,6 +462,7 @@ const CreditNote = () => {
                                     type="checkbox"
                                     name="bank"
                                     value="bank"
+                                    checked={showBank}
                                     onChange={handleBank}
                                 />
                             </form>

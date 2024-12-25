@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 25, 2024 at 07:56 AM
+-- Generation Time: Dec 25, 2024 at 08:10 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -324,27 +324,6 @@ INSERT INTO `stockhistory` (`stockHistoryId`, `stockHistoryQty`, `stock_stockId`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `stockpayment`
---
-
-CREATE TABLE `stockpayment` (
-  `id` int(11) NOT NULL,
-  `cashAmount` varchar(255) NOT NULL,
-  `chequeAmount` varchar(255) NOT NULL,
-  `stockPrice` varchar(255) NOT NULL,
-  `due` varchar(255) NOT NULL,
-  `vat` varchar(255) NOT NULL,
-  `total` varchar(255) NOT NULL,
-  `stockQty` varchar(255) NOT NULL,
-  `stockDescription` varchar(255) NOT NULL,
-  `stockStatus` varchar(255) NOT NULL,
-  `productId` int(11) NOT NULL,
-  `suplierId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `stock_payments`
 --
 
@@ -357,7 +336,7 @@ CREATE TABLE `stock_payments` (
   `vat` float NOT NULL,
   `stockQty` int(11) NOT NULL,
   `stockId` int(11) DEFAULT NULL,
-  `userId` int(11) NOT NULL
+  `supplieId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -587,20 +566,12 @@ ALTER TABLE `stockhistory`
   ADD KEY `fk_stockHistory_products1_idx` (`products_productId`);
 
 --
--- Indexes for table `stockpayment`
---
-ALTER TABLE `stockpayment`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `productId` (`productId`),
-  ADD KEY `suplierId` (`suplierId`);
-
---
 -- Indexes for table `stock_payments`
 --
 ALTER TABLE `stock_payments`
   ADD PRIMARY KEY (`stockPaymentId`),
   ADD KEY `stockId` (`stockId`),
-  ADD KEY `userId` (`userId`);
+  ADD KEY `stock_payments_ibfk_2` (`supplieId`);
 
 --
 -- Indexes for table `store`
@@ -699,12 +670,6 @@ ALTER TABLE `stock`
 --
 ALTER TABLE `stockhistory`
   MODIFY `stockHistoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `stockpayment`
---
-ALTER TABLE `stockpayment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `stock_payments`
@@ -806,18 +771,11 @@ ALTER TABLE `stockhistory`
   ADD CONSTRAINT `fk_stockHistory_stock1` FOREIGN KEY (`stock_stockId`) REFERENCES `stock` (`stockId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `stockpayment`
---
-ALTER TABLE `stockpayment`
-  ADD CONSTRAINT `stockpayment_ibfk_1` FOREIGN KEY (`productId`) REFERENCES `products` (`productId`),
-  ADD CONSTRAINT `stockpayment_ibfk_2` FOREIGN KEY (`suplierId`) REFERENCES `supplier` (`supplierId`);
-
---
 -- Constraints for table `stock_payments`
 --
 ALTER TABLE `stock_payments`
   ADD CONSTRAINT `stock_payments_ibfk_1` FOREIGN KEY (`stockId`) REFERENCES `stock` (`stockId`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  ADD CONSTRAINT `stock_payments_ibfk_2` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`);
+  ADD CONSTRAINT `stock_payments_ibfk_2` FOREIGN KEY (`supplieId`) REFERENCES `supplier` (`supplierId`);
 
 --
 -- Constraints for table `transaction`

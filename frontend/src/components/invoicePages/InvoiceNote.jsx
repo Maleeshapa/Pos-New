@@ -122,7 +122,7 @@ const InvoiceNote = () => {
         }
     };
 
-    const [showAddress, setShowAddress] = useState(false)
+    const [showAddress, setShowAddress] = useState(true)
     const [showBank, setShowBank] = useState(false)
 
     const handleAddress = (e) => {
@@ -230,7 +230,7 @@ const InvoiceNote = () => {
                                 </tbody>
                                 <tbody>
                                     <tr>
-                                        <td id="table-content" colSpan={2} rowSpan={3}>
+                                        <td id="table-content" colSpan={3} rowSpan={3}>
                                         {showBank && (
                                                 <>
                                                     Payment mode : Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c<br></br>
@@ -262,8 +262,6 @@ const InvoiceNote = () => {
                                                     )}
                                                 </>
                                             )}
-                                        </td>
-                                        <td id="table-content" colSpan={2} rowSpan={3}>
                                         </td>
                                         <td>Subtotal</td>
                                         <td>
@@ -409,10 +407,10 @@ const InvoiceNote = () => {
                             <form action="">
                                 <br />
                                 <label className='invoice-type-label' htmlFor="">Address</label>
-                                <input type="checkbox" name="address" value="address" onChange={handleAddress} />
+                                <input type="checkbox" name="address" value="address" checked={showAddress}  onChange={handleAddress} />
                                 <br />
                                 <label className='invoice-type-label' htmlFor="">Bank</label>
-                                <input type="checkbox" name="bank" value="bank" onChange={handleBank} />
+                                <input type="checkbox" name="bank" value="bank" checked={showBank}  onChange={handleBank} />
                             </form>
                         </div>
                         <button onClick={handlePrint} className='btn btn-success'>Print Invoice</button>

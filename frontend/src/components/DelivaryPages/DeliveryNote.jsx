@@ -178,7 +178,7 @@ const DeliveryNote = () => {
         }
     };
 
-    const [showAddress, setShowAddress] = useState(false)
+    const [showAddress, setShowAddress] = useState(true)
     const [showBank, setShowBank] = useState(false)
 
     const handleAddress = (e) => {
@@ -284,11 +284,11 @@ const DeliveryNote = () => {
                                 <thead>
                                     <tr>
                                         <th>S/N</th>
-                                        <th>Description</th>
+                                        <th colSpan={2}>Description</th>
                                         <th>Qty</th>
                                         {/* <th>Unit Price</th>
                                         <th>Total LKR</th> */}
-                                        <th>Status</th>  {/* New column for status */}
+                                        {/* <th>Status</th> */}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -305,9 +305,9 @@ const DeliveryNote = () => {
                                                 className={`table-row ${ShowRemove === index ? 'row-hover' : ''}`}
                                             >
                                                 <td id='table-sn'>{index + 1}</td>
-                                                <td id='tableDes'>{invoiceProduct.product.productName}</td>
+                                                <td colSpan={2}id='tableDes'>{invoiceProduct.product.productName}</td>
                                                 <td id='table-sn'>{invoiceProduct.invoiceQty}</td>
-                                                <td>{invoiceProduct.invoiceProductStatus}</td> {/* Show status here */}
+                                                {/* <td>{invoiceProduct.invoiceProductStatus}</td> */}
                                             </tr>
                                         ))
                                     )}
@@ -488,6 +488,7 @@ const DeliveryNote = () => {
                                     type="checkbox"
                                     name="address"
                                     value="address"
+                                    checked={showAddress} 
                                     onChange={handleAddress}
                                 />
                                 <br />
@@ -496,6 +497,7 @@ const DeliveryNote = () => {
                                     type="checkbox"
                                     name="bank"
                                     value="bank"
+                                    checked={showBank} 
                                     onChange={handleBank}
                                 />
                             </form>
