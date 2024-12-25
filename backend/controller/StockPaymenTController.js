@@ -49,14 +49,7 @@ async function createStockPayment(req, res) {
 
 async function getAllStockPayments(req, res) {
     try {
-        const stockPayments = await StockPayment.findAll({
-            include: [
-                {
-                    model: Stock,
-                    as: "stock",
-                },
-            ],
-        });
+        const stockPayments = await StockPayment.findAll();
 
         if (stockPayments.length === 0) {
             return res.status(404).json({ message: "No stock payments found" });
@@ -73,11 +66,7 @@ async function getStockPaymentById(req, res) {
     try {
         const { id } = req.params;
 
-        const stockPayment = await StockPayment.findByPk(id, {
-            include: [
-                { model: Stock, as: "stock" },
-            ],
-        });
+        const stockPayment = await StockPayment.findByPk(id);
 
         if (!stockPayment) {
             return res.status(404).json({ message: `StockPayment not found for ID: ${id}` });
