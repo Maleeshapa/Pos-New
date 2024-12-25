@@ -1,11 +1,11 @@
 import React from 'react';
 import Table from '../../components/Table/Table';
 
-const columns = ['#', 'Store Name', 'Supplier Name/Position', 'Date', 'Total Amount', 'Paid', 'Outstanding', 'Status'];
+const columns = ['#', 'Store Name', 'Supplier Name/Position', 'Supplied Date','Cheque No','Cheque Given Date','Cheque Date', 'Total Amount', 'Paid', 'Outstanding', 'Status'];
 
 const data = [
-  ['1', 'ABC Store', 'John Doe/Manager', '2024-09-28 11.00AM', '5000', '4000', '1000', 'Status'],
-  ['2', 'XYZ Store', 'Jane Smith/Supplier', '2024-09-28 11.00AM', '5000', '4000', '1000', 'Status']
+  ['1', 'ABC Store', 'John Doe/Manager', '2024-09-28 11.00AM', 'Cheque No 01', '2024-12-25', '2025-01-20', '5000', '5000', '0', ' Paid '],
+  ['2', 'XYZ Store', 'Jane Smith/Supplier', '2024-09-28 11.00AM', 'Cheque No 02', '2024-12-25', '2025-01-20', '5000', '4000', '1000', 'Due Payment']
 ];
 
 const btnName = ' + New Payment To Supplier ';
