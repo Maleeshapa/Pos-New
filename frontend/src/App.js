@@ -25,6 +25,7 @@ import SelectDN from './components/DelivaryPages/SelectDN';
 import ProformaInvoice from './components/PerformaInvoice/ProformaInvoice';
 import InvoiceNote from './components/invoicePages/InvoiceNote';
 import DraftSales from './components/SalesPages/DraftSales';
+import Qutation from './Pages/Cost Table/Qutation';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token');
@@ -71,6 +72,7 @@ function Layout() {
 
             <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
             <Route path="/costing-table" element={<ProtectedRoute><CostingTable /></ProtectedRoute>} />
+            <Route path="/qutation" element={<ProtectedRoute><Qutation /></ProtectedRoute>} />
           </Routes>
         </div>
       </div>

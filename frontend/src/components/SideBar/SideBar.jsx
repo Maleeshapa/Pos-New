@@ -103,6 +103,7 @@ const Sidebar = () => {
             path: '/costing',
             submenus: [
                 { title: 'Costing Table', path: '/costing-table' },
+                { title: 'Qutation', path: '/qutation' },
             ]
         },
         {
