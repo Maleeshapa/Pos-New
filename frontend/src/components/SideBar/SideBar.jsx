@@ -89,14 +89,14 @@ const Sidebar = () => {
                 { title: 'Sales History', path: '/Rental/history' },
             ]
         },*/
-        {
-            title: 'Upload',
-            icon: <FileUp size={20} />,
-            path: '/upload',
-            submenus: [
-                { title: 'Upload Purchase Orders', path: '/upload' },
-            ]
-        },
+        // {
+        //     title: 'Upload',
+        //     icon: <FileUp size={20} />,
+        //     path: '/upload',
+        //     submenus: [
+        //         { title: 'Upload Purchase Orders', path: '/upload' },
+        //     ]
+        // },
         {
             title: 'Costing Table',
             icon: <Sheet size={20} />,
