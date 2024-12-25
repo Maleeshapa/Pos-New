@@ -1,9 +1,10 @@
 const Stock = require("../model/Stock");
 const StockPayment = require("../model/StockPayment");
+const Supplier = require("../model/Supplier");
 
 async function createStockPayment(req, res) {
     try {
-        const { cashAmount, chequeAmount, due, vat, total, stockQty } = req.body;
+        const { cashAmount, chequeAmount, due, vat, total, stockQty, supplierId } = req.body;
 
         // Basic input validation
         if (cashAmount === undefined || chequeAmount === undefined || due === undefined) {
@@ -26,6 +27,7 @@ async function createStockPayment(req, res) {
             vat,
             total,
             stockQty,
+            supplierId,
         });
 
         res.status(201).json({
@@ -49,7 +51,9 @@ async function createStockPayment(req, res) {
 
 async function getAllStockPayments(req, res) {
     try {
-        const stockPayments = await StockPayment.findAll();
+        const stockPayments = await StockPayment.findAll({
+            include: [{ model: Supplier, as: 'supplier' }]
+        });
 
         if (stockPayments.length === 0) {
             return res.status(404).json({ message: "No stock payments found" });

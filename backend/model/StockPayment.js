@@ -1,6 +1,6 @@
-const Stock = require("./Stock");
 const { DataTypes } = require("sequelize");
 const sequelize = require("../dbConfig");
+const Supplier = require("./Supplier");
 
 const StockPayment = sequelize.define(
     "StockPayment",
@@ -34,23 +34,23 @@ const StockPayment = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        // stockId: {
-        //     type: DataTypes.INTEGER,
-        //     references: {
-        //         model: Stock,
-        //         key: "stockId",
-        //     },
-        // },
+        supplierId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: Supplier,
+                key: "supplierId",
+            },
+        },
     },
     {
-        tableName: "stock_payments",
+        tableName: "stockPayments",
         timestamps: false,
     }
 );
 
-// StockPayment.belongsTo(Stock, {
-//     foreignKey: "stockId",
-//     as: "stock"
-// });
+StockPayment.belongsTo(Supplier, {
+    foreignKey: "supplierId",
+    as: "supplier",
+});
 
 module.exports = StockPayment;

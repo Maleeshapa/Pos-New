@@ -24,6 +24,8 @@ const NewStock = () => {
 
   const [formData, setFormData] = useState({
     stockName: '',
+    supplier: '',
+    supplierName: '',
     supplierSearch: '',
     store: '',
     productSearch: '',
@@ -46,6 +48,8 @@ const NewStock = () => {
 
   const initialFormState = {
     stockName: '',
+    supplier: '',
+    supplierName: '',
     supplierSearch: '',
     store: '',
     productSearch: '',
@@ -301,12 +305,13 @@ const NewStock = () => {
 
       //StockPayment Data
       const stockPaymentData = {
-        cashAmount: (formData.cashAmount) || 0,
-        chequeAmount: (formData.chequeAmount) || 0,
-        due: (formData.due) || 0,
-        vat: (formData.vat) || 0,
-        total: (formData.vatWithTotal) || 0,
-        stockQty: (formData.totalQty) || 0,
+        cashAmount: formData.cashAmount || 0,
+        chequeAmount: formData.chequeAmount || 0,
+        due: formData.due || 0,
+        vat: formData.vat || 0,
+        total: formData.vatWithTotal || 0,
+        stockQty: formData.totalQty || 0,
+        supplierId: stock[0].supplier_supplierId,
       };
 
       console.log('Sending transaction data:', stockPaymentData);
@@ -499,7 +504,7 @@ const NewStock = () => {
                 <div className="col-md-6 mb-3">
                   <label htmlFor="" className='mb-1'>Expiration date</label>
                   <input onChange={handleChange} type="date" name='exp' id='' onWheel={(e) => e.target.blur()} value={formData.exp} className='form-control' />
-                </div>  
+                </div>
 
                 <div className="col-md-4 mb-3">
                   <label htmlFor="price" className="form-label">Price</label>
