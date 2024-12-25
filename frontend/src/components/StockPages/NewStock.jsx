@@ -499,7 +499,7 @@ const NewStock = () => {
                 <div className="col-md-6 mb-3">
                   <label htmlFor="" className='mb-1'>Expiration date</label>
                   <input onChange={handleChange} type="date" name='exp' id='' onWheel={(e) => e.target.blur()} value={formData.exp} className='form-control' />
-                </div>
+                </div>  
 
                 <div className="col-md-4 mb-3">
                   <label htmlFor="price" className="form-label">Price</label>
@@ -575,7 +575,7 @@ const NewStock = () => {
           {/* Footer Buttons */}
           <div className="d-flex justify-content-end mt-4">
             <button type="reset" className="btn btn-danger me-2" onClick={resetForm}>Clear</button>
-            <button type="submit" className="btn btn-success" onClick={handleSubmit}>New Stock</button>
+            <button type="submit" className="btn btn-success" onClick={handleSubmit}>Stock Purchase</button>
           </div>
 
         </form>

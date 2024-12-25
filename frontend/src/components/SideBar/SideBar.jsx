@@ -140,7 +140,7 @@ const Sidebar = () => {
             icon: <Boxes size={20} />,
             path: '/stock',
             submenus: [
-                { title: 'Add New Stock', path: '/stock/new-stock' },
+                { title: 'New Stock Purchase', path: '/stock/new-stock' },
                 { title: 'Create Product Return', path: '/stock/create' },
                 { title: 'Returned Product List', path: '/stock/list' },
             ]
