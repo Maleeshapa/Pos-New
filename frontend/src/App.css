@@ -9,16 +9,16 @@
 
 
 
-/* @media screen and (min-width: 1024px) and (max-width: 1600px) {
+@media screen and (min-width: 1024px) and (max-width: 1600px) {
   body {
-    zoom: 85%;
+    zoom: 75%;
     
     -webkit-transform-origin: 0 0;
     
     transform-origin: 0 0;
     
   }
-} */
+}
 
 @media screen and (min-width: 1024px) and (max-width: 1600px) {
   .modal-overlay {

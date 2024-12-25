@@ -9,7 +9,7 @@ const Draft = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const columns = ["ID", "Invoice No", 'Type', "Customer", "store", 'address', "Date/time", "Transaction Type", "Total Amount", "Due", "invoice"];
+  const columns = ["ID", "Invoice No", 'Type', "Customer","Purchase Order No", "store", 'address', "Date/time", "Transaction Type", "Total Amount", "Due", "invoice","Purchase Order img/pdf"];
 
   useEffect(() => {
     fetchSalesHistory();
@@ -45,12 +45,15 @@ const Draft = () => {
         const transactiondue = transactionsData[index]?.reduce((total, transaction) => total + transaction.due, 0);
         const transactionTypes = transactionsData[index]?.map((transaction) => transaction.transactionType).join(', ') || "Unknown";
 
+        const filename = invoice.image ? invoice.image.split('/').pop() : null;
+
         return [
           invoice.invoiceId,
           invoice.invoiceNo,
           invoice.status,
           invoice.customer.cusName,
           invoice.customer.cusAddress,
+          invoice.purchaseNo,
           invoice.store,
           formattedInvoiceDate,
           transactionTypes,
@@ -59,6 +62,13 @@ const Draft = () => {
           <div>
             <Link to={`/salesDetails/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye /></button></Link>
           </div>,
+          filename ? (
+            <a href={`${config.BASE_URL}/download/invoice/${filename}`} download>
+                <button className="btn btn-success">Download</button>
+            </a>
+        ) : (
+            "No Image"
+        ),
         ];
       });
 
