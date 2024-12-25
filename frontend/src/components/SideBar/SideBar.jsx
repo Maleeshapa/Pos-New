@@ -151,7 +151,7 @@ const Sidebar = () => {
             path: '/Supplier',
             submenus: [
                 { title: 'Supplier Details', path: '/supplier/supplier' },
-                // { title: 'Supplier Payment', path: '/supplier/supplier-payments' },
+                { title: 'Supplier Payment', path: '/supplier/supplier-payments' },
             ]
         },
         // {
