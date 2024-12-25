@@ -116,7 +116,7 @@ const CreditNote = () => {
                 callback: function (doc) {
                     doc.autoPrint();
                     window.open(doc.output('bloburl'), '_blank');
-                    doc.save('invoice.pdf');
+                    doc.save('Credit.pdf');
                 },
                 x: 10,
                 y: 10,
