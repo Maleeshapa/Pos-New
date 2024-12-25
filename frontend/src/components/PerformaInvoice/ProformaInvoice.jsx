@@ -20,7 +20,7 @@ const ProformaInvoice = () => {
         cusName: '',
         cusJob: '',
         cusOffice: '',
-        cusAddress:'',
+        cusAddress: '',
         proforma: ''
     });
     const [invoiceProducts, setInvoiceProducts] = useState([]);
@@ -48,7 +48,7 @@ const ProformaInvoice = () => {
                     cusName: invoiceData.customer.cusName,
                     cusJob: invoiceData.customer.cusJob,
                     cusOffice: invoiceData.customer.cusOffice,
-                    cusAddress:invoiceData.customer.cusAddress,
+                    cusAddress: invoiceData.customer.cusAddress,
                     proforma: generatedProformaNo,
                     PurchaseOrder: invoiceData.purchaseNo,
                 });
@@ -184,7 +184,15 @@ const ProformaInvoice = () => {
                                     </div>
                                     {showAddress && (
                                         <div className="details mb-2">
-                                            <input type="text" className="form-input" name="cusName" value={formData.cusAddress} />
+                                            <div className="details-box">
+                                                <textarea
+                                                    className="form-input"
+                                                    name="cusAddress"
+                                                    rows="2"
+                                                    style={{ resize: "both" }}
+                                                    value={formData.cusAddress}
+                                                ></textarea>
+                                            </div>
                                         </div>
                                     )}
                                 </div>
@@ -288,8 +296,8 @@ const ProformaInvoice = () => {
                                     </tr>
                                 </tbody>
                             </table>
-                             {/*bank details-------------------------------------------------------------------*/}
-                             {showBank && (
+                            {/*bank details-------------------------------------------------------------------*/}
+                            {showBank && (
                                 <>
                                     {colkan && (
                                         <table>
@@ -390,7 +398,7 @@ const ProformaInvoice = () => {
                             <footer className="invoice-footer ">
                                 {/* <p className='text-danger font-weight-bold'>Payment mode :  Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c.</p> */}
 
-<div className="signature">
+                                <div className="signature">
                                     <table className="signature-table">
                                         <thead>
                                             <tr>

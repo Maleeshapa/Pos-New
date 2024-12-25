@@ -136,10 +136,10 @@ const DeliveryNote = () => {
                 }
                 return response.json();
             });
-    
+
             await Promise.all(updatePromises);
             console.log('All product statuses updated.');
-    
+
             setInvoiceProducts((prevProducts) =>
                 prevProducts.map((product) => ({
                     ...product,
@@ -150,17 +150,17 @@ const DeliveryNote = () => {
             console.error('Error updating product statuses:', error);
             alert('An error occurred while updating product statuses.');
         }
-    };    
-    
+    };
+
     const handlePrint = async () => {
         const printContent = document.getElementById('invoice-card');
-    
+
         if (printContent) {
             const doc = new jsPDF();
-    
+
             // Update the product statuses in the database before printing
             await updateProductStatusToDelivered();
-    
+
             // Now, render the PDF with updated data
             doc.html(printContent, {
                 callback: async function (doc) {
@@ -177,7 +177,7 @@ const DeliveryNote = () => {
             console.error('Invoice card not found!');
         }
     };
-    
+
     const [showAddress, setShowAddress] = useState(false)
     const [showBank, setShowBank] = useState(false)
 
@@ -227,7 +227,6 @@ const DeliveryNote = () => {
                                     {showAddress && (
                                         <div className="details mb-2">
                                             <div className="details-box">
-                                                {/* <label htmlFor="">Pickup from</label> */}
                                                 <textarea
                                                     className="form-input"
                                                     name="cusAddress"
@@ -315,7 +314,39 @@ const DeliveryNote = () => {
                                 </tbody>
                                 <tbody>
                                     <tr>
-                                        <td></td>
+                                        <td colSpan={2}>
+                                            {showBank && (
+                                                <>
+                                                    Payment mode : Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c<br></br>
+                                                    {colkan && (
+                                                        <>
+                                                            Bank:HNB<br></br>
+                                                            Account Number : 250010032342<br></br>
+                                                            Account Name : Colkan Holdings (Pvt) LTD<br></br>
+                                                            Branch Name : Colkan
+                                                        </>
+                                                    )}
+
+                                                    {haman && (
+                                                        <>
+                                                            Bank:BOC<br></br>
+                                                            Account Number : 93829087<br></br>
+                                                            Account Name : Haman<br></br>
+                                                            Branch Name : Wellewathe
+                                                        </>
+                                                    )}
+
+                                                    {terra && (
+                                                        <>
+                                                            Bank:Sampath Bank<br></br>
+                                                            Account Number : 0117 1000 1407<br></br>
+                                                            Account Name : Terra walkers<br></br>
+                                                            Branch Name : Kirulapona
+                                                        </>
+                                                    )}
+                                                </>
+                                            )}
+                                        </td>
                                         <td>Total Quantity</td>
                                         <td>
                                             {invoiceProducts.reduce((total, product) => total + Number(product.invoiceQty), 0)}
@@ -324,7 +355,7 @@ const DeliveryNote = () => {
                                 </tbody>
                             </table>
                             {/*bank details-------------------------------------------------------------------*/}
-                            {showBank && (
+                            {/* {showBank && (
                                 <>
                                     {colkan && (
                                         <table>
@@ -421,10 +452,10 @@ const DeliveryNote = () => {
                                             </tr>
                                         </table>
                                     )}
-                                </>)}
+                                </>)} */}
 
                             <footer className="invoice-footer ">
-                                <p className='text-danger font-weight-bold'>I / We hereby acknowledge the receipt of the above goods are received in damages.</p>
+                                <p className='font-weight-bold'>I / We hereby acknowledge the receipt of the above goods are received in damages.</p>
 
                                 <div className="signature">
                                     <table className="signature-table">

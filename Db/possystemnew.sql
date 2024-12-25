@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 22, 2024 at 04:41 PM
+-- Generation Time: Dec 25, 2024 at 07:56 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -41,6 +41,20 @@ CREATE TABLE `category` (
 INSERT INTO `category` (`categoryId`, `categoryName`, `categoryType`, `categoryStatus`) VALUES
 (1, 'cat 1', 'cat', 'In stock'),
 (2, 'cat 2', 'gold', 'In stock');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chequdata`
+--
+
+CREATE TABLE `chequdata` (
+  `id` int(11) NOT NULL,
+  `chequeDate` date NOT NULL,
+  `chequePayment` varchar(255) NOT NULL,
+  `supplierId` int(11) NOT NULL,
+  `stockPaymentId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -132,7 +146,12 @@ INSERT INTO `invoice` (`invoiceId`, `invoiceNo`, `invoiceDate`, `status`, `store
 (385, '1508', '2024-12-20 15:19:43', 'Invoice', 'haman', '', NULL, 5),
 (386, '1509', '2024-12-22 12:26:48', 'draft', 'haman', '', NULL, 5),
 (387, '1510', '2024-12-22 13:30:15', 'Invoice', 'haman', '', NULL, 5),
-(388, '1511', '2024-12-22 14:13:40', 'draft', 'haman', 'purchaseNo', NULL, 5);
+(388, '1511', '2024-12-22 14:13:40', 'draft', 'haman', 'purchaseNo', NULL, 5),
+(389, '1512', '2024-12-23 14:13:08', 'Invoice', 'haman', 'purchaseNo2', NULL, 5),
+(390, '1513', '2024-12-24 18:45:26', 'Invoice', 'haman', '', NULL, 5),
+(391, '1514', '2024-12-24 19:05:07', 'Invoice', 'haman', 'purchaseNo25', 'http://localhost:5000/uploads/invoice/INV_1735067107837.jpg', 5),
+(392, '1515', '2024-12-24 19:06:01', 'Invoice', 'haman', 'purchaseNo22', 'http://localhost:5000/uploads/invoice/INV_1735067161866.jpg', 5),
+(393, '1516', '2024-12-24 19:18:05', 'Invoice', 'haman', 'purchaseNo23', 'http://localhost:5000/uploads/invoice/INV_1735067885552.pdf', 5);
 
 -- --------------------------------------------------------
 
@@ -156,8 +175,8 @@ CREATE TABLE `invoiceproduct` (
 --
 
 INSERT INTO `invoiceproduct` (`id`, `invoiceId`, `invoiceNo`, `productId`, `stockId`, `invoiceQty`, `totalAmount`, `invoiceProductStatus`) VALUES
-(278, 374, '1500', 1, 1, '1', '100', 'notDelivered'),
-(279, 374, '1500', 2, 3, '1', '120', 'notDelivered'),
+(278, 374, '1500', 1, 1, '1', '100', 'Delivered'),
+(279, 374, '1500', 2, 3, '1', '120', 'Delivered'),
 (280, 374, '1500', 6, 3, '1', '90', 'notDelivered'),
 (281, 374, '1500', 3, 4, '10', '1000', 'notDelivered'),
 (282, 374, '1500', 6, 4, '5', '450', 'notDelivered'),
@@ -176,7 +195,13 @@ INSERT INTO `invoiceproduct` (`id`, `invoiceId`, `invoiceNo`, `productId`, `stoc
 (298, 388, '1511', 2, 3, '1', '120', 'invoice'),
 (299, 388, '1511', 1, 1, '1', '100', 'invoice'),
 (300, 388, '1511', 3, 4, '1', '100', 'invoice'),
-(301, 388, '1511', 6, 4, '1', '90', 'invoice');
+(301, 388, '1511', 6, 4, '1', '90', 'invoice'),
+(302, 389, '1512', 1, 1, '1', '100', 'invoice'),
+(303, 389, '1512', 2, 3, '1', '120', 'invoice'),
+(304, 390, '1513', 1, 1, '1', '100', 'invoice'),
+(305, 391, '1514', 1, 1, '1', '100', 'invoice'),
+(306, 392, '1515', 1, 1, '1', '100', 'invoice'),
+(307, 393, '1516', 1, 1, '1', '100', 'invoice');
 
 -- --------------------------------------------------------
 
@@ -264,8 +289,8 @@ CREATE TABLE `stock` (
 --
 
 INSERT INTO `stock` (`stockId`, `stockName`, `stockdate`, `billImage`, `stockPrice`, `due`, `vat`, `total`, `stockQty`, `mfd`, `exp`, `cashAmount`, `chequeAmount`, `stockDescription`, `stockStatus`, `products_productId`, `supplier_supplierId`, `store_storeId`, `category_categoryId`) VALUES
-(1, 'stock1', '2024-10-16 17:09:18', NULL, 100, 1, 1, 100, 856, '2024-10-16', '2024-10-31', 500, NULL, 'note', '', 1, 1, 1, 1),
-(3, 'stock 2', '2024-10-17 01:28:56', NULL, 100, 1, 1, 1, 1000, '2024-10-17', '2024-10-31', 500, 211, 'booo', '', 2, 1, 1, 1),
+(1, 'stock1', '2024-10-16 17:09:18', NULL, 100, 1, 1, 100, 851, '2024-10-16', '2024-10-31', 500, NULL, 'note', '', 1, 1, 1, 1),
+(3, 'stock 2', '2024-10-17 01:28:56', NULL, 100, 1, 1, 1, 999, '2024-10-17', '2024-10-31', 500, 211, 'booo', '', 2, 1, 1, 1),
 (4, '5', '2024-10-18 09:01:00', NULL, 10000, 0, 0, 0, 1000, '2024-10-18', '2024-10-17', 98, NULL, NULL, 'In stock', 3, 1, 1, 1),
 (5, '1', '2024-12-19 07:42:00', 'http://localhost:5000/uploads/stock/1_1733663580933.png', 500, 0, 0, 0, 5, '2024-12-26', '2024-12-18', 120, NULL, '5', 'In stock', 3, 1, 1, 1),
 (6, '5', '2024-12-10 07:09:00', 'http://localhost:5000/uploads/stock/5_1733747989746.png', 200, 0, 0, 0, 2, '2024-12-10', '2024-12-16', 112, 121, NULL, 'In stock', 1, 2, 1, 1),
@@ -314,7 +339,25 @@ CREATE TABLE `stockpayment` (
   `stockDescription` varchar(255) NOT NULL,
   `stockStatus` varchar(255) NOT NULL,
   `productId` int(11) NOT NULL,
-  `stockId` int(11) NOT NULL
+  `suplierId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stock_payments`
+--
+
+CREATE TABLE `stock_payments` (
+  `stockPaymentId` int(11) NOT NULL,
+  `cashAmount` float NOT NULL,
+  `chequeAmount` float NOT NULL,
+  `due` float NOT NULL,
+  `total` float NOT NULL,
+  `vat` float NOT NULL,
+  `stockQty` int(11) NOT NULL,
+  `stockId` int(11) DEFAULT NULL,
+  `userId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -414,7 +457,12 @@ INSERT INTO `transaction` (`transactionId`, `transactionType`, `price`, `discoun
 (267, 'cash', '120', 0, '2024-12-20 15:19:43', '', 0, 0, 385, 1),
 (268, '', '220', 0, '2024-12-22 12:26:48', '', 0, 0, 386, 1),
 (269, '', '120', 0, '2024-12-22 13:30:15', '', 0, 0, 387, 1),
-(270, 'cash', '410', 0, '2024-12-22 14:13:41', '', 410, 0, 388, 1);
+(270, 'cash', '410', 0, '2024-12-22 14:13:41', '', 410, 0, 388, 1),
+(271, 'cash', '220', 0, '2024-12-23 14:13:09', '', 220, 0, 389, 1),
+(272, 'credit', '100', 0, '2024-12-24 18:45:27', '', 0, 100, 390, 1),
+(273, 'card', '100', 0, '2024-12-24 19:05:08', '', 100, 0, 391, 1),
+(274, 'cash', '100', 0, '2024-12-24 19:06:02', '', 100, 0, 392, 1),
+(275, 'card', '100', 0, '2024-12-24 19:18:05', '', 100, 0, 393, 1);
 
 -- --------------------------------------------------------
 
@@ -447,7 +495,8 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`userId`, `userTitle`, `userFullName`, `userName`, `userPassword`, `userType`, `userEmail`, `userNIC`, `userSecondTP`, `userTP`, `userAddress`, `userImage`, `userStatus`, `store_storeId`, `is_hidden`) VALUES
 (1, 'Mr.', 'abc', 'abc', '$2b$10$1R9ZL5CZUuWfUJsFaDTxeuQqbzaXaO7eRnxVQ27J/6Kqjr2uS3KMe', 'Admin', 'buddhika@gmail.com', '123456789V', '12334567890', '1234567890', 'ccc', NULL, 'Active', 1, 0),
 (2, 'Mr.', 'maleesha', 'maleesha', '$2b$10$DdVcqL6K7es6nZsGhfIlveZFfI14GmalUirHJitqD6sY/oG4n2CMC', 'User', 'kunage@gmail.com', '00000000V', '12334567890', '1234567890', 'xxx', NULL, 'Active', 1, 0),
-(4, 'Mr.', 'master', 'master', '$2b$10$YOYbjZyy3L4nBG/QLXHT5OZGqyFj80naF.fLxwH7nXRPHld6CjdCC', 'Admin', 'master@gmail.com', '123456729V', '12334567890', '1234567890', 'xxx', NULL, 'Active', 1, 1);
+(4, 'Mr.', 'master', 'master', '$2b$10$YOYbjZyy3L4nBG/QLXHT5OZGqyFj80naF.fLxwH7nXRPHld6CjdCC', 'Admin', 'master@gmail.com', '123456729V', '12334567890', '1234567890', 'xxx', NULL, 'Active', 1, 1),
+(5, 'Mr.', 'maleesha', 'maleeshapa', '$2b$10$SQb/n5CQrtiyuE/ABCIVoO1noHx9zPc53rEVlC7WGZ9VkFBu4Qo4m', 'Admin', 'buddhika@gmail.com', '2002832992', '12334567890', '1234567890', 'kandy', 'http://localhost:5000/uploads/users/maleeshapa_1735067279096.jpg', 'Active', 1, 0);
 
 --
 -- Indexes for dumped tables
@@ -458,6 +507,13 @@ INSERT INTO `user` (`userId`, `userTitle`, `userFullName`, `userName`, `userPass
 --
 ALTER TABLE `category`
   ADD PRIMARY KEY (`categoryId`);
+
+--
+-- Indexes for table `chequdata`
+--
+ALTER TABLE `chequdata`
+  ADD KEY `stockPaymentId` (`stockPaymentId`),
+  ADD KEY `supplierId` (`supplierId`);
 
 --
 -- Indexes for table `customer`
@@ -536,7 +592,15 @@ ALTER TABLE `stockhistory`
 ALTER TABLE `stockpayment`
   ADD PRIMARY KEY (`id`),
   ADD KEY `productId` (`productId`),
-  ADD KEY `stockId` (`stockId`);
+  ADD KEY `suplierId` (`suplierId`);
+
+--
+-- Indexes for table `stock_payments`
+--
+ALTER TABLE `stock_payments`
+  ADD PRIMARY KEY (`stockPaymentId`),
+  ADD KEY `stockId` (`stockId`),
+  ADD KEY `userId` (`userId`);
 
 --
 -- Indexes for table `store`
@@ -604,13 +668,13 @@ ALTER TABLE `expensescat`
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `invoiceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=389;
+  MODIFY `invoiceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=394;
 
 --
 -- AUTO_INCREMENT for table `invoiceproduct`
 --
 ALTER TABLE `invoiceproduct`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=302;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=308;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -643,6 +707,12 @@ ALTER TABLE `stockpayment`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `stock_payments`
+--
+ALTER TABLE `stock_payments`
+  MODIFY `stockPaymentId` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `store`
 --
 ALTER TABLE `store`
@@ -664,17 +734,24 @@ ALTER TABLE `switch`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transactionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=271;
+  MODIFY `transactionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=276;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `chequdata`
+--
+ALTER TABLE `chequdata`
+  ADD CONSTRAINT `chequdata_ibfk_1` FOREIGN KEY (`stockPaymentId`) REFERENCES `stockpayment` (`id`),
+  ADD CONSTRAINT `chequdata_ibfk_2` FOREIGN KEY (`supplierId`) REFERENCES `supplier` (`supplierId`);
 
 --
 -- Constraints for table `expenses`
@@ -733,7 +810,14 @@ ALTER TABLE `stockhistory`
 --
 ALTER TABLE `stockpayment`
   ADD CONSTRAINT `stockpayment_ibfk_1` FOREIGN KEY (`productId`) REFERENCES `products` (`productId`),
-  ADD CONSTRAINT `stockpayment_ibfk_2` FOREIGN KEY (`stockId`) REFERENCES `stock` (`stockId`);
+  ADD CONSTRAINT `stockpayment_ibfk_2` FOREIGN KEY (`suplierId`) REFERENCES `supplier` (`supplierId`);
+
+--
+-- Constraints for table `stock_payments`
+--
+ALTER TABLE `stock_payments`
+  ADD CONSTRAINT `stock_payments_ibfk_1` FOREIGN KEY (`stockId`) REFERENCES `stock` (`stockId`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `stock_payments_ibfk_2` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`);
 
 --
 -- Constraints for table `transaction`

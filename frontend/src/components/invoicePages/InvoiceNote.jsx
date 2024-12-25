@@ -138,7 +138,7 @@ const InvoiceNote = () => {
                 <h4>Invoice </h4>
                 <div className="invoice-page">
                     <div className="invoice">
-                        <div id="invoice-card"> 
+                        <div id="invoice-card">
                             {colkan && (
                                 <section className="invoice-header">
                                     <img src={one} alt="" className="header-img" />
@@ -169,7 +169,15 @@ const InvoiceNote = () => {
                                     </div>
                                     {showAddress && (
                                         <div className="details mb-2">
-                                            <input type="text" className="form-input" name="cusName" value={formData.cusAddress} />
+                                            <div className="details-box">
+                                                <textarea
+                                                    className="form-input"
+                                                    name="cusAddress"
+                                                    rows="2"
+                                                    style={{ resize: "both" }}
+                                                    value={formData.cusAddress}
+                                                ></textarea>
+                                            </div>
                                         </div>
                                     )}
                                 </div>
@@ -184,10 +192,10 @@ const InvoiceNote = () => {
                                     </div>
                                     <div className="details ">
                                         <label htmlFor="">Purchase Order</label>
-                                        <input type="text" className="form-input" name="PurchaseOrder" value={formData.PurchaseOrder}/>
+                                        <input type="text" className="form-input" name="PurchaseOrder" value={formData.PurchaseOrder} />
                                     </div>
                                 </div>
-                                
+
                             </section>
 
                             {/* product table---------------------------------------------------------------- */}
@@ -222,7 +230,38 @@ const InvoiceNote = () => {
                                 </tbody>
                                 <tbody>
                                     <tr>
-                                        <td id="table-content" rowSpan={3}>
+                                        <td id="table-content" colSpan={2} rowSpan={3}>
+                                        {showBank && (
+                                                <>
+                                                    Payment mode : Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c<br></br>
+                                                    {colkan && (
+                                                        <>
+                                                            Bank:HNB<br></br>
+                                                            Account Number : 250010032342<br></br>
+                                                            Account Name : Colkan Holdings (Pvt) LTD<br></br>
+                                                            Branch Name : Colkan
+                                                        </>
+                                                    )}
+
+                                                    {haman && (
+                                                        <>
+                                                            Bank:BOC<br></br>
+                                                            Account Number : 93829087<br></br>
+                                                            Account Name : Haman<br></br>
+                                                            Branch Name : Wellewathe
+                                                        </>
+                                                    )}
+
+                                                    {terra && (
+                                                        <>
+                                                            Bank:Sampath Bank<br></br>
+                                                            Account Number : 0117 1000 1407<br></br>
+                                                            Account Name : Terra walkers<br></br>
+                                                            Branch Name : Kirulapona
+                                                        </>
+                                                    )}
+                                                </>
+                                            )}
                                         </td>
                                         <td id="table-content" colSpan={2} rowSpan={3}>
                                         </td>
@@ -249,7 +288,7 @@ const InvoiceNote = () => {
                                 </tbody>
                             </table>
                             {/*bank details-------------------------------------------------------------------*/}
-                            {showBank && (
+                            {/* {showBank && (
                                 <>
                                     {colkan && (
                                         <table>
@@ -346,10 +385,10 @@ const InvoiceNote = () => {
                                             </tr>
                                         </table>
                                     )}
-                                </>)}
+                                </>)} */}
 
                             <footer className="invoice-footer ">
-                                <p className='text-danger font-weight-bold'>I / We hereby acknowledge the receipt of the above goods are received in damages.</p>
+                                <p className='font-weight-bold'>I / We hereby acknowledge the receipt of the above goods are received in damages.</p>
 
                                 <div className="signature">
                                     <table className="signature-table">
