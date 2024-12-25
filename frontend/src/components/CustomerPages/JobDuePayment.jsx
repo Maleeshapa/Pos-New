@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import config from '../../config';
-import Table from '../Table/Table'
+import Table from '../Table/Table';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const JobDuePayment = () => {
-  const columns = ['Invoice Number','Customer Code','Customer','Store','Date','Total Amount','Paid Amount','Due Amount'];
+  const columns = ['Invoice Number', 'Customer Code', 'Customer', 'Store', 'Date', 'Total Amount', 'Paid Amount', 'Due Amount'];
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sortOrder, setSortOrder] = useState('asc'); // Sorting order for Due Amount
 
   useEffect(() => {
     fetchDueCustomer();
@@ -41,10 +42,10 @@ const JobDuePayment = () => {
         const formattedInvoiceDate = `${invoiceDate.getFullYear()}-${String(invoiceDate.getMonth() + 1).padStart(2, '0')}-${String(invoiceDate.getDate()).padStart(2, '0')} ${String(invoiceDate.getHours()).padStart(2, '0')}:${String(invoiceDate.getMinutes()).padStart(2, '0')}`;
 
         const transactionPaid = creditTransactions.reduce((total, transaction) => total + transaction.paid, 0);
-        const transactiondue = creditTransactions.reduce((total, transaction) => total + transaction.due, 0);
-        const transactionPrice = creditTransactions.reduce((total, transaction) => total + transaction.price, '');
+        const transactionDue = creditTransactions.reduce((total, transaction) => total + transaction.due, 0);
+        const transactionPrice = creditTransactions.reduce((total, transaction) => total + transaction.price, 0);
 
-        return [  
+        return [
           invoice.invoiceNo,
           invoice.customer.cusCode,
           invoice.customer.cusName,
@@ -52,7 +53,7 @@ const JobDuePayment = () => {
           formattedInvoiceDate,
           transactionPrice,
           transactionPaid,
-          transactiondue
+          transactionDue
         ];
       }).filter(Boolean);
 
@@ -62,6 +63,16 @@ const JobDuePayment = () => {
       setError(err.message);
       setIsLoading(false);
     }
+  };
+
+  const sortDataByDueAmount = () => {
+    const sortedData = [...data].sort((a, b) => {
+      const dueA = a[7]; // Due Amount column index
+      const dueB = b[7];
+      return sortOrder === 'asc' ? dueA - dueB : dueB - dueA;
+    });
+    setData(sortedData);
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc'); // Toggle sorting order
   };
 
   const title = 'Due_customer';
@@ -77,10 +88,19 @@ const JobDuePayment = () => {
             <p>Loading...</p>
           ) : error ? (
             <p>Error: {error}</p>
-          ) : (<p></p>)}
+          ) : null}
           <Table
             data={data}
-            columns={columns}
+            columns={columns.map((col, index) => {
+              if (col === 'Due Amount') {
+                return (
+                  <span key={index} onClick={sortDataByDueAmount} style={{ cursor: 'pointer' }}>
+                    {col} {sortOrder === 'asc' ? '▲' : '▼'}
+                  </span>
+                );
+              }
+              return col;
+            })}
             title={title}
             invoice={invoice}
             showButton={false}
@@ -91,5 +111,4 @@ const JobDuePayment = () => {
   );
 };
 
-
-export default JobDuePayment
+export default JobDuePayment;

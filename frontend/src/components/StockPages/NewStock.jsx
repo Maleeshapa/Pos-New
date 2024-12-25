@@ -299,6 +299,35 @@ const NewStock = () => {
         throw new Error('Failed to submit stock data');
       }
 
+      //StockPayment Data
+      const stockPaymentData = {
+        cashAmount: (formData.cashAmount) || 0,
+        chequeAmount: (formData.chequeAmount) || 0,
+        due: (formData.due) || 0,
+        vat: (formData.vat) || 0,
+        total: (formData.vatWithTotal) || 0,
+        stockQty: (formData.totalQty) || 0,
+      };
+
+      console.log('Sending transaction data:', stockPaymentData);
+
+      const stockPaymentResponse = await fetch(`${config.BASE_URL}/stockPayment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(stockPaymentData),
+      });
+
+      if (!stockPaymentResponse.ok) {
+        const errorData = await stockPaymentResponse.json();
+        console.error('Stock payment error details:', errorData);
+        throw new Error(errorData.error || 'Failed to create stock payment');
+      }
+
+      const stockPaymentResult = await stockPaymentResponse.json();
+      console.log('Stock payment created:', stockPaymentResult);
+
       setSuccessMessage('Stock data submitted successfully!');
       setError(null);
       resetForm();
@@ -527,7 +556,7 @@ const NewStock = () => {
             </div>
             <div className="col-md-2 mb-3">
               <label htmlFor="totalPrice" className="form-label">Vat + Total</label>
-              <input type="number" name="vatWithTotal" value={formData.vatWithTotal} className="form-control" onChange={handleChange} placeholder='0.00' readOnly/>
+              <input type="number" name="vatWithTotal" value={formData.vatWithTotal} className="form-control" onChange={handleChange} placeholder='0.00' readOnly />
             </div>
             <div className="col-md-3 mb-3">
               <label className="form-label">Cash Amount</label>
@@ -539,7 +568,7 @@ const NewStock = () => {
             </div>
             <div className="col-md-2 mb-3">
               <label htmlFor="qty" className="form-label">due</label>
-              <input type="number" name="due" value={formData.due} required className="form-control" onChange={handleChange} readOnly  placeholder='0.00'/>
+              <input type="number" name="due" value={formData.due} required className="form-control" onChange={handleChange} readOnly placeholder='0.00' />
             </div>
           </div>
 

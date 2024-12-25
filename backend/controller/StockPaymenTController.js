@@ -3,36 +3,20 @@ const StockPayment = require("../model/StockPayment");
 
 async function createStockPayment(req, res) {
     try {
-        const { cashAmount, chequeAmount, due, vat, total, stocks } = req.body;
+        const { cashAmount, chequeAmount, due, vat, total, stockQty } = req.body;
 
-        // Validate input
-        if (!Array.isArray(stocks) || stocks.length === 0) {
-            return res.status(400).json({ message: "No stock data provided" });
+        // Basic input validation
+        if (cashAmount === undefined || chequeAmount === undefined || due === undefined) {
+            return res.status(400).json({ error: "Missing payment amounts." });
         }
 
-        // Fetch stock data and calculate total
-        const stockIds = stocks.map(stock => stock.stockId);
-        const stockRecords = await Stock.findAll({ where: { stockId: stockIds } });
-
-        if (stockRecords.length !== stocks.length) {
-            return res.status(400).json({
-                message: "One or more stock IDs are invalid",
-            });
+        if (total === undefined || total <= 0) {
+            return res.status(400).json({ error: "Invalid or missing total amount." });
         }
 
-        let calculatedTotal = 0;
-        for (const stock of stocks) {
-            const stockRecord = stockRecords.find(s => s.stockId === stock.stockId);
-            if (!stockRecord) {
-                return res.status(400).json({ message: `Invalid stock ID: ${stock.stockId}` });
-            }
-
-            // Calculate total for this stock (price * quantity)
-            calculatedTotal += stockRecord.stockPrice * stock.stockQty;
+        if (stockQty === undefined || stockQty <= 0) {
+            return res.status(400).json({ error: "Invalid or missing stock quantity." });
         }
-
-        // Add VAT (if applicable)
-        calculatedTotal += vat || 0;
 
         // Create stock payment
         const newStockPayment = await StockPayment.create({
@@ -40,8 +24,8 @@ async function createStockPayment(req, res) {
             chequeAmount,
             due,
             vat,
-            total: calculatedTotal,
-            stockQty: stocks.reduce((sum, stock) => sum + stock.stockQty, 0),
+            total,
+            stockQty,
         });
 
         res.status(201).json({
@@ -51,26 +35,21 @@ async function createStockPayment(req, res) {
     } catch (error) {
         if (error.name === "SequelizeValidationError") {
             console.error("Validation errors:", error.errors);
-            return res
-                .status(400)
-                .json({ error: "Validation error: Please check the provided data." });
+            return res.status(400).json({
+                error: "Validation error: Please check the provided data.",
+            });
         }
+        console.error("An internal error occurred:", error.message);
         return res.status(500).json({
             error: `An internal error occurred: ${error.message}`,
         });
     }
 }
 
+
 async function getAllStockPayments(req, res) {
     try {
-        const stockPayments = await StockPayment.findAll({
-            include: [
-                {
-                    model: Stock,
-                    as: "stock",
-                },
-            ],
-        });
+        const stockPayments = await StockPayment.findAll();
 
         if (stockPayments.length === 0) {
             return res.status(404).json({ message: "No stock payments found" });
@@ -87,11 +66,7 @@ async function getStockPaymentById(req, res) {
     try {
         const { id } = req.params;
 
-        const stockPayment = await StockPayment.findByPk(id, {
-            include: [
-                { model: Stock, as: "stock" },
-            ],
-        });
+        const stockPayment = await StockPayment.findByPk(id);
 
         if (!stockPayment) {
             return res.status(404).json({ message: `StockPayment not found for ID: ${id}` });
