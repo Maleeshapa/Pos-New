@@ -2,18 +2,22 @@ import { useEffect, useState } from "react";
 import Table from '../Table/Table';
 import config from '../../config';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import { Eye } from 'lucide-react';
 
 const Invoice = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const columns = ["ID", "Invoice No", 'Type', "Customer", 'address',"store","Date/time", "Transaction Type", "Total Amount", "Due", "invoice"];
+  const columns = [
+    "ID", "Invoice No", "Type", "Customer", "Address", "Store", "Date/Time", 
+    "Transaction Type", "Total Amount", "Due", "Invoice", "Image"
+  ];
 
   useEffect(() => {
     fetchSalesHistory();
   }, []);
+
   const fetchSalesHistory = async () => {
     try {
       const response = await fetch(`${config.BASE_URL}/invoices`);
@@ -41,8 +45,10 @@ const Invoice = () => {
         const formattedInvoiceDate = `${invoiceDate.getFullYear()}-${String(invoiceDate.getMonth() + 1).padStart(2, '0')}-${String(invoiceDate.getDate()).padStart(2, '0')} ${String(invoiceDate.getHours()).padStart(2, '0')}:${String(invoiceDate.getMinutes()).padStart(2, '0')}`;
 
         const transactionPrice = transactionsData[index]?.reduce((total, transaction) => total + transaction.paid, 0);
-        const transactiondue = transactionsData[index]?.reduce((total, transaction) => total + transaction.due, 0);
+        const transactionDue = transactionsData[index]?.reduce((total, transaction) => total + transaction.due, 0);
         const transactionTypes = transactionsData[index]?.map((transaction) => transaction.transactionType).join(', ') || "Unknown";
+
+        const filename = invoice.image ? invoice.image.split('/').pop() : null;
 
         return [
           invoice.invoiceId,
@@ -54,11 +60,22 @@ const Invoice = () => {
           formattedInvoiceDate,
           transactionTypes,
           transactionPrice,
-          transactiondue,
+          transactionDue,
           <div>
-            <Link to={`/invoice/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-primary">Invoice</button></Link>
-            <Link to={`/salesDetails/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye/></button></Link>
+            <Link to={`/invoice/${invoice.store}/${invoice.invoiceNo}`}>
+              <button className="btn btn-primary">Invoice</button>
+            </Link>
+            <Link to={`/salesDetails/${invoice.store}/${invoice.invoiceNo}`}>
+              <button className="btn btn-warning"><Eye /></button>
+            </Link>
           </div>,
+          filename ? (
+            <a href={`${config.BASE_URL}/download/invoice/${filename}`} download>
+                <button className="btn btn-success">Download</button>
+            </a>
+        ) : (
+            "No Image"
+        ),
         ];
       });
 
@@ -106,7 +123,6 @@ const Invoice = () => {
       }
     }
   };
-
 
   return (
     <div>
