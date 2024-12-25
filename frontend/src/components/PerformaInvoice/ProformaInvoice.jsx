@@ -129,7 +129,7 @@ const ProformaInvoice = () => {
         }
     };
 
-    const [showAddress, setShowAddress] = useState(false)
+    const [showAddress, setShowAddress] = useState(true)
     const [showBank, setShowBank] = useState(false)
 
     const handleAddress = (e) => {
@@ -271,7 +271,39 @@ const ProformaInvoice = () => {
                                 </tbody>
                                 <tbody>
                                     <tr>
-                                        <td colSpan={3}></td>
+                                    <td id="table-content" colSpan={3} rowSpan={3}>
+                                        {showBank && (
+                                                <>
+                                                    Payment mode : Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c<br></br>
+                                                    {colkan && (
+                                                        <>
+                                                            Bank:HNB<br></br>
+                                                            Account Number : 250010032342<br></br>
+                                                            Account Name : Colkan Holdings (Pvt) LTD<br></br>
+                                                            Branch Name : Colkan
+                                                        </>
+                                                    )}
+
+                                                    {haman && (
+                                                        <>
+                                                            Bank:BOC<br></br>
+                                                            Account Number : 93829087<br></br>
+                                                            Account Name : Haman<br></br>
+                                                            Branch Name : Wellewathe
+                                                        </>
+                                                    )}
+
+                                                    {terra && (
+                                                        <>
+                                                            Bank:Sampath Bank<br></br>
+                                                            Account Number : 0117 1000 1407<br></br>
+                                                            Account Name : Terra walkers<br></br>
+                                                            Branch Name : Kirulapona
+                                                        </>
+                                                    )}
+                                                </>
+                                            )}
+                                        </td>
                                         <td>Subtotal</td>
                                         <td>
                                             {invoiceProducts.reduce(
@@ -281,14 +313,12 @@ const ProformaInvoice = () => {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colSpan={3}></td>
                                         <td>Discount</td>
                                         {Transaction.map((Transaction) => (
                                             <td>{Transaction.discount}</td>
                                         ))}
                                     </tr>
                                     <tr>
-                                        <td colSpan={3}></td>
                                         <td>TOTAL</td>
                                         {Transaction.map((Transaction) => (
                                             <td>{Transaction.paid}</td>
@@ -297,7 +327,7 @@ const ProformaInvoice = () => {
                                 </tbody>
                             </table>
                             {/*bank details-------------------------------------------------------------------*/}
-                            {showBank && (
+                            {/* {showBank && (
                                 <>
                                     {colkan && (
                                         <table>
@@ -394,7 +424,8 @@ const ProformaInvoice = () => {
                                             </tr>
                                         </table>
                                     )}
-                                </>)}
+                                </>)} */}
+
                             <footer className="invoice-footer ">
                                 {/* <p className='text-danger font-weight-bold'>Payment mode :  Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c.</p> */}
 
@@ -429,6 +460,7 @@ const ProformaInvoice = () => {
                                     type="checkbox"
                                     name="address"
                                     value="address"
+                                    checked={showAddress} 
                                     onChange={handleAddress}
                                 />
                                 <br />
@@ -437,6 +469,7 @@ const ProformaInvoice = () => {
                                     type="checkbox"
                                     name="bank"
                                     value="bank"
+                                    checked={showBank} 
                                     onChange={handleBank}
                                 />
                             </form>
