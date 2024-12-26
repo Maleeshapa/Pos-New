@@ -49,7 +49,7 @@ const CostingModal = ({ showModal, closeModal, formData, onChange, onSubmit }) =
 
     // Ensure updatedData is initialized correctly
     const updatedData = { ...localFormData, [name]: value };
-    
+
         const unitCost = parseFloat(updatedData.unitCost) || 0;
         const ourMarginPercentage = parseFloat(updatedData.ourMarginPercentage) || 0;
         const otherMarginPercentage = parseFloat(updatedData.otherMarginPercentage) || 0;
@@ -59,9 +59,9 @@ const CostingModal = ({ showModal, closeModal, formData, onChange, onSubmit }) =
         updatedData.ourMarginValue = (unitCost * ourMarginPercentage) / 100;
         updatedData.otherMarginValue = (unitCost * otherMarginPercentage) / 100;
         updatedData.pricePlusMargin = updatedData.ourMarginValue + updatedData.otherMarginValue;
-        updatedData.sellingRate = updatedData.pricePlusMargin / 0.9; // Selling Rate Before Discount Calculation
-        updatedData.sellingRateRounded = Math.ceil(updatedData.sellingRate / 10) * 10; // Round to nearest 10 (upwards)
-        updatedData.unitPrice = updatedData.sellingRateRounded; // Unit Price matches Selling Rate Rounded
+        updatedData.sellingRate = updatedData.pricePlusMargin / 0.9; 
+        updatedData.sellingRateRounded = Math.ceil(updatedData.sellingRate / 10) * 10; 
+        updatedData.unitPrice = updatedData.sellingRateRounded; 
         updatedData.discountValue = (updatedData.sellingRateRounded * discountPercentage) / 100;
         updatedData.discountedPrice = updatedData.sellingRateRounded - updatedData.discountValue;
         updatedData.amount = updatedData.discountedPrice * qty;

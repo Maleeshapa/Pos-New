@@ -3,6 +3,7 @@ import CostingModal from './CostingModal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Trash } from 'lucide-react';
 import axios from 'axios';
+import config from '../../config';
 
 const CostingTable = () => {
     const [entries, setEntries] = useState([]);
@@ -30,6 +31,7 @@ const CostingTable = () => {
         profit: 0,
     });
     const [showModal, setShowModal] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     const handleInputChange = (updatedData) => {
         setFormData(updatedData);
@@ -81,6 +83,62 @@ const CostingTable = () => {
         }), { totalAmount: 0, totalProfit: 0 });
     };
 
+    const handleSaveToDatabase = async () => {
+        if (entries.length === 0) {
+            alert('Please add at least one entry');
+            return;
+        }
+
+        setIsSaving(true);
+        const totals = calculateTotals();
+
+        try {
+            // Save header first
+            const headerResponse = await axios.post(`${config.BASE_URL}/costing/header`, {
+                totalAmount: totals.totalAmount,
+                totalProfit: totals.totalProfit
+            });
+
+            const headerId = headerResponse.data.id;
+
+            // Save details
+            const detailsPromises = entries.map(entry => 
+                axios.post(`${config.BASE_URL}/costing/detail`, {
+                    headerId,
+                    productCode: entry.productCode,
+                    descriptionCustomer: entry.descriptionCustomer,
+                    description: entry.description,
+                    warranty: entry.warranty,
+                    supplier: entry.supplier,
+                    unitCost: entry.unitCost,
+                    ourMarginPercentage: entry.ourMarginPercentage,
+                    ourMarginValue: entry.ourMarginValue,
+                    otherMarginPercentage: entry.otherMarginPercentage,
+                    otherMarginValue: entry.otherMarginValue,
+                    pricePlusMargin: entry.pricePlusMargin,
+                    sellingRate: entry.sellingRate,
+                    sellingRateRounded: entry.sellingRateRounded,
+                    uom: entry.uom,
+                    qty: entry.qty,
+                    unitPrice: entry.unitPrice,
+                    discountPercentage: entry.discountPercentage,
+                    discountValue: entry.discountValue,
+                    discountedPrice: entry.discountedPrice,
+                    amount: entry.amount,
+                    profit: entry.profit
+                })
+            );
+
+            await Promise.all(detailsPromises);
+            alert('Costing data saved successfully');
+            setEntries([]);
+        } catch (error) {
+            console.error('Error saving costing data:', error);
+            alert('Error saving costing data');
+        } finally {
+            setIsSaving(false);
+        }
+    };
 
     return (
         <div className="container-fluid mt-4">
@@ -94,9 +152,10 @@ const CostingTable = () => {
                 
                 <button
                     className="btn btn-success"
-                   
+                    onClick={handleSaveToDatabase}
+                    disabled={isSaving || entries.length === 0}
                 >
-                    Print Quotation
+                    {isSaving ? 'Saving...' : 'Save to Database'}
                 </button>
             </div>
 

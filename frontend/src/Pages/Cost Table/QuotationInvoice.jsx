@@ -221,7 +221,7 @@ const QuotationInvoice = () => {
                                  
                                         
                                             <tr className={`table-row`} >
-                                                <td id='table-sn'>{index + 1}</td>
+                                                {/* <td id='table-sn'>{index + 1}</td> */}
                                                 <td id='table-sn'> { } </td>
                                                 <td id='table-sn'> { } </td>
                                                 <td id='table-sn'> { } </td>
