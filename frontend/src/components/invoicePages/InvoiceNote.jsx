@@ -17,6 +17,7 @@ const InvoiceNote = () => {
         invoiceDate: '',
         PurchaseOrder: '',
         cusName: '',
+        cusOffice: '',
         cusJob: '',
         cusAddress: ''
     });
@@ -44,6 +45,7 @@ const InvoiceNote = () => {
                     cusJob: invoiceData.customer.cusJob,
                     cusAddress: invoiceData.customer.cusAddress,
                     PurchaseOrder: invoiceData.purchaseNo,
+                    cusOffice: invoiceData.customer.cusOffice,
                 });
 
                 if (invoiceData.invoiceId) {
@@ -167,6 +169,9 @@ const InvoiceNote = () => {
                                     <div className="details mb-2">
                                         <input type="text" className="form-input" name="cusJob" value={formData.cusJob} />
                                     </div>
+                                    <div className="details mb-2">
+                                        <input type="text" className="form-input" name="cusOffice" value={formData.cusOffice} />
+                                    </div>
                                     {showAddress && (
                                         <div className="details mb-2">
                                             <div className="details-box">
@@ -231,7 +236,7 @@ const InvoiceNote = () => {
                                 <tbody>
                                     <tr>
                                         <td id="table-content" colSpan={3} rowSpan={3}>
-                                        {showBank && (
+                                            {showBank && (
                                                 <>
                                                     Payment mode : Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c payee only<br></br>
                                                     {colkan && (
@@ -407,10 +412,10 @@ const InvoiceNote = () => {
                             <form action="">
                                 <br />
                                 <label className='invoice-type-label' htmlFor="">Address</label>
-                                <input type="checkbox" name="address" value="address" checked={showAddress}  onChange={handleAddress} />
+                                <input type="checkbox" name="address" value="address" checked={showAddress} onChange={handleAddress} />
                                 <br />
                                 <label className='invoice-type-label' htmlFor="">Bank</label>
-                                <input type="checkbox" name="bank" value="bank" checked={showBank}  onChange={handleBank} />
+                                <input type="checkbox" name="bank" value="bank" checked={showBank} onChange={handleBank} />
                             </form>
                         </div>
                         <button onClick={handlePrint} className='btn btn-success'>Print Invoice</button>

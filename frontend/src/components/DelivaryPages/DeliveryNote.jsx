@@ -18,6 +18,7 @@ const DeliveryNote = () => {
         PurchaseOrder: '',
         cusName: '',
         cusJob: '',
+        cusOffice:'',
         cusAddress: '',
         delivaryNo: ''
     });
@@ -47,6 +48,7 @@ const DeliveryNote = () => {
                     cusName: invoiceData.customer.cusName,
                     cusJob: invoiceData.customer.cusJob,
                     cusAddress: invoiceData.customer.cusAddress,
+                    cusOffice:invoiceData.customer.cusOffice,
                     PurchaseOrder: invoiceData.purchaseNo,
                 });
 
@@ -223,6 +225,9 @@ const DeliveryNote = () => {
                                     </div>
                                     <div className="details mb-2">
                                         <input type="text" className="form-input" name="cusJob" value={formData.cusJob} />
+                                    </div>
+                                    <div className="details mb-2">
+                                        <input type="text" className="form-input" name="cusOffice" value={formData.cusOffice} />
                                     </div>
                                     {showAddress && (
                                         <div className="details mb-2">

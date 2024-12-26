@@ -409,6 +409,30 @@ const NewSales = ({ invoice }) => {
         body: JSON.stringify(productInvoice),
       });
 
+      //deliveryNote---------------------------------------------------------------
+      const deliveryNote = tableData.map(row => ({
+        productId: row[9],
+        stockId: row[10],
+        invoiceId: invoiceResult.invoiceId,
+        invoiceNo: invoiceResult.invoiceNo,
+        totalAmount: row[4] * row[5],
+        invoiceQty: row[5],
+        deliveryStatus: delivary,
+      }));
+      console.log('Invoice No before sending:', formData.invoiceNo);
+
+      const deliveryResponse = await fetch(`${config.BASE_URL}/deliveryNote`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(deliveryNote),
+      });
+
+      const deliveryResult = await deliveryResponse.json();
+      console.log('Delivery Note data :', deliveryResult);
+      console.log('Delivery Status:', delivary);
+
       if (!productResponse.ok) {
         const errorData = await productResponse.json();
 
