@@ -164,23 +164,42 @@ const deleteDeliveryNote = async (req, res) => {
 const updateDeliveryNoteStatus = async (req, res) => {
     try {
         const { id } = req.params;
-        const { status } = req.body;
+        const { status, invoiceQty } = req.body;
 
+        // Find the delivery note by its primary key
         const deliveryNote = await DeliveryNote.findByPk(id);
 
         if (!deliveryNote) {
-            return res.status(404).json({ message: 'Invoice product not found' });
+            return res.status(404).json({ message: 'Delivery note not found' });
         }
 
-        deliveryNote.deliveryStatus = status || 'Delivered';
-        await DeliveryNote.save();
+        // Validate the input quantity if provided
+        if (typeof invoiceQty !== 'undefined' && invoiceQty < 0) {
+            return res.status(400).json({ message: 'Invalid quantity provided' });
+        }
 
-        res.status(200).json({ message: 'Invoice product status updated successfully', deliveryNote });
+        // Update the delivery status and invoice quantity dynamically
+        deliveryNote.deliveryStatus = status || 'Delivered';
+        if (typeof invoiceQty !== 'undefined') {
+            deliveryNote.invoiceQty = invoiceQty;
+        }
+
+        // Save the changes
+        await deliveryNote.save();
+
+        res.status(200).json({ 
+            message: 'Delivery note updated successfully', 
+            deliveryNote 
+        });
     } catch (error) {
-        console.error('Error updating invoice product status:', error);
-        res.status(500).json({ message: 'Error updating invoice product status', error: error.message });
+        console.error('Error updating delivery note status:', error);
+        res.status(500).json({ 
+            message: 'Error updating delivery note status', 
+            error: error.message 
+        });
     }
 };
+
 
 module.exports = {
     createDeliveryNote,

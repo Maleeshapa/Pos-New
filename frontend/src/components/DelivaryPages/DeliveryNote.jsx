@@ -77,10 +77,10 @@ const DeliveryNote = () => {
 
     const fetchInvoiceProducts = async (invoiceId) => {
         try {
-            const response = await fetch(`${config.BASE_URL}/invoiceProducts/${invoiceId}`);
+            const response = await fetch(`${config.BASE_URL}/deliveryNotes/${invoiceId}`);
             if (response.ok) {
                 const data = await response.json();
-                const filteredProducts = data.filter(product => product.invoiceProductStatus !== 'Delivered');
+                const filteredProducts = data.filter(product => product.deliveryStatus !== 'Delivered');
                 setInvoiceProducts(filteredProducts);
             } else {
                 alert('No invoice products found');
@@ -122,48 +122,12 @@ const DeliveryNote = () => {
         setInvoiceProducts(prevProducts => prevProducts.filter((_, i) => i !== index));
     };
 
-    const updateProductStatusToDelivered = async () => {
-        try {
-            const updatePromises = invoiceProducts.map(async (product) => {
-                console.log(`Updating product with ID: ${product.id}`); 
-                const response = await fetch(`${config.BASE_URL}/invoiceProducts/${product.id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ invoiceProductStatus: 'Delivered' }),
-                });
-                if (!response.ok) {
-                    throw new Error(`Failed to update product ${product.id}`);
-                }
-                return response.json();
-            });
-
-            await Promise.all(updatePromises);
-            console.log('All product statuses updated.');
-
-            setInvoiceProducts((prevProducts) =>
-                prevProducts.map((product) => ({
-                    ...product,
-                    invoiceProductStatus: 'Delivered',
-                }))
-            );
-        } catch (error) {
-            console.error('Error updating product statuses:', error);
-            alert('An error occurred while updating product statuses.');
-        }
-    };
-
     const handlePrint = async () => {
         const printContent = document.getElementById('invoice-card');
 
         if (printContent) {
             const doc = new jsPDF();
 
-            // Update the product statuses in the database before printing
-            await updateProductStatusToDelivered();
-
-            // Now, render the PDF with updated data
             doc.html(printContent, {
                 callback: async function (doc) {
                     doc.autoPrint();
