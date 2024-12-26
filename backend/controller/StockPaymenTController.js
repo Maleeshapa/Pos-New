@@ -83,8 +83,53 @@ async function getStockPaymentById(req, res) {
     }
 }
 
+async function updateStockPayment(req, res) {
+    try {
+        const { id } = req.params;
+        const { cashAmount, chequeAmount, due, vat, total, stockQty, supplierId } = req.body;
+
+        // Find the stock payment record by ID
+        const stockPayment = await StockPayment.findByPk(id);
+
+        if (!stockPayment) {
+            return res.status(404).json({ message: `StockPayment not found for ID: ${id}` });
+        }
+
+        // Update the stock payment record
+        await stockPayment.update({
+            cashAmount,
+            chequeAmount,
+            due,
+            vat,
+            total,
+            stockQty,
+            supplierId,
+        });
+
+        // Respond with the updated record
+        res.status(200).json({ message: "StockPayment updated successfully", stockPayment });
+    } catch (error) {
+        // Handle validation errors
+        if (error.name === "SequelizeValidationError") {
+            console.error("Validation errors:", error.errors);
+            return res.status(400).json({
+                error: "Validation error: Please check the provided data.",
+                details: error.errors,
+            });
+        }
+
+        // Handle other internal errors
+        console.error("An internal error occurred:", error.message);
+        return res.status(500).json({
+            error: `An internal error occurred: ${error.message}`,
+        });
+    }
+}
+
+
 module.exports = {
     createStockPayment,
     getAllStockPayments,
     getStockPaymentById,
+    updateStockPayment,
 };

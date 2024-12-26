@@ -94,6 +94,7 @@ app.delete("/stock/:id", StockController.deleteStock);
 app.post("/stockPayment", StockPaymentController.createStockPayment);
 app.get("/stockPayments", StockPaymentController.getAllStockPayments);
 app.get("/stockPayment/:id", StockPaymentController.getStockPaymentById);
+app.put("/stockPayment/:id", StockPaymentController.updateStockPayment);
 
 //Stock History routes
 app.get('/stockHistory', StockHistoryController.getAllStockHistory);

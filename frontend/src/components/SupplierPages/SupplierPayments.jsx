@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Table from '../../components/Table/Table';
 import config from '../../config';
+import StockPaymentModel from '../../Models/StockPayment/StockPaymentModel';
 
 function SupplierPayments() {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const columns = ['#', 'Supplier Name', 'Cheque Amount', 'Cash Amount', 'Total Quantity', 'Vat %', 'Total Amount', 'Due Amount'];
 
   useEffect(() => {
@@ -39,6 +40,14 @@ function SupplierPayments() {
     }
   };
 
+  const handleEditClick = (payment) => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   const title = 'Supplier Payment Details';
   const invoice = 'Supplier Payment Details.pdf';
 
@@ -60,7 +69,14 @@ function SupplierPayments() {
             showDate={false}
             title={title}
             invoice={invoice}
-            showActions={false}
+            showActions={true}
+            showDelete={false}
+            onEdit={handleEditClick}
+          />
+        )}
+        {isModalOpen && (
+          <StockPaymentModel
+            closeModal={handleCloseModal}
           />
         )}
       </div>

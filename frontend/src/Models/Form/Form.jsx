@@ -67,7 +67,6 @@ const Form = ({ closeModal, onSave, cus }) => {
     }
 
     const customerData = {
-      cusCode: generateCustomerCode(),
       cusName: formData.name,
       cusJob: formData.jobPosition,
       cusOffice: formData.company,      
@@ -110,13 +109,6 @@ const Form = ({ closeModal, onSave, cus }) => {
       console.error('Error:', error);
       setError('An error occurred while saving the customer.');
     }
-  };
-
-  let lastCustomerCode = 0;
-
-  const generateCustomerCode = () => {
-    lastCustomerCode += 1;
-    return `cus${String(lastCustomerCode).padStart(3, '0')}`;
   };
 
 
