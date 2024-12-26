@@ -81,9 +81,6 @@ const CostingTable = () => {
         }), { totalAmount: 0, totalProfit: 0 });
     };
 
-    const handleSave = async () => {
-       
-    };
 
     return (
         <div className="container-fluid mt-4">
@@ -97,10 +94,9 @@ const CostingTable = () => {
                 
                 <button
                     className="btn btn-success"
-                    onClick={handleSave}
-                    disabled={entries.length === 0}
+                   
                 >
-                    Save Costing Data
+                    Print Quotation
                 </button>
             </div>
 
