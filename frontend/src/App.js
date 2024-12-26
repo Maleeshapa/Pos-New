@@ -65,6 +65,7 @@ function Layout() {
 
             <Route path="/proformaInvoice/:store/:invoiceNo" element={<ProtectedRoute><ProformaInvoice /></ProtectedRoute>} />
             <Route path="/invoice/:store/:invoiceNo" element={<ProtectedRoute><InvoiceNote /></ProtectedRoute>} />
+            <Route path="/createDelivery/:store/:invoiceNo" element={<ProtectedRoute><SelectDN /></ProtectedRoute>} />
             <Route path="/delivery/:store/:invoiceNo" element={<ProtectedRoute><DeliveryNote /></ProtectedRoute>} />
             <Route path="/creditNote/:store/:invoiceNo" element={<ProtectedRoute><CreditNote /></ProtectedRoute>} />
             <Route path="/salesDetails/:store/:invoiceNo" element={<ProtectedRoute><SalesDetails /></ProtectedRoute>} />
