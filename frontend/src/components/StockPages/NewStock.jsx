@@ -357,6 +357,8 @@ const NewStock = () => {
       formData.store,
       formData.product,
       formData.category,
+      formData.mfd || 'N/A',
+      formData.exp || 'N/A',
       formData.price,
       formData.qty,
       formData.description,
@@ -494,7 +496,8 @@ const NewStock = () => {
                     readOnly
                   />
                 </div>
-                {/* <div className="col-md-6 mb-3">
+{/* 
+                <div className="col-md-6 mb-3">
                   <label htmlFor="" className='mb-1'>Manufacture Date </label>
                   <input onChange={handleChange} type="date" name='mfd' id='' onWheel={(e) => e.target.blur()} value={formData.mfd} className='form-control' />
                 </div>

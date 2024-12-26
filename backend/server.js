@@ -24,6 +24,7 @@ const ProductNStockController = require("./controller/Reports/ProductStockContro
 const StockHistoryController = require('./controller/StockHistoryController');
 const InvoiceProductController = require('./controller/InvoiceProduct');
 const CustomerController = require('./controller/CustomerController');
+const DeliveryNoteController = require('./controller/DeliveryNoteController');
 // const CostingController = require("./controller/CostingController");
 // const CostingController = require("./controller/");
 
@@ -115,6 +116,14 @@ app.get('/invoiceProducts/:invoiceId', InvoiceProductController.getInvoiceById)
 app.delete('/invoiceProduct/:invoiceId', InvoiceProductController.deleteInvoiceProduct)
 app.get('/invoiceProduct/:num', InvoiceProductController.getInvoiceProductsByNo);
 app.put('/invoiceProducts/:id', InvoiceProductController.updateInvoiceProductStatus);
+
+//Delivery Note Route
+app.post('/deliveryNote', DeliveryNoteController.createDeliveryNote);
+app.get('/deliveryNotes', DeliveryNoteController.getAllDeliveryNote);
+app.get('/deliveryNotes/:invoiceId', DeliveryNoteController.getDeliveryNoteById)
+app.delete('/deliveryNote/:invoiceId', DeliveryNoteController.deleteDeliveryNote)
+app.get('/deliveryNote/:num', DeliveryNoteController.getDeliveryNoteByNo);
+app.put('/deliveryNotes/:id', DeliveryNoteController.updateDeliveryNoteStatus);
 
 //transaction routes
 app.post("/transaction", TransactionController.createTransaction);
