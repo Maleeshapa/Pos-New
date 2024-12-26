@@ -1,20 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import './CostingModal.css';
+import config from '../../config';
+import axios from 'axios';
 
 const CostingModal = ({ showModal, closeModal, formData, onChange, onSubmit }) => {
     const [localFormData, setLocalFormData] = useState(formData);
+    const [productCode, setProductCode] = useState(''); // Separate state for productCode
 
     useEffect(() => {
         if (showModal) {
             setLocalFormData(formData);
+            setProductCode(formData.productCode || ''); // Sync with initial form data
         }
     }, [showModal, formData]);
 
+    const fetchProductDetails = async (code) => {
+        try {
+            const response = await axios.get(`${config.BASE_URL}/product/codeOrName/${code}`);
+            const product = response.data;
+
+            setLocalFormData(prevData => ({
+                ...prevData,
+                warranty: product.productWarranty,
+                description: product.productDescription,
+            }));
+
+            onChange({
+                ...localFormData,
+                productCode: code, // Ensure productCode stays consistent
+                warranty: product.productWarranty,
+                description: product.productDescription,
+            });
+        } catch (error) {
+            console.error('Error fetching product details:', error);
+        }
+    };
+    
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        const updatedData = { ...formData, [name]: value };
 
-        // Auto-calculated fields
+    // Separate handling for productCode
+    if (name === 'productCode') {
+        setProductCode(value); // Update productCode separately
+        fetchProductDetails(value);
+        return;
+    }
+
+    // Ensure updatedData is initialized correctly
+    const updatedData = { ...localFormData, [name]: value };
+
         const unitCost = parseFloat(updatedData.unitCost) || 0;
         const ourMarginPercentage = parseFloat(updatedData.ourMarginPercentage) || 0;
         const otherMarginPercentage = parseFloat(updatedData.otherMarginPercentage) || 0;
@@ -24,9 +59,9 @@ const CostingModal = ({ showModal, closeModal, formData, onChange, onSubmit }) =
         updatedData.ourMarginValue = (unitCost * ourMarginPercentage) / 100;
         updatedData.otherMarginValue = (unitCost * otherMarginPercentage) / 100;
         updatedData.pricePlusMargin = updatedData.ourMarginValue + updatedData.otherMarginValue;
-        updatedData.sellingRate = updatedData.pricePlusMargin / 0.9; // Selling Rate Before Discount Calculation
-        updatedData.sellingRateRounded = Math.ceil(updatedData.sellingRate / 10) * 10; // Round to nearest 10 (upwards)
-        updatedData.unitPrice = updatedData.sellingRateRounded; // Unit Price matches Selling Rate Rounded
+        updatedData.sellingRate = updatedData.pricePlusMargin / 0.9; 
+        updatedData.sellingRateRounded = Math.ceil(updatedData.sellingRate / 10) * 10; 
+        updatedData.unitPrice = updatedData.sellingRateRounded; 
         updatedData.discountValue = (updatedData.sellingRateRounded * discountPercentage) / 100;
         updatedData.discountedPrice = updatedData.sellingRateRounded - updatedData.discountValue;
         updatedData.amount = updatedData.discountedPrice * qty;
@@ -36,9 +71,11 @@ const CostingModal = ({ showModal, closeModal, formData, onChange, onSubmit }) =
         onChange(updatedData);
     };
 
+    
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(localFormData);
+        onSubmit({ ...localFormData, productCode }); 
         closeModal();
     };
 
@@ -87,4 +124,4 @@ const CostingModal = ({ showModal, closeModal, formData, onChange, onSubmit }) =
     );
 };
 
-export default CostingModal;
+export default CostingModal; 
