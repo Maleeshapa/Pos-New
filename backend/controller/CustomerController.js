@@ -3,12 +3,22 @@ const { Op } = require('sequelize');
 
 async function createCustomer(req, res) {
     try {
-        const { cusName, cusCode, cusAddress, cusPhone, cusJob, cusOffice,cusStore } = req.body;
+        const { cusName, cusAddress, cusPhone, cusJob, cusOffice, cusStore } = req.body;
 
         // Validate required fields
         if (!cusName || !cusAddress || !cusStore) {
             return res.status(400).json({ error: "All fields are required." });
         }
+
+        // Generate cusCode
+        const lastCustomer = await Customer.findOne({
+            order: [["cusCode", "DESC"]],
+        });
+
+        const lastCusCode = lastCustomer?.cusCode;
+        const lastNumber = parseInt(lastCusCode.slice(3), 10);
+        const newNumber = lastNumber + 1;
+        const cusCode = `CUS${newNumber.toString().padStart(3, "0")}`;
 
         // Create new Customer
         const newCustomer = await Customer.create({
@@ -18,7 +28,7 @@ async function createCustomer(req, res) {
             cusPhone,
             cusJob,
             cusOffice,
-            cusStore
+            cusStore,
         });
 
         // Return success response
@@ -39,6 +49,7 @@ async function createCustomer(req, res) {
         return res.status(500).json({ error: `An internal server error occurred: ${error.message}` });
     }
 }
+
 
 async function getAllCustomers(req, res) {
     try {
