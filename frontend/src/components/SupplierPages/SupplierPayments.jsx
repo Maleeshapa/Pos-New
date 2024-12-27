@@ -7,45 +7,63 @@ function SupplierPayments() {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedStockPay, setSelectedStockPay] = useState(null);
+
   const columns = ['#', 'Supplier Name', 'Cheque Amount', 'Cash Amount', 'Total Quantity', 'Vat %', 'Total Amount', 'Due Amount'];
+  const btnName = ['Add Product'];
 
   useEffect(() => {
     fetchStockPaymentsList();
-  });
+  }, []);
 
   const fetchStockPaymentsList = async () => {
     try {
       const response = await fetch(`${config.BASE_URL}/stockPayments`);
       if (!response.ok) {
-        setError(`Failed to fetch supplier payments list: ${response.status} ${response.statusText}`);
+        throw new Error(`Failed to fetch supplier payments list: ${response.status} ${response.statusText}`);
       }
       const stockPay = await response.json();
       const formattedData = stockPay.map(stockPay => [
         stockPay.stockPaymentId || '-',
         stockPay.supplier?.supplierName || '-',
-        stockPay.chequeAmount !== 0 ? stockPay.chequeAmount : '-',
-        stockPay.cashAmount !== 0 ? stockPay.cashAmount : '-',
-        stockPay.stockQty !== 0 ? stockPay.stockQty : '-',
-        stockPay.vat !== 0 ? stockPay.vat : '-',
-        stockPay.total !== 0 ? stockPay.total : '-',
-        stockPay.due !== 0 ? stockPay.due : '-',
+        stockPay.chequeAmount || '-',
+        stockPay.cashAmount || '-',
+        stockPay.stockQty || '-',
+        stockPay.vat || '-',
+        stockPay.total || '-',
+        stockPay.due || '-',
       ]);
-
       setData(formattedData);
-      setIsLoading(false);
     } catch (err) {
-      setError(`Error fetching supplier payments list: ${err.message}`);
+      setError(err.message);
+    } finally {
       setIsLoading(false);
     }
   };
 
-  const handleEditClick = (payment) => {
-    setIsModalOpen(true);
+  const handleAddStockPay = () => {
+    setSelectedStockPay(null);
+    setShowEditModal(true);
+  };
+
+  const handleEditClick = (rowIndex) => {
+    const selectedStockPayData = data[rowIndex];
+    setSelectedStockPay({
+      stockPaymentId: selectedStockPayData[0],
+      supplierName: selectedStockPayData[1],
+      chequeAmount: selectedStockPayData[2],
+      cashAmount: selectedStockPayData[3],
+      stockQty: selectedStockPayData[4],
+      vat: selectedStockPayData[5],
+      total: selectedStockPayData[6],
+      due: selectedStockPayData[7],
+    });
+    setShowEditModal(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
+    setShowEditModal(false);
   };
 
   const title = 'Supplier Payment Details';
@@ -54,16 +72,17 @@ function SupplierPayments() {
   return (
     <div>
       <div className="scrolling-container">
-        <h4>Supplier Payment Details</h4>
-        <h4>Product List</h4>
+        <h4>{title}</h4>
         {isLoading ? (
           <p>Loading...</p>
         ) : error ? (
           <p>Error: {error}</p>
         ) : (
           <Table
-            search={'Search by Supplier Name'}
+            search="Search by Supplier Name"
             data={data}
+            onAdd={handleAddStockPay}
+            btnName={btnName}
             columns={columns}
             showButton={false}
             showDate={false}
@@ -74,11 +93,12 @@ function SupplierPayments() {
             onEdit={handleEditClick}
           />
         )}
-        {isModalOpen && (
-          <StockPaymentModel
-            closeModal={handleCloseModal}
-          />
-        )}
+        <StockPaymentModel
+          showModal={showEditModal}
+          closeModal={handleCloseModal}
+          onSave={fetchStockPaymentsList}
+          stockPayment={selectedStockPay}
+        />
       </div>
     </div>
   );

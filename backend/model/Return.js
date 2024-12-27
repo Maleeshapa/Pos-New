@@ -14,32 +14,12 @@ const Return = sequelize.define(
             primaryKey: true,
             autoIncrement: true,
         },
-        returnItemType: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        returnQty: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        returnNote: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
         returnItemDate: {
             type: DataTypes.DATE,
             allowNull: false,
         },
         returnAmount: {
             type: DataTypes.FLOAT,
-            allowNull: false,
-        },
-        products_productId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: Product,
-                key: "productId",
-            },
             allowNull: false,
         },
         store_storeId: {
@@ -80,10 +60,6 @@ const Return = sequelize.define(
         timestamps: false,
     }
 );
-Return.belongsTo(Product, {
-    foreignKey: "products_productId",
-    as: "products",
-});
 Return.belongsTo(Store, {
     foreignKey: "store_storeId",
     as: "store",
