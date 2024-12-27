@@ -13,15 +13,16 @@ const CategoryController = require("./controller/CategoryController");
 const ProductController = require("./controller/ProductController");
 const StockController = require("./controller/StockController");
 const StockPaymentController = require("./controller/StockPaymenTController");
+const StockHistoryController = require('./controller/StockHistoryController');
 const InvoiceController = require("./controller/InvoiceController");
 const TransactionController = require("./controller/TransactionController");
 const StoreController = require("./controller/StoreController");
 const ReturnController = require("./controller/ReturnController");
+const ReturnProductController = require("./controller/ReturnProductController");
 const ExpenseController = require("./controller/ExpensesController");
 const ExpensesCatController = require("./controller/ExpensesCatController");
 const ReportController = require("./controller/Reports/ReportController");
 const ProductNStockController = require("./controller/Reports/ProductStockController");
-const StockHistoryController = require('./controller/StockHistoryController');
 const InvoiceProductController = require('./controller/InvoiceProduct');
 const CustomerController = require('./controller/CustomerController');
 // const CostingController = require("./controller/CostingController");
@@ -134,6 +135,11 @@ app.delete("/store/:id", StoreController.deleteStore);
 app.post("/return", ReturnController.createReturn);
 app.get("/returns", ReturnController.getAllReturns);
 app.get("/return/:id", ReturnController.getReturnById);
+
+//returnProduct routes
+app.post("/returnProduct", ReturnProductController.createReturnProduct);
+app.get("/returnProducts", ReturnProductController.getAllReturnProducts);
+app.get("/returnProduct/:id", ReturnProductController.getAllReturnProductsById);
 
 //expenses routes
 app.post("/expense", ExpenseController.createExpense);

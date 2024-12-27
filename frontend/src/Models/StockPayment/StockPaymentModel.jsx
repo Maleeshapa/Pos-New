@@ -118,25 +118,25 @@ function StockPaymentModel({ showModal, closeModal, onSave, stockPayment }) {
                 <form onSubmit={handleSubmit} className='mt-4'>
                     <div className="form-group">
                         <label htmlFor="supplierName">Supplier Name</label>
-                        <input type="text" className="form-control" id="supplierName" name='name' value={formData.name} onChange={handleChange} readOnly />
+                        <input type="text" className="form-control" id="supplierName" name='name' value={formData.name} onChange={handleChange} disabled />
                     </div>
                     <div className="form-group">
                         <label htmlFor="stockQty">Stock Quantity</label>
-                        <input type="text" className="form-control" id="stockQty" name='stockQty' value={formData.stockQty} onChange={handleChange} readOnly />
+                        <input type="text" className="form-control" id="stockQty" name='stockQty' value={formData.stockQty} onChange={handleChange} disabled />
                     </div>
                     <div className="form-group">
                         <label htmlFor="vat">Vat %</label>
-                        <input type="text" className="form-control" id="vat" name='vat' value={formData.vat} onChange={handleChange} readOnly />
+                        <input type="text" className="form-control" id="vat" name='vat' value={formData.vat} onChange={handleChange} disabled />
                     </div>
                     <div className="form-group">
                         <label htmlFor="total">Total</label>
-                        <input type="text" className="form-control" id="total" name='total' value={formData.total} onChange={handleChange} readOnly />
+                        <input type="text" className="form-control" id="total" name='total' value={formData.total} onChange={handleChange} disabled />
                     </div>
                     <div className="form-group">
                         <label htmlFor="due">Due</label>
-                        <input type="text" className="form-control" id="due" name='due' value={formData.due} onChange={handleChange} readOnly />
+                        <input type="text" className="form-control" id="due" name='due' value={formData.due} onChange={handleChange} disabled />
                     </div>
-                    
+
                     <div className="form-group">
                         <label htmlFor="chequeAmount">Cheque Amount</label>
                         <input type="text" className="form-control" id="chequeAmount" name='chequeAmount' value={formData.chequeAmount} onChange={handleChange} />

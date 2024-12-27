@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import './Stock.css';
 import config from '../../config';
+import Table from '../Table/Table';
 
 const CreateProductReturn = () => {
-    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
-    const [productSearch, setProductSearch] = useState('');
     const [stores, setStores] = useState([]);
     const [users, setUsers] = useState([]);
-    const [productSuggestions, setProductSuggestions] = useState([]);
     const [data, setData] = useState([]);
     const Columns = ["id", "product", "Type", "qty", "price"];
 
@@ -84,10 +81,8 @@ const CreateProductReturn = () => {
             ]);
 
             setData(formattedData);
-            setIsLoading(false);
         } catch (err) {
             setError(err.message);
-            setIsLoading(false);
         }
     };
 
@@ -168,181 +163,66 @@ const CreateProductReturn = () => {
         }
     };
 
-    const handleProductSearch = async (e) => {
-        const query = e.target.value;
-        setProductSearch(query);
-
-        if (query.length >= 2) {
-            try {
-                const response = await fetch(`${config.BASE_URL}/products/suggestions?query=${query}`);
-                if (!response.ok) throw new Error('Failed to fetch product suggestions');
-                const suggestions = await response.json();
-                setProductSuggestions(suggestions);
-            } catch (err) {
-                setError(err.message);
-            }
-        } else {
-            setProductSuggestions([]);
-        }
-    };
-
-    const handleProductSelect = async (productName) => {
-        setProductSearch(productName);
-        setProductSuggestions([]);
-
-        try {
-            const productResponse = await fetch(`${config.BASE_URL}/product/productName/${productName}`);
-            if (!productResponse.ok) throw new Error('Product not found');
-            const product = await productResponse.json();
-
-            const stockResponse = await fetch(`${config.BASE_URL}/stock/product/${product.productId}`);
-            if (!stockResponse.ok) throw new Error('Stock ID not found for this product');
-            const stock = await stockResponse.json();
-
-            setFormData(prevData => ({
-                ...prevData,
-                product: product.productId,
-                productNo: product.productCode,
-                productName: product.productName,
-                productNote: `${product.productDescription} ${product.productWarranty}`,
-                stockId: stock.stockId,
-            }));
-        } catch (err) {
-            setError(err.message);
-        }
-    };
-
     return (
-        <div>
-            <div className="scrolling-container">
-                <h4>Create Product Return</h4>
-                {error && (
-                    <div className="alert alert-danger" role="alert">
-                        {error}
+        <div className="scrolling-container">
+            <h4>Create Product Return</h4>
+            {error && (
+                <div className="alert alert-danger" role="alert">
+                    {error}
+                </div>
+            )}
+
+            {successMessage && (
+                <div className="alert alert-success" role="alert">
+                    {successMessage}
+                </div>
+            )}
+            <form onSubmit={handleSubmit} className='mb-2' style={{ paddingLeft: '20px' }}>
+                <div className="row">
+                    <div className="col-md-3 mb-3">
+                        <label className="form-label">Invoice Number</label>
+                        <input type="number" className="form-control" name="invoiceNo" value={formData.invoiceNo} onChange={handleChange} onWheel={(e) => e.target.blur()} />
                     </div>
-                )}
-
-                {successMessage && (
-                    <div className="alert alert-success" role="alert">
-                        {successMessage}
+                    <div className="col-md-3 mb-3">
+                        <label className="form-label">Cashier</label>
+                        <input type="text" name="userName" value={formData.userName} className="form-control" disabled />
                     </div>
-                )}
-                <form onSubmit={handleSubmit}>
-                    <div className="row">
-                        <div className="customer px-4 col-md-4">
-                            <div className="Stock-details">
-                                <label htmlFor="invoiceNo">Invoice Number</label>
-                                <input type="number" className="form-control" name="invoiceNo" value={formData.invoiceNo} onChange={handleChange} onWheel={(e) => e.target.blur()} />
-                            </div>
-                            <div className="Stock-details mb-2">
-                                <label htmlFor="returnType">Return Type</label>
-                                <select name="returnType" className="form-control" value={formData.returnType} onChange={handleChange}>
-                                    <option value="">Select Type</option>
-                                    <option value="Refund">Refund</option>
-                                    <option value="Damage">Damaged</option>
-                                    <option value="WarrantyClaim">Warranty Claim</option>
-                                    <option value="Exchange">Exchange</option>
-                                </select>
-                            </div>
-                            <div className="Stock-details mb-2">
-                                <label htmlFor="user">Cashier</label>
-                                <input
-                                    type="text"
-                                    name="userName"
-                                    value={formData.userName}
-                                    className="form-control"
-                                    readOnly
-                                />
-                            </div>
-
-                            <div className="Stock-details mb-2">
-                                <label htmlFor="store">Store</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    name="store"
-                                    value={
-                                        stores.find(store => store.storeId === formData.store)?.storeName || ""
-                                    }
-                                    readOnly
-                                />
-                            </div>
-                            <div className="Stock-details mb-2">
-                                <label htmlFor="returnDate">Return Date</label>
-                                <input type="datetime-local" className="form-control" name="returnDate" value={formData.returnDate} onChange={handleChange} readOnly />
-                            </div>
-                            <div className="Stock-details mb-2">
-                                <label htmlFor="note">Note</label>
-                                <textarea className="form-control" name="note" value={formData.note} onChange={handleChange} placeholder="Add your note here" rows={3} />
-                            </div>
-                        </div>
-
-                        <div className="product col-md-8">
-                            <div className="row">
-                                <div className="Stock-details col-md-4 mb-2">
-                                    <label htmlFor="productName">Product Name</label>
-                                    <input type="text" className="form-control" name="productName" value={productSearch} onChange={handleProductSearch} />
-                                    {productSuggestions.length > 0 && (
-                                        <ul className="list-group mt-0">
-                                            {productSuggestions.map((product, index) => (
-                                                <li
-                                                    key={index}
-                                                    className="list-group-item list-group-item-action"
-                                                    onClick={() => handleProductSelect(product.productName)}
-                                                >
-                                                    {product.productName}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </div>
-                                <div className="Stock-details col-md-4">
-                                    <label htmlFor="productNo">Product Number</label>
-                                    <input type="text" className="form-control" name="productNo" value={formData.productNo} onChange={handleChange} />
-                                </div>
-                            </div>
-
-                            <div className="row">
-                                <div className="Stock-details col-md-4 mb-2">
-                                    <label htmlFor="qty">Quantity</label>
-                                    <input type="number" className="form-control" name="qty" value={formData.qty} onChange={handleChange} onWheel={(e) => e.target.blur()} />
-                                </div>
-                                <div className="Stock-details col-md-4 mb-2">
-                                    <label htmlFor="productNote">Note / Warranty</label>
-                                    <textarea className="form-control" name="productNote" value={formData.productNote} onChange={handleChange} rows={2} />
-                                </div>
-                                <div className="col-md-4 mt-5">
-                                    <button className="btn btn-danger btn-md" type="button" onClick={() => setFormData(initialFormData)}>Clear</button>
-                                    <button className="btn btn-primary btn-md">Proceed</button>
-                                </div>
-                            </div>
-
-                            {/* <div className="product-table">
-                                {isLoading ? (
-                                    <p>Loading...</p>
-                                ) : (
-                                    <Table
-                                        data={data}
-                                        columns={Columns}
-                                        showSearch={false}
-                                        showButton={false}
-                                        showActions={false}
-                                        showRow={false}
-                                        showDate={false}
-                                        showPDF={false}
-                                    />
-                                )}
-                            </div> */}
-
-                        </div>
+                    <div className="col-md-3 mb-3">
+                        <label className="form-label">Store</label>
+                        <input type="text" className="form-control" name="store"
+                            value={
+                                stores.find(store => store.storeId === formData.store)?.storeName || ""
+                            }
+                            disabled
+                        />
                     </div>
-                    {/* <div className="d-grid d-md-flex me-md-2 justify-content-end px-5">
-                        <button className="btn btn-danger btn-md mb-2" type="button" onClick={() => setFormData(initialFormData)}>Clear</button>
-                        <button className="btn btn-primary btn-md mb-2" type="submit">Proceed</button>
-                    </div> */}
-                </form>
+                    <div className="col-md-3 mb-3">
+                        <label className="form-label">Date</label>
+                        <input type="datetime-local" className="form-control" name="returnDate" value={formData.returnDate} onChange={handleChange} disabled />
+                    </div>
+                </div>
+            </form>
+
+
+            <div className="col-md-12">
+                <div className="product-table">
+                    <Table
+                        data={data}
+                        columns={Columns}
+                        showSearch={false}
+                        showButton={false}
+                        showActions={false}
+                        showRow={false}
+                        showDate={false}
+                        showPDF={false}
+                    />
+                </div>
             </div>
-        </div>
+            <div className="d-grid d-md-flex me-md-2 justify-content-end px-5">
+                <button className="btn btn-danger btn-md mb-2" type="button" onClick={() => setFormData(initialFormData)}>Clear</button>
+                <button className="btn btn-primary btn-md mb-2" type="submit">Proceed</button>
+            </div>
+        </div >
     );
 };
 
