@@ -5,7 +5,7 @@
   }
   /*invoice style---------------------------------------------------------*/
   .invoice-2 {
-    width: 800px;
+    width: 100%;
     margin: 0 auto;
     padding: 20px;
     font-family: Arial, sans-serif;
@@ -38,6 +38,7 @@
   .billing-details {
     display: flex;
     justify-content: space-between;
+    gap: 15%;
   }
   
   .invoice-info {
@@ -158,3 +159,13 @@
   .details input{
     width: 200px;
   }
+
+  .invoice-table .not-delivery {
+    color: red !important;
+    font-weight: bold;
+}
+
+  .invoice-table .delivery {
+    color: rgb(0, 255, 47) !important;
+    font-weight: bold;
+}

@@ -5,7 +5,7 @@
   }
   /*invoice style---------------------------------------------------------*/
   .invoice-details-page {
-    width: 800px;
+    width: 100%;
     margin: 0 auto;
     border: 1px solid #ddd;
     padding: 20px;
@@ -17,8 +17,8 @@
     align-items: center;
   }
   
-  .header-img {
-    width: 100%;
+  .header-img-details-page {
+    width: 50%;
     height: 100%;
   }
   

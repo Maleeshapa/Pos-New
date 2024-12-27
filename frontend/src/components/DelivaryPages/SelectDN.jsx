@@ -26,6 +26,7 @@ const SelectDN = () => {
   const [Transaction, setTransaction] = useState([]);
   const [ShowRemove, setShowRemove] = useState(null);
 
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -127,6 +128,7 @@ const SelectDN = () => {
       alert('An error occurred while fetching the transaction');
     }
   };
+  
   const removeProduct = (index) => {
     setInvoiceProducts(prevProducts => prevProducts.filter((_, i) => i !== index));
   };
@@ -142,8 +144,7 @@ const SelectDN = () => {
           console.log(`Updating product with ID: ${product.id}, Qty: ${updatedQty}`);
 
           const deliveryData = {
-            invoiceQty: updatedQty,
-            deliveryStatus: 'Delivered',
+            sendQty: updatedQty,
           };
 
           const response = await fetch(`${config.BASE_URL}/deliveryNotes/${product.id}`, {
@@ -279,17 +280,46 @@ const SelectDN = () => {
                     />
                   </div>
                 </div>
+
+                <div className="options">
+                  <div className="invoice-type">
+                    <form action="">
+                      <br />
+                      <label className='invoice-type-label' htmlFor="">Address</label>
+                      <input
+                        type="checkbox"
+                        name="address"
+                        value="address"
+                        checked={showAddress}
+                        onChange={handleAddress}
+                      />
+                      <br />
+                      <label className='invoice-type-label' htmlFor="">Bank</label>
+                      <input
+                        type="checkbox"
+                        name="bank"
+                        value="bank"
+                        checked={showBank}
+                        onChange={handleBank}
+                      />
+                    </form>
+                  </div>
+                  <button onClick={handlePrint} className='btn btn-success'>Print Invoice</button>
+                </div>
               </section>
 
               {/* product table---------------------------------------------------------------- */}
-              <table className="invoice-table">
+              <table className="invoice-table" >
                 <thead>
                   <tr>
                     <th>S/N</th>
                     <th colSpan={2}>Description</th>
-                    <th>Qty</th>
+                    <th>Quantity</th>
+                    <th className='text-center'>Delivery Quantity</th>
+                    <th className='text-center'>Delivered Quantity</th>
+                    <th className='text-center'>Current Delivery Quantity</th>
                     {/* <th>Unit Price</th>
-                                        <th>Total LKR</th> */}
+                    <th>Total LKR</th> */}
                     <th>Status</th>
                     <th>Action</th>
                   </tr>
@@ -302,16 +332,16 @@ const SelectDN = () => {
                   ) : (
                     invoiceProducts.map((invoiceProduct, index) => (
                       <tr key={index}
-
                       >
                         <td id='table-sn'>{index + 1}</td>
                         <td colSpan={2} id='tableDes'>{invoiceProduct.product.productName} </td>
-                        <td
-                          id={`table-sn-${index}`} // Add a unique ID for each quantity cell
+                        <td className='text-center' id='table-sn'>{invoiceProduct.invoiceQty}</td>
+                        <td className='text-center' id='table-sn'>{invoiceProduct.sendQty}</td>
+                        <td className='text-center' id='table-sn'></td>
+                        <td className='text-center' id={`table-sn-${index}`}
                           contentEditable
                           suppressContentEditableWarning
-                        >
-                          {invoiceProduct.invoiceQty}
+                        >  
                         </td>
                         <td className={invoiceProduct.deliveryStatus === 'notDelivered' ? 'not-delivery' : 'delivery'} >{invoiceProduct.deliveryStatus}</td>
                         <td onMouseEnter={() => setShowRemove(index)}
@@ -359,7 +389,7 @@ const SelectDN = () => {
                       )}
                     </td>
                     <td>Total Quantity</td>
-                    <td>
+                    <td className='text-center'>
                       {invoiceProducts.reduce((total, product) => total + Number(product.invoiceQty), 0)}
                     </td>
                   </tr>
@@ -368,32 +398,7 @@ const SelectDN = () => {
             </div>
           </div>
 
-          <div className="options">
-            <div className="invoice-type">
-              <form action="">
-                <br />
-                <label className='invoice-type-label' htmlFor="">Address</label>
-                <input
-                  type="checkbox"
-                  name="address"
-                  value="address"
-                  checked={showAddress}
-                  onChange={handleAddress}
-                />
-                <br />
-                <label className='invoice-type-label' htmlFor="">Bank</label>
-                <input
-                  type="checkbox"
-                  name="bank"
-                  value="bank"
-                  checked={showBank}
-                  onChange={handleBank}
-                />
-              </form>
-            </div>
-            <button onClick={handlePrint} className='btn btn-success'>Print Invoice</button>
 
-          </div>
 
         </div>
       </div>

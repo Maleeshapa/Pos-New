@@ -127,18 +127,18 @@ const SalesDetails = () => {
                         <div id="invoice-card">
                             {colkan && (
                                 <section className="invoice-header">
-                                    <img src={one} alt="" className="header-img" />
+                                    <img src={one} alt="" className="header-img-details-page" />
                                 </section>
                             )}
                             {haman && (
                                 <section className="invoice-header">
-                                    <img src={two} alt="" className="header-img" />
+                                    <img src={two} alt="" className="header-img-details-page" />
                                 </section>
 
                             )}
                             {terra && (
                                 <section className="invoice-header">
-                                    <img src={three} alt="" className="header-img" />
+                                    <img src={three} alt="" className="header-img-details-page" />
                                 </section>
                             )}
                             <section className="billing-details">

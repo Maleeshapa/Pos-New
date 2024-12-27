@@ -13,7 +13,7 @@ const createDeliveryNote = async (req, res) => {
         }
 
         for (const deliveryNote of deliveryNotes) {
-            const { productId, stockId, invoiceId, invoiceNo, totalAmount, invoiceQty, deliveryStatus } = deliveryNote;
+            const { productId, stockId, invoiceId, invoiceNo, totalAmount, invoiceQty,sendQty, deliveryStatus } = deliveryNote;
 
             // Check if the product exists
             const product = await Product.findByPk(productId);
@@ -36,7 +36,7 @@ const createDeliveryNote = async (req, res) => {
         // Process invoice products if all stock is sufficient
         const createdDeliveryStatus = [];
         for (const deliveryNote of deliveryNotes) {
-            const { productId, stockId, invoiceId, invoiceNo, totalAmount, invoiceQty, deliveryStatus } = deliveryNote;
+            const { productId, stockId, invoiceId, invoiceNo, totalAmount, invoiceQty,sendQty, deliveryStatus } = deliveryNote;
 
             // Create the invoice product
             const newDeliveryNote = await DeliveryNote.create({
@@ -46,6 +46,7 @@ const createDeliveryNote = async (req, res) => {
                 invoiceNo,
                 totalAmount,
                 invoiceQty,
+                sendQty,
                 deliveryStatus,
             });
 
@@ -164,7 +165,7 @@ const deleteDeliveryNote = async (req, res) => {
 const updateDeliveryNoteStatus = async (req, res) => {
     try {
         const { id } = req.params;
-        const { status, invoiceQty } = req.body;
+        const { sendQty } = req.body;
 
         // Find the delivery note by its primary key
         const deliveryNote = await DeliveryNote.findByPk(id);
@@ -174,14 +175,12 @@ const updateDeliveryNoteStatus = async (req, res) => {
         }
 
         // Validate the input quantity if provided
-        if (typeof invoiceQty !== 'undefined' && invoiceQty < 0) {
+        if (typeof sendQty !== 'undefined' && sendQty < 0) {
             return res.status(400).json({ message: 'Invalid quantity provided' });
         }
 
-        // Update the delivery status and invoice quantity dynamically
-        deliveryNote.deliveryStatus = status || 'Delivered';
-        if (typeof invoiceQty !== 'undefined') {
-            deliveryNote.invoiceQty = invoiceQty;
+        if (typeof sendQty !== 'undefined') {
+            deliveryNote.sendQty = sendQty;
         }
 
         // Save the changes

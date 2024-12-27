@@ -48,6 +48,10 @@ const DeliveryNote = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
+        sendQty: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
         deliveryStatus: {
             type: DataTypes.STRING,
             allowNull: false,

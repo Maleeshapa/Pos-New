@@ -417,6 +417,7 @@ const NewSales = ({ invoice }) => {
         invoiceNo: invoiceResult.invoiceNo,
         totalAmount: row[4] * row[5],
         invoiceQty: row[5],
+        sendQty: row[5],
         deliveryStatus: delivary,
       }));
       console.log('Invoice No before sending:', formData.invoiceNo);
