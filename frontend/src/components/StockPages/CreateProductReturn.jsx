@@ -238,6 +238,7 @@ const CreateProductReturn = () => {
                                 <label htmlFor="returnType">Return Type</label>
                                 <select name="returnType" className="form-control" value={formData.returnType} onChange={handleChange}>
                                     <option value="">Select Type</option>
+                                    <option value="Refund">Refund</option>
                                     <option value="Damage">Damaged</option>
                                     <option value="WarrantyClaim">Warranty Claim</option>
                                     <option value="Exchange">Exchange</option>

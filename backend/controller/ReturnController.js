@@ -58,7 +58,7 @@ const createReturn = async (req, res) => {
         });
 
         // If return type is "Exchange," adjust the stock quantity
-        if (returnItemType === "Exchange") {
+        if (returnItemType === "Refund") {
             const updatedStockQty = parseFloat(stock.stockQty) + parseFloat(returnQty);
             await stock.update({ stockQty: updatedStockQty });
         }
