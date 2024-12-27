@@ -17,6 +17,7 @@ const Table = ({
     btnName,
     onEdit,
     onDelete,
+    onRowClick,
     showSearch = true,
     showButton = true,
     showActions = true,
@@ -218,7 +219,12 @@ const Table = ({
                             </thead>
                             <tbody>
                                 {currentItems.map((datum, rowIndex) => (
-                                    <tr key={rowIndex}>
+                                    <tr
+                                        key={rowIndex}
+                                        onClick={() =>
+                                            onRowClick && onRowClick(datum)
+                                        } // Add onRowClick handler
+                                    >
                                         {datum.map((item, colIndex) => (
                                             <td
                                                 key={colIndex}
@@ -234,7 +240,10 @@ const Table = ({
                                                 {showEdit && (
                                                     <button
                                                         className="btn btn-warning btn-sm mr-3"
-                                                        onClick={() => onEdit(rowIndex)}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation(); // Prevent triggering onRowClick
+                                                            onEdit(rowIndex);
+                                                        }}
                                                     >
                                                         <FontAwesomeIcon icon={faPen} />
                                                     </button>
@@ -242,7 +251,10 @@ const Table = ({
                                                 {showDelete && (
                                                     <button
                                                         className="btn btn-danger btn-sm"
-                                                        onClick={() => onDelete(rowIndex)}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation(); // Prevent triggering onRowClick
+                                                            onDelete(rowIndex);
+                                                        }}
                                                     >
                                                         <FontAwesomeIcon icon={faTrash} />
                                                     </button>

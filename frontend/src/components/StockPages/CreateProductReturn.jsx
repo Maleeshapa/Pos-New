@@ -8,7 +8,8 @@ const CreateProductReturn = () => {
     const [stores, setStores] = useState([]);
     const [users, setUsers] = useState([]);
     const [data, setData] = useState([]);
-    const Columns = ["id", "product", "Type", "qty", "price"];
+    const [returnDetails, setReturnDetails] = useState([]); // For dynamic fields
+    const Columns = ["id", "product", "Qty", "price"];
 
     const getSriLankanTime = () => {
         const now = new Date();
@@ -18,19 +19,15 @@ const CreateProductReturn = () => {
     };
 
     const initialFormData = {
-        cusName: '',
         invoiceNo: '',
-        returnType: '',
         user: '',
         userName: '',
         store: '',
         returnDate: getSriLankanTime(),
-        note: '',
-        product: '',
-        productNo: '',
-        productName: '',
-        qty: '',
-        productNote: '',
+        prodName: '',
+        returnQty: '',
+        returnType: '',
+        returnNote: '',
     };
 
     const [formData, setFormData] = useState(initialFormData);
@@ -38,11 +35,48 @@ const CreateProductReturn = () => {
     useEffect(() => {
         fetchStores();
         fetchUsers();
-        fetchReturnData();
         fetchUserId();
     }, []);
 
+    const handleRowClick = (rowData) => {
+        setReturnDetails((prevDetails) => [
+            ...prevDetails,
+            {
+                prodName: rowData[1],
+                returnQty: '',
+                returnType: '',
+                returnNote: '',
+            },
+        ]);
+    };
 
+    const handleDynamicFieldChange = (index, name, value) => {
+        const updatedDetails = [...returnDetails];
+        updatedDetails[index][name] = value;
+        setReturnDetails(updatedDetails);
+    };
+
+    const fetchInvoiceData = async (invoiceNo) => {
+        try {
+            const response = await fetch(`${config.BASE_URL}/invoiceProduct/${invoiceNo}`);
+            if (response.ok) {
+                const invoiceData = await response.json();
+                const formattedData = invoiceData.map((inv) => [
+                    inv.product?.productId,
+                    inv.product?.productName,
+                    inv.invoiceQty,
+                    inv.product?.productSellingPrice,
+                ]);
+                setData(formattedData);
+                return invoiceData;
+            } else {
+                console.error('invoice not found');
+            }
+        } catch (err) {
+            setError(err.message);
+            return null;
+        }
+    };
 
     const fetchUserId = async () => {
         const userName = localStorage.getItem('userName');
@@ -65,33 +99,31 @@ const CreateProductReturn = () => {
         }
     };
 
+    const handleChange = async (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
 
-    const fetchReturnData = async () => {
-        try {
-            const response = await fetch(`${config.BASE_URL}/returns`);
-            if (!response.ok) throw new Error('Failed to fetch return list');
-            const returnList = await response.json();
-
-            const formattedData = returnList.map(returns => [
-                returns.returnItemId,
-                returns.products?.productName,
-                returns.returnItemType,
-                returns.returnQty,
-                returns.products?.productSellingPrice,
-            ]);
-
-            setData(formattedData);
-        } catch (err) {
-            setError(err.message);
+        if (name === "invoiceNo" && value) {
+            await fetchInvoiceData(value);
         }
     };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prevData => ({
-            ...prevData,
-            [name]: value,
-        }));
+    const fetchInvoiceId = async (invoiceNo) => {
+        try {
+            const response = await fetch(`${config.BASE_URL}/invoice/invoiceNo/${invoiceNo}`);
+            if (response.ok) {
+                const invoiceData = await response.json();
+                return invoiceData.invoiceId;
+            } else {
+                throw new Error('Invoice not found');
+            }
+        } catch (error) {
+            setError(error.message);
+            return null;
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -99,37 +131,42 @@ const CreateProductReturn = () => {
         setError(null);
         setSuccessMessage(null);
 
+        if (!formData.invoiceNo) {
+            setError("Please enter an invoice number");
+            return;
+        }
+
         try {
-            const invoiceResponse = await fetch(`${config.BASE_URL}/invoiceProduct/${formData.invoiceNo}`);
-            if (!invoiceResponse.ok) throw new Error('Invoice not found.');
-            const invoiceData = await invoiceResponse.json();
+            const invoiceId = await fetchInvoiceId(formData.invoiceNo);
+            if (!invoiceId) {
+                setError("Invoice ID not found for the entered invoice number");
+                return;
+            }
 
             const response = await fetch(`${config.BASE_URL}/return`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    returnItemType: formData.returnType,
                     returnItemDate: formData.returnDate,
-                    returnQty: formData.qty,
-                    returnNote: formData.note,
-                    productId: formData.product,
                     storeId: formData.store,
                     userId: formData.user,
-                    invoiceId: invoiceData[0]?.invoiceId,
-                    stockId: formData.stockId,
+                    invoiceId,
                 }),
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to create return.');
+                throw new Error(errorData.message || "Failed to create return.");
             }
 
-            const result = await response.json();
-            setSuccessMessage('Return created successfully.');
+            await response.json();
+            setSuccessMessage("Return created successfully.");
             setFormData(initialFormData);
-        } catch (err) {
-            setError(err.message);
+            setData([]);
+            setReturnDetails([]);
+
+        } catch (error) {
+            setError(error.message);
         }
     };
 
@@ -137,13 +174,13 @@ const CreateProductReturn = () => {
         try {
             const response = await fetch(`${config.BASE_URL}/stores`);
             if (!response.ok) throw new Error('Failed to fetch stores');
-            const data = await response.json();
-            setStores(data);
+            const storesData = await response.json();
+            setStores(storesData);
 
-            if (data.length > 0) {
-                setFormData(prevData => ({
-                    ...prevData,
-                    store: data[0].storeId,
+            if (storesData.length > 0) {
+                setFormData(prev => ({
+                    ...prev,
+                    store: storesData[0].storeId,
                 }));
             }
         } catch (err) {
@@ -151,13 +188,12 @@ const CreateProductReturn = () => {
         }
     };
 
-
     const fetchUsers = async () => {
         try {
             const response = await fetch(`${config.BASE_URL}/users`);
             if (!response.ok) throw new Error('Failed to fetch users');
-            const data = await response.json();
-            setUsers(data);
+            const usersData = await response.json();
+            setUsers(usersData);
         } catch (err) {
             setError(err.message);
         }
@@ -171,7 +207,6 @@ const CreateProductReturn = () => {
                     {error}
                 </div>
             )}
-
             {successMessage && (
                 <div className="alert alert-success" role="alert">
                     {successMessage}
@@ -190,9 +225,7 @@ const CreateProductReturn = () => {
                     <div className="col-md-3 mb-3">
                         <label className="form-label">Store</label>
                         <input type="text" className="form-control" name="store"
-                            value={
-                                stores.find(store => store.storeId === formData.store)?.storeName || ""
-                            }
+                            value={stores.find(store => store.storeId === formData.store)?.storeName || ""}
                             disabled
                         />
                     </div>
@@ -200,29 +233,82 @@ const CreateProductReturn = () => {
                         <label className="form-label">Date</label>
                         <input type="datetime-local" className="form-control" name="returnDate" value={formData.returnDate} onChange={handleChange} disabled />
                     </div>
+
+                    <div className="col-md-12">
+                        <div className="product-table">
+                            <Table
+                                data={data || []}
+                                columns={Columns}
+                                showSearch={false}
+                                showButton={false}
+                                showActions={false}
+                                showRow={false}
+                                showDate={false}
+                                showPDF={false}
+                                onRowClick={handleRowClick}
+                            />
+                        </div>
+                    </div>
+
+                    {returnDetails.map((detail, index) => (
+                        <div className='row' key={index}>
+                            <div className="col-md-3 mb-3">
+                                <label className="form-label">Product Name</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="prodName"
+                                    value={detail.prodName}
+                                    onChange={(e) => handleDynamicFieldChange(index, 'prodName', e.target.value)}
+                                />
+                            </div>
+                            <div className="col-md-3 mb-3">
+                                <label className="form-label">Return Quantity</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="returnQty"
+                                    value={detail.returnQty}
+                                    onChange={(e) => handleDynamicFieldChange(index, 'returnQty', e.target.value)}
+                                />
+                            </div>
+                            <div className="col-md-3 mb-3">
+                                <label className="form-label">Return Type</label>
+                                <select
+                                    name="returnType"
+                                    className='form-control'
+                                    value={detail.returnType}
+                                    onChange={(e) => handleDynamicFieldChange(index, 'returnType', e.target.value)}
+                                >
+                                    <option value=" ">Select Options</option>
+                                    <option value="Refund">Refund</option>
+                                    <option value="Damage">Damage</option>
+                                    <option value="Exchange">Exchange</option>
+                                    <option value="Warranty">Warranty Claim</option>
+                                </select>
+                            </div>
+                            <div className="col-md-3 mb-3">
+                                <label className="form-label">Return Note</label>
+                                <textarea
+                                    className="form-control"
+                                    name="returnNote"
+                                    value={detail.returnNote}
+                                    onChange={(e) => handleDynamicFieldChange(index, 'returnNote', e.target.value)}
+                                />
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </form>
 
-
-            <div className="col-md-12">
-                <div className="product-table">
-                    <Table
-                        data={data}
-                        columns={Columns}
-                        showSearch={false}
-                        showButton={false}
-                        showActions={false}
-                        showRow={false}
-                        showDate={false}
-                        showPDF={false}
-                    />
-                </div>
-            </div>
             <div className="d-grid d-md-flex me-md-2 justify-content-end px-5">
-                <button className="btn btn-danger btn-md mb-2" type="button" onClick={() => setFormData(initialFormData)}>Clear</button>
-                <button className="btn btn-primary btn-md mb-2" type="submit">Proceed</button>
+                <button className="btn btn-danger btn-md mb-2" type="button" onClick={() => {
+                    setFormData(initialFormData);
+                    setData([]);
+                }}>Clear</button>
+                <button className="btn btn-primary btn-md mb-2" type="submit" onClick={handleSubmit}>Proceed</button>
             </div>
-        </div >
+        </div>
     );
 };
 

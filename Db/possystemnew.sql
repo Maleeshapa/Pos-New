@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 27, 2024 at 03:05 PM
+-- Generation Time: Dec 27, 2024 at 02:34 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -293,10 +293,10 @@ CREATE TABLE `returnitems` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `returnproducts`
+-- Table structure for table `returnproduct`
 --
 
-CREATE TABLE `returnproducts` (
+CREATE TABLE `returnproduct` (
   `returnProductId` int(11) NOT NULL,
   `stockId` int(11) NOT NULL,
   `invoiceProductId` int(11) NOT NULL,
@@ -646,9 +646,9 @@ ALTER TABLE `returnitems`
   ADD KEY `fk_return_invoice1_idx` (`invoice_invoiceId`);
 
 --
--- Indexes for table `returnproducts`
+-- Indexes for table `returnproduct`
 --
-ALTER TABLE `returnproducts`
+ALTER TABLE `returnproduct`
   ADD PRIMARY KEY (`returnProductId`),
   ADD KEY `returnproduct_ibfk_2` (`invoiceProductId`),
   ADD KEY `returnproduct_ibfk_3` (`returnItemId`),
@@ -792,9 +792,9 @@ ALTER TABLE `returnitems`
   MODIFY `returnItemId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `returnproducts`
+-- AUTO_INCREMENT for table `returnproduct`
 --
-ALTER TABLE `returnproducts`
+ALTER TABLE `returnproduct`
   MODIFY `returnProductId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -913,12 +913,12 @@ ALTER TABLE `returnitems`
   ADD CONSTRAINT `fk_return_user1` FOREIGN KEY (`user_userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `returnproducts`
+-- Constraints for table `returnproduct`
 --
-ALTER TABLE `returnproducts`
-  ADD CONSTRAINT `returnproducts_ibfk_2` FOREIGN KEY (`invoiceProductId`) REFERENCES `invoiceproduct` (`id`) ON UPDATE NO ACTION,
-  ADD CONSTRAINT `returnproducts_ibfk_3` FOREIGN KEY (`returnItemId`) REFERENCES `returnitems` (`returnItemId`) ON UPDATE NO ACTION,
-  ADD CONSTRAINT `returnproducts_ibfk_4` FOREIGN KEY (`stockId`) REFERENCES `stock` (`stockId`) ON UPDATE NO ACTION;
+ALTER TABLE `returnproduct`
+  ADD CONSTRAINT `returnproduct_ibfk_2` FOREIGN KEY (`invoiceProductId`) REFERENCES `invoiceproduct` (`id`) ON UPDATE NO ACTION,
+  ADD CONSTRAINT `returnproduct_ibfk_3` FOREIGN KEY (`returnItemId`) REFERENCES `returnitems` (`returnItemId`) ON UPDATE NO ACTION,
+  ADD CONSTRAINT `returnproduct_ibfk_4` FOREIGN KEY (`stockId`) REFERENCES `stock` (`stockId`) ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `stock`
