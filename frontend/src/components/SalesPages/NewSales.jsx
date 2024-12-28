@@ -31,7 +31,9 @@ const NewSales = ({ invoice }) => {
     return { date: date.split('/').reverse().join('-'), time };
   };
 
-  const Columns = ["Customer Code", 'Customer Name', 'Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty', 'Product ID', 'Stock ID'];
+ // const Columns = ["Customer Code", 'Customer Name', 'Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty', 'Product ID', 'Stock ID'];
+  const Columns = ['Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty', 'Product ID', 'Stock ID'];
+  
   const [formData, setFormData] = useState({
     cusName: '',
     cusNic: '',
@@ -236,8 +238,8 @@ const NewSales = ({ invoice }) => {
       return;
     }
     const newRow = [
-      formData.cusName,
-      formData.cusAddress,
+      // formData.cusName,
+      // formData.cusAddress,
       formData.productNo,
       formData.productName,
       formData.productPrice,
@@ -670,18 +672,74 @@ const NewSales = ({ invoice }) => {
                   <div className="product-details col-md-3 mb-2">
                     <input onChange={handleChange} value={formData.qty} type="number" onWheel={(e) => e.target.blur()} name="qty" className="form-control" id="qty" placeholder="Enter Quantity" />
                   </div>
-                  <div className="product-details col-md-3 mb-2">
+                  
+                  {/* <div className="product-details col-md-3 mb-2">
                     <input onChange={handleChange} value={formData.discount} type="number" onWheel={(e) => e.target.blur()} name="discount" className="form-control" id="discount" placeholder="Product Discount %" />
                   </div>
                   <div className="product-details col-md-3 mb-2">
-                    <input onChange={discount} value={formData.discountRs} type="number" onWheel={(e) => e.target.blur()} name="discountRs" className="form-control" id="discountRs" placeholder="Product DiscountRs LKR" />
-                  </div>
+                    <input onChange={discount} value={formData.discountRs} type="number" onWheel={(e) => e.target.blur()} name="discountRs" className="form-control" id="discountRs" placeholder="Product Discount - Rs LKR" />
+                  </div> */}
+
+                  
+<div className="product-details col-md-3 mb-2">
+  <label htmlFor="discountType">Discount Type</label>
+  <select
+    onChange={(e) => setFormData({ ...formData, discountType: e.target.value })}
+    value={formData.discountType || ''}
+    name="discountType"
+    className="form-control"
+    id="discountType"
+  >
+    <option value="">Select Type</option>
+    <option value="percentage">Percentage</option>
+    <option value="fixed">Fixed</option>
+  </select>
+</div>
+
+{formData.discountType === 'percentage' && (
+  <div className="product-details col-md-3 mb-2">
+    <label htmlFor="discount">Discount (%)</label>
+    <input
+      onChange={handleChange}
+      value={formData.discount}
+      type="number"
+      onWheel={(e) => e.target.blur()}
+      name="discount"
+      className="form-control"
+      id="discount"
+      placeholder="Product Discount %"
+    />
+  </div>
+)}
+
+{formData.discountType === 'fixed' && (
+  <div className="product-details col-md-3 mb-2">
+    <label htmlFor="discountRs">Discount (LKR)</label>
+    <input
+      onChange={handleChange}
+      value={formData.discountRs}
+      type="number"
+      onWheel={(e) => e.target.blur()}
+      name="discountRs"
+      className="form-control"
+      id="discountRs"
+      placeholder="Product Discount - Rs LKR"
+    />
+  </div>
+)}
+
+
+
                   <div className="product-details col-md-3 mb-2">
                     <input onChange={handleChange} value={formData.totalPrice} type="number" onWheel={(e) => e.target.blur()} name="totalPrice" className="form-control" id="totalPrice" placeholder="Total Price" />
                   </div>
+
+                  
                   <div className="product-details col-md-6 mb-2">
                     <textarea onChange={handleChange} value={formData.productNote} name="productNote" className="form-control" id="productNote" placeholder="Warranty" rows="3"></textarea>
                   </div>
+
+                  
                 </div>
               </div>
             </div>
