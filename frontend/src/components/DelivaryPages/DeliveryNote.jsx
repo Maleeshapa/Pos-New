@@ -18,8 +18,10 @@ const DeliveryNote = () => {
         PurchaseOrder: '',
         cusName: '',
         cusJob: '',
-        cusOffice:'',
+        cusOffice: '',
         cusAddress: '',
+        cusPhone: '',
+        cusEmail: '',
         delivaryNo: ''
     });
     const [invoiceProducts, setInvoiceProducts] = useState([]);
@@ -48,7 +50,9 @@ const DeliveryNote = () => {
                     cusName: invoiceData.customer.cusName,
                     cusJob: invoiceData.customer.cusJob,
                     cusAddress: invoiceData.customer.cusAddress,
-                    cusOffice:invoiceData.customer.cusOffice,
+                    cusOffice: invoiceData.customer.cusOffice,
+                    cusPhone: invoiceData.customer.cusPhone,
+                    cusEmail: invoiceData.customer.cusEmail,
                     PurchaseOrder: invoiceData.purchaseNo,
                 });
 
@@ -146,6 +150,8 @@ const DeliveryNote = () => {
 
     const [showAddress, setShowAddress] = useState(true)
     const [showBank, setShowBank] = useState(false)
+    const [showPhone, setShowPhone] = useState(false)
+    const [showEmail, setShowEmail] = useState(false)
 
     const handleAddress = (e) => {
         setShowAddress(e.target.checked);
@@ -153,6 +159,14 @@ const DeliveryNote = () => {
     const handleBank = (e) => {
         setShowBank(e.target.checked);
     };
+    const handlePhone = (e) => {
+        setShowPhone(e.target.checked);
+    };
+    const handleEmail = (e) => {
+        setShowEmail(e.target.checked);
+    };
+
+    const [note, setNote] = useState('Note:');
 
     return (
         <div>
@@ -206,7 +220,16 @@ const DeliveryNote = () => {
                                             </div>
                                         </div>
                                     )}
-
+                                    {showPhone && (
+                                        <div className="details mb-2">
+                                            <input type="text" className="form-input" name="cusPhone" value={formData.cusPhone} />
+                                        </div>
+                                    )}
+                                    {showEmail && (
+                                        <div className="details mb-2">
+                                            <input type="text" className="form-input" name="cusEmail" value={formData.cusEmail} />
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="invoice-info">
                                     <div className="details mb-2">
@@ -270,7 +293,7 @@ const DeliveryNote = () => {
                                             <tr key={index} className={`table-row `}
                                             >
                                                 <td id='table-sn'>{index + 1}</td>
-                                                <td colSpan={2}id='tableDes'>{invoiceProduct.product.productName}</td>
+                                                <td colSpan={2} id='tableDes'>{invoiceProduct.product.productName}</td>
                                                 <td id='table-sn'>{invoiceProduct.deliverdQty}</td>
                                                 {/* <td>{invoiceProduct.invoiceProductStatus}</td> */}
                                             </tr>
@@ -319,7 +342,9 @@ const DeliveryNote = () => {
                                     </tr>
                                 </tbody>
                             </table>
-
+                            <div className="delivery-note mt-2">
+                                <textarea value={note} name="note" rows={3} id="deliveryNote" onChange={(e) => setNote(e.target.value)}></textarea>
+                            </div>
                             <footer className="invoice-footer ">
                                 <p className='font-weight-bold'>I / We hereby acknowledge the receipt of the above goods are received in damages.</p>
 
@@ -354,7 +379,7 @@ const DeliveryNote = () => {
                                     type="checkbox"
                                     name="address"
                                     value="address"
-                                    checked={showAddress} 
+                                    checked={showAddress}
                                     onChange={handleAddress}
                                 />
                                 <br />
@@ -363,8 +388,26 @@ const DeliveryNote = () => {
                                     type="checkbox"
                                     name="bank"
                                     value="bank"
-                                    checked={showBank} 
+                                    checked={showBank}
                                     onChange={handleBank}
+                                />
+                                <br />
+                                <label className='invoice-type-label' htmlFor="">Phone</label>
+                                <input
+                                    type="checkbox"
+                                    name="phone"
+                                    value="phone"
+                                    checked={showPhone}
+                                    onChange={handlePhone}
+                                />
+                                <br />
+                                <label className='invoice-type-label' htmlFor="">Email</label>
+                                <input
+                                    type="checkbox"
+                                    name="email"
+                                    value="email"
+                                    checked={showEmail}
+                                    onChange={handleEmail}
                                 />
                             </form>
                         </div>
