@@ -5,7 +5,6 @@ import StockPaymentModel from '../../Models/StockPayment/StockPaymentModel';
 
 function SupplierPayments() {
   const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedStockPay, setSelectedStockPay] = useState(null);
@@ -37,8 +36,6 @@ function SupplierPayments() {
       setData(formattedData);
     } catch (err) {
       setError(err.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -73,26 +70,20 @@ function SupplierPayments() {
     <div>
       <div className="scrolling-container">
         <h4>{title}</h4>
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p>Error: {error}</p>
-        ) : (
-          <Table
-            search="Search by Supplier Name"
-            data={data}
-            onAdd={handleAddStockPay}
-            btnName={btnName}
-            columns={columns}
-            showButton={false}
-            showDate={false}
-            title={title}
-            invoice={invoice}
-            showActions={true}
-            showDelete={false}
-            onEdit={handleEditClick}
-          />
-        )}
+        <Table
+          search="Search by Supplier Name"
+          data={data}
+          onAdd={handleAddStockPay}
+          btnName={btnName}
+          columns={columns}
+          showButton={false}
+          showDate={false}
+          title={title}
+          invoice={invoice}
+          showActions={true}
+          showDelete={false}
+          onEdit={handleEditClick}
+        />
         <StockPaymentModel
           showModal={showEditModal}
           closeModal={handleCloseModal}

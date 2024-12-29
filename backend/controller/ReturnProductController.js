@@ -1,6 +1,7 @@
 const ReturnProduct = require('../model/ReturnProduct');
 const InvoiceProduct = require('../model/InvoiceProduct');
 const Stock = require('../model/Stock');
+const Return = require('../model/Return');
 
 async function createReturnProduct(req, res) {
     try {
@@ -14,7 +15,7 @@ async function createReturnProduct(req, res) {
         const createdReturns = [];
 
         for (const returnItem of returns) {
-            const { returnQty, returnItemType, returnNote, invoiceProductId, stockId } = returnItem;
+            const { returnQty, returnItemType, returnNote, invoiceProductId, stockId, returnItemId } = returnItem;
 
             // Validate related entities
             const invoiceProduct = await InvoiceProduct.findByPk(invoiceProductId);
@@ -34,6 +35,7 @@ async function createReturnProduct(req, res) {
                 returnNote,
                 invoiceProductId,
                 stockId,
+                returnItemId,
             });
 
             createdReturns.push(newReturnProduct);
@@ -65,6 +67,10 @@ async function getAllReturnProducts(req, res) {
                     model: Stock,
                     as: 'stock'
                 },
+                {
+                    model: Return,
+                    as: 'return'
+                },
             ]
         });
 
@@ -88,6 +94,10 @@ async function getAllReturnProductsById(req, res) {
                 {
                     model: Stock,
                     as: 'stock',
+                },
+                {
+                    model: Return,
+                    as: 'return'
                 },
             ],
         });

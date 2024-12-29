@@ -3,7 +3,7 @@ const { Op } = require('sequelize');
 
 async function createCustomer(req, res) {
     try {
-        const { cusName, cusAddress, cusPhone, cusJob, cusOffice, cusStore } = req.body;
+        const { cusName, cusAddress, cusPhone, cusJob, cusOffice, cusStore, cusEmail } = req.body;
 
         // Validate required fields
         if (!cusName || !cusAddress || !cusStore) {
@@ -15,7 +15,7 @@ async function createCustomer(req, res) {
             order: [["cusCode", "DESC"]],
         });
 
-        const lastCusCode = lastCustomer?.cusCode;
+        const lastCusCode = lastCustomer?.cusCode || "CUS000";
         const lastNumber = parseInt(lastCusCode.slice(3), 10);
         const newNumber = lastNumber + 1;
         const cusCode = `CUS${newNumber.toString().padStart(3, "0")}`;
@@ -29,6 +29,7 @@ async function createCustomer(req, res) {
             cusJob,
             cusOffice,
             cusStore,
+            cusEmail, // Include email
         });
 
         // Return success response
@@ -85,7 +86,8 @@ async function updateCustomer(req, res) {
             cusPhone,
             cusJob,
             cusOffice,
-            cusStore
+            cusStore,
+            cusEmail // Include email
         } = req.body;
 
         const customer = await Customer.findByPk(id);
@@ -100,7 +102,8 @@ async function updateCustomer(req, res) {
             cusPhone,
             cusJob,
             cusOffice,
-            cusStore
+            cusStore,
+            cusEmail // Include email
         });
 
         res.status(200).json(customer);
@@ -108,6 +111,7 @@ async function updateCustomer(req, res) {
         res.status(400).json({ error: error.message });
     }
 }
+
 
 async function deleteCustomer(req, res) {
     try {
