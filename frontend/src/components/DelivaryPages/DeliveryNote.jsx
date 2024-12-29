@@ -267,15 +267,11 @@ const DeliveryNote = () => {
                                         </tr>
                                     ) : (
                                         invoiceProducts.map((invoiceProduct, index) => (
-                                            <tr key={index}
-                                                onMouseEnter={() => setShowRemove(index)}
-                                                onMouseLeave={() => setShowRemove(null)}
-                                                onClick={() => removeProduct(index)}
-                                                className={`table-row ${ShowRemove === index ? 'row-hover' : ''}`}
+                                            <tr key={index} className={`table-row `}
                                             >
                                                 <td id='table-sn'>{index + 1}</td>
                                                 <td colSpan={2}id='tableDes'>{invoiceProduct.product.productName}</td>
-                                                <td id='table-sn'>{invoiceProduct.invoiceQty}</td>
+                                                <td id='table-sn'>{invoiceProduct.deliverdQty}</td>
                                                 {/* <td>{invoiceProduct.invoiceProductStatus}</td> */}
                                             </tr>
                                         ))
@@ -318,7 +314,7 @@ const DeliveryNote = () => {
                                         </td>
                                         <td>Total Quantity</td>
                                         <td>
-                                            {invoiceProducts.reduce((total, product) => total + Number(product.invoiceQty), 0)}
+                                            {invoiceProducts.reduce((total, product) => total + Number(product.deliverdQty), 0)}
                                         </td>
                                     </tr>
                                 </tbody>

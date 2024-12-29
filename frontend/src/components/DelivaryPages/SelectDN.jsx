@@ -101,7 +101,6 @@ const SelectDN = () => {
     }
   };
 
-
   const generateDeliveryNo = () => {
     const currentYear = new Date().getFullYear().toString().slice(-2);
     const rowCount = invoiceProducts.length;
@@ -136,6 +135,7 @@ const SelectDN = () => {
   const updateDeliveryNote = async () => {
     try {
       const updatePromises = invoiceProducts.map(async (product, index) => {
+
         const qtyCell = document.querySelector(`#table-sn-${index}`);
         const updatedQty = qtyCell ? parseInt(qtyCell.textContent.trim()) : product.invoiceQty;
 
@@ -144,7 +144,8 @@ const SelectDN = () => {
           console.log(`Updating product with ID: ${product.id}, Qty: ${updatedQty}`);
 
           const deliveryData = {
-            sendQty: updatedQty,
+            sendQty:product.sendQty-updatedQty,
+            deliverdQty: updatedQty,
           };
 
           const response = await fetch(`${config.BASE_URL}/deliveryNotes/${product.id}`, {
@@ -316,11 +317,11 @@ const SelectDN = () => {
                     <th colSpan={2}>Description</th>
                     <th>Quantity</th>
                     <th className='text-center'>Delivery Quantity</th>
-                    <th className='text-center'>Delivered Quantity</th>
+                    <th className='text-center'>Last Delivered Quantity</th>
                     <th className='text-center'>Current Delivery Quantity</th>
                     {/* <th>Unit Price</th>
                     <th>Total LKR</th> */}
-                    <th>Status</th>
+                    {/* <th>Status</th> */}
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -337,13 +338,13 @@ const SelectDN = () => {
                         <td colSpan={2} id='tableDes'>{invoiceProduct.product.productName} </td>
                         <td className='text-center' id='table-sn'>{invoiceProduct.invoiceQty}</td>
                         <td className='text-center' id='table-sn'>{invoiceProduct.sendQty}</td>
-                        <td className='text-center' id='table-sn'></td>
+                        <td className='text-center' id={`table-dn-${index}`}>{invoiceProduct.deliverdQty}</td>
                         <td className='text-center' id={`table-sn-${index}`}
                           contentEditable
                           suppressContentEditableWarning
                         >  
                         </td>
-                        <td className={invoiceProduct.deliveryStatus === 'notDelivered' ? 'not-delivery' : 'delivery'} >{invoiceProduct.deliveryStatus}</td>
+                        {/* <td className={invoiceProduct.deliveryStatus === 'notDelivered' ? 'not-delivery' : 'delivery'} >{invoiceProduct.deliveryStatus}</td> */}
                         <td onMouseEnter={() => setShowRemove(index)}
                           onMouseLeave={() => setShowRemove(null)}
                           onClick={() => removeProduct(index)}
