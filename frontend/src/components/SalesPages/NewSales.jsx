@@ -274,10 +274,10 @@ const NewSales = ({ invoice }) => {
     let payableAmount = 0;
 
     updatedTableData.forEach((row) => {
-      const price = parseFloat(row[4]) || 0;
-      const qty = parseFloat(row[5]) || 0;
-      const discount = parseFloat(row[6]) || 0;
-      const totalPrice = parseFloat(row[7]) || 0;
+      const price = parseFloat(row[2]) || 0;
+      const qty = parseFloat(row[3]) || 0;
+      const discount = parseFloat(row[4]) || 0;
+      const totalPrice = parseFloat(row[5]) || 0;
 
       totalAmount += price * qty;
       totalDiscount += discount;
@@ -393,12 +393,12 @@ const NewSales = ({ invoice }) => {
       }
 
       const productInvoice = tableData.map(row => ({
-        productId: row[9],
-        stockId: row[10],
+        productId: row[7],
+        stockId: row[8],
         invoiceId: invoiceResult.invoiceId,
         invoiceNo: invoiceResult.invoiceNo,
-        totalAmount: row[4] * row[5],
-        invoiceQty: row[5],
+        totalAmount: row[3] * row[3],
+        invoiceQty: row[3],
         invoiceProductStatus: delivary,
       }));
       console.log('Invoice No before sending:', formData.invoiceNo);
@@ -413,13 +413,13 @@ const NewSales = ({ invoice }) => {
 
       //deliveryNote---------------------------------------------------------------
       const deliveryNote = tableData.map(row => ({
-        productId: row[9],
-        stockId: row[10],
+        productId: row[7],
+        stockId: row[8],
         invoiceId: invoiceResult.invoiceId,
         invoiceNo: invoiceResult.invoiceNo,
-        totalAmount: row[4] * row[5],
-        invoiceQty: row[5],
-        sendQty: row[5],
+        totalAmount: row[3] * row[3],
+        invoiceQty: row[3],
+        sendQty: row[3],
         deliveryStatus: delivary,
       }));
       console.log('Invoice No before sending:', formData.invoiceNo);

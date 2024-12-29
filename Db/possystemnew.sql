@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 27, 2024 at 02:34 PM
+-- Generation Time: Dec 29, 2024 at 09:46 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -115,19 +115,21 @@ CREATE TABLE `customer` (
   `cusPhone` varchar(255) NOT NULL,
   `cusJob` varchar(255) NOT NULL,
   `cusOffice` varchar(255) NOT NULL,
-  `cusStore` varchar(255) NOT NULL
+  `cusStore` varchar(255) NOT NULL,
+  `cusEmail` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`cusId`, `cusName`, `cusCode`, `cusAddress`, `cusPhone`, `cusJob`, `cusOffice`, `cusStore`) VALUES
-(5, 'Buddhika', 'cus001', 'kandy', '1234567890', 'no job', 'Abc', 'haman'),
-(6, 'kavindu', 'cus002', 'Hunnasgiriya', '1234567895', 'kada himiya', 'kavindu stores', 'terra'),
-(8, 'maleesha', 'cus004', 'katugasthota', '1234567823', 'accounting ex', 'avcd', 'colkan'),
-(10, 'vidun jetman', 'cus001', 'napane', '1234567897', 'bank', 'banks', 'colkan'),
-(11, 'branch 2', 'cus001', 'sssq', '1234567894', 'bhalla', 'Abc', 'colkan');
+INSERT INTO `customer` (`cusId`, `cusName`, `cusCode`, `cusAddress`, `cusPhone`, `cusJob`, `cusOffice`, `cusStore`, `cusEmail`) VALUES
+(5, 'Buddhika', 'cus001', 'kandy', '1234567890', 'no job', 'Abc', 'haman', NULL),
+(6, 'kavindu', 'cus002', 'Hunnasgiriya', '1234567895', 'kada himiya', 'kavindu stores', 'terra', NULL),
+(8, 'maleesha', 'cus004', 'katugasthota', '1234567823', 'accounting ex', 'avcd', 'colkan', NULL),
+(10, 'vidun jetman', 'cus001', 'napane', '1234567897', 'bank', 'banks', 'colkan', NULL),
+(11, 'branch 2', 'cus001', 'sssq', '1234567894', 'bhalla', 'Abc', 'colkan', NULL),
+(12, 'sad', 'CUS005', 'hunga', '1234557890', 'teach', 'school', 'colkan', 'test@test.com');
 
 -- --------------------------------------------------------
 
@@ -141,9 +143,10 @@ CREATE TABLE `deliverynote` (
   `invoiceNo` varchar(255) NOT NULL,
   `productId` int(11) NOT NULL,
   `stockId` int(11) NOT NULL,
-  `invoiceQty` varchar(255) NOT NULL,
-  `sendQty` varchar(255) NOT NULL,
-  `totalAmount` varchar(255) NOT NULL,
+  `invoiceQty` int(255) NOT NULL,
+  `sendQty` int(255) NOT NULL,
+  `deliverdQty` int(11) NOT NULL,
+  `totalAmount` int(255) NOT NULL,
   `deliveryStatus` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -151,11 +154,10 @@ CREATE TABLE `deliverynote` (
 -- Dumping data for table `deliverynote`
 --
 
-INSERT INTO `deliverynote` (`id`, `invoiceId`, `invoiceNo`, `productId`, `stockId`, `invoiceQty`, `sendQty`, `totalAmount`, `deliveryStatus`) VALUES
-(7, 426, '1500', 1, 1, '5', '5', '500', 'notDelivered'),
-(8, 426, '1500', 2, 3, '10', '10', '1200', 'notDelivered'),
-(9, 426, '1500', 3, 4, '20', '20', '2000', 'notDelivered'),
-(10, 426, '1500', 6, 4, '30', '30', '2700', 'notDelivered');
+INSERT INTO `deliverynote` (`id`, `invoiceId`, `invoiceNo`, `productId`, `stockId`, `invoiceQty`, `sendQty`, `deliverdQty`, `totalAmount`, `deliveryStatus`) VALUES
+(16, 436, '1500', 1, 1, 1, 1, 0, 1, 'notDelivered'),
+(17, 436, '1500', 2, 3, 10, 10, 0, 100, 'notDelivered'),
+(18, 436, '1500', 3, 4, 15, 15, 0, 225, 'notDelivered');
 
 -- --------------------------------------------------------
 
@@ -208,7 +210,7 @@ CREATE TABLE `invoice` (
 --
 
 INSERT INTO `invoice` (`invoiceId`, `invoiceNo`, `invoiceDate`, `status`, `store`, `purchaseNo`, `image`, `cusId`) VALUES
-(426, '1500', '2024-12-27 08:06:32', 'delivery', 'haman', 'purchaseNo', 'http://localhost:5000/uploads/invoice/INV_1735286792586.pdf', 5);
+(436, '1500', '2024-12-29 08:45:49', 'delivery', 'haman', 'purchaseNo', NULL, 5);
 
 -- --------------------------------------------------------
 
@@ -232,10 +234,9 @@ CREATE TABLE `invoiceproduct` (
 --
 
 INSERT INTO `invoiceproduct` (`id`, `invoiceId`, `invoiceNo`, `productId`, `stockId`, `invoiceQty`, `totalAmount`, `invoiceProductStatus`) VALUES
-(362, 426, '1500', 1, 1, '5', '500', 'notDelivered'),
-(363, 426, '1500', 2, 3, '10', '1200', 'notDelivered'),
-(364, 426, '1500', 3, 4, '20', '2000', 'notDelivered'),
-(365, 426, '1500', 6, 4, '30', '2700', 'notDelivered');
+(374, 436, '1500', 1, 1, '1', '1', 'notDelivered'),
+(375, 436, '1500', 2, 3, '10', '100', 'notDelivered'),
+(376, 436, '1500', 3, 4, '15', '225', 'notDelivered');
 
 -- --------------------------------------------------------
 
@@ -293,10 +294,10 @@ CREATE TABLE `returnitems` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `returnproduct`
+-- Table structure for table `returnproducts`
 --
 
-CREATE TABLE `returnproduct` (
+CREATE TABLE `returnproducts` (
   `returnProductId` int(11) NOT NULL,
   `stockId` int(11) NOT NULL,
   `invoiceProductId` int(11) NOT NULL,
@@ -334,9 +335,9 @@ CREATE TABLE `stock` (
 --
 
 INSERT INTO `stock` (`stockId`, `stockName`, `stockdate`, `billImage`, `stockPrice`, `stockQty`, `mfd`, `exp`, `stockDescription`, `stockStatus`, `products_productId`, `supplier_supplierId`, `store_storeId`, `category_categoryId`) VALUES
-(1, 'stock1', '2024-10-16 17:09:18', NULL, 100, 2147483642, '2024-10-16', '2024-10-31', 'note', '', 1, 1, 1, 1),
-(3, 'stock 2', '2024-10-17 01:28:56', NULL, 100, 99654055, '2024-10-17', '2024-10-31', 'booo', '', 2, 1, 1, 1),
-(4, '5', '2024-10-18 09:01:00', NULL, 10000, 2147483597, '2024-10-18', '2024-10-17', NULL, 'In stock', 3, 1, 1, 1),
+(1, 'stock1', '2024-10-16 17:09:18', NULL, 100, 2147483646, '2024-10-16', '2024-10-31', 'note', '', 1, 1, 1, 1),
+(3, 'stock 2', '2024-10-17 01:28:56', NULL, 100, 996540531, '2024-10-17', '2024-10-31', 'booo', '', 2, 1, 1, 1),
+(4, '5', '2024-10-18 09:01:00', NULL, 10000, 2147483582, '2024-10-18', '2024-10-17', NULL, 'In stock', 3, 1, 1, 1),
 (5, '1', '2024-12-19 07:42:00', 'http://localhost:5000/uploads/stock/1_1733663580933.png', 500, 5, '2024-12-26', '2024-12-18', '5', 'In stock', 3, 1, 1, 1),
 (6, '5', '2024-12-10 07:09:00', 'http://localhost:5000/uploads/stock/5_1733747989746.png', 200, 2, '2024-12-10', '2024-12-16', NULL, 'In stock', 1, 2, 1, 1),
 (7, 'ww', '2024-12-10 07:14:00', NULL, 500, 5, '2024-12-12', '2024-12-11', NULL, 'In stock', 1, 1, 1, 1),
@@ -514,7 +515,13 @@ CREATE TABLE `transaction` (
 --
 
 INSERT INTO `transaction` (`transactionId`, `transactionType`, `price`, `discount`, `dateTime`, `note`, `paid`, `due`, `invoice_invoiceId`, `user_userId`) VALUES
-(303, 'cash', '6400', 0, '2024-12-27 08:06:33', '', 6400, 0, 426, 1);
+(303, 'cash', '6400', 0, '2024-12-27 08:06:33', '', 6400, 0, 426, 1),
+(304, 'credit', '100', 0, '2024-12-27 14:48:08', '', 0, 0, 427, 4),
+(305, 'credit', '100', 0, '2024-12-27 14:48:46', '', 0, 0, 428, 4),
+(306, 'credit', '100', 0, '2024-12-27 14:49:24', '', 0, 100, 429, 4),
+(307, 'credit', '100', 0, '2024-12-27 14:49:56', '', 0, 100, 430, 4),
+(308, 'credit', '300', 0, '2024-12-27 14:50:16', '', 0, 300, 431, 4),
+(311, 'cash', '2800', 0, '2024-12-29 08:45:50', '', 2800, 0, 436, 1);
 
 -- --------------------------------------------------------
 
@@ -646,9 +653,9 @@ ALTER TABLE `returnitems`
   ADD KEY `fk_return_invoice1_idx` (`invoice_invoiceId`);
 
 --
--- Indexes for table `returnproduct`
+-- Indexes for table `returnproducts`
 --
-ALTER TABLE `returnproduct`
+ALTER TABLE `returnproducts`
   ADD PRIMARY KEY (`returnProductId`),
   ADD KEY `returnproduct_ibfk_2` (`invoiceProductId`),
   ADD KEY `returnproduct_ibfk_3` (`returnItemId`),
@@ -747,13 +754,13 @@ ALTER TABLE `costing_headers`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `cusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `cusId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `deliverynote`
 --
 ALTER TABLE `deliverynote`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -771,13 +778,13 @@ ALTER TABLE `expensescat`
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `invoiceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=427;
+  MODIFY `invoiceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=437;
 
 --
 -- AUTO_INCREMENT for table `invoiceproduct`
 --
 ALTER TABLE `invoiceproduct`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=366;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=377;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -792,9 +799,9 @@ ALTER TABLE `returnitems`
   MODIFY `returnItemId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `returnproduct`
+-- AUTO_INCREMENT for table `returnproducts`
 --
-ALTER TABLE `returnproduct`
+ALTER TABLE `returnproducts`
   MODIFY `returnProductId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -843,7 +850,7 @@ ALTER TABLE `switch`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transactionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=304;
+  MODIFY `transactionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=312;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -856,111 +863,11 @@ ALTER TABLE `user`
 --
 
 --
--- Constraints for table `chequdata`
---
-ALTER TABLE `chequdata`
-  ADD CONSTRAINT `chequdata_ibfk_1` FOREIGN KEY (`stockPaymentId`) REFERENCES `stockpayment` (`id`),
-  ADD CONSTRAINT `chequdata_ibfk_2` FOREIGN KEY (`supplierId`) REFERENCES `supplier` (`supplierId`);
-
---
 -- Constraints for table `costing_details`
 --
 ALTER TABLE `costing_details`
   ADD CONSTRAINT `costing_details_ibfk_1` FOREIGN KEY (`header_id`) REFERENCES `costing_headers` (`id`),
   ADD CONSTRAINT `costing_details_ibfk_2` FOREIGN KEY (`product_code`) REFERENCES `products` (`productCode`);
-
---
--- Constraints for table `deliverynote`
---
-ALTER TABLE `deliverynote`
-  ADD CONSTRAINT `deliverynote_ibfk_2` FOREIGN KEY (`productId`) REFERENCES `products` (`productId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `deliverynote_ibfk_3` FOREIGN KEY (`stockId`) REFERENCES `stock` (`stockId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `expenses`
---
-ALTER TABLE `expenses`
-  ADD CONSTRAINT `fk_Expenses_expensesCat1` FOREIGN KEY (`expensesCat_expensesCatId`) REFERENCES `expensescat` (`expensesCatId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_Expenses_user1` FOREIGN KEY (`user_userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `invoice`
---
-ALTER TABLE `invoice`
-  ADD CONSTRAINT `invoice_ibfk_1` FOREIGN KEY (`cusId`) REFERENCES `customer` (`cusId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `invoiceproduct`
---
-ALTER TABLE `invoiceproduct`
-  ADD CONSTRAINT `invoiceproduct_ibfk_1` FOREIGN KEY (`invoiceId`) REFERENCES `invoice` (`invoiceId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `invoiceproduct_ibfk_2` FOREIGN KEY (`productId`) REFERENCES `products` (`productId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `invoiceproduct_ibfk_3` FOREIGN KEY (`stockId`) REFERENCES `stock` (`stockId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `products`
---
-ALTER TABLE `products`
-  ADD CONSTRAINT `fk_products_category` FOREIGN KEY (`category_categoryId`) REFERENCES `category` (`categoryId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `returnitems`
---
-ALTER TABLE `returnitems`
-  ADD CONSTRAINT `fk_return_invoice1` FOREIGN KEY (`invoice_invoiceId`) REFERENCES `invoice` (`invoiceId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_return_products1` FOREIGN KEY (`products_productId`) REFERENCES `products` (`productId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_return_store1` FOREIGN KEY (`store_storeId`) REFERENCES `store` (`storeId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_return_user1` FOREIGN KEY (`user_userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `returnproduct`
---
-ALTER TABLE `returnproduct`
-  ADD CONSTRAINT `returnproduct_ibfk_2` FOREIGN KEY (`invoiceProductId`) REFERENCES `invoiceproduct` (`id`) ON UPDATE NO ACTION,
-  ADD CONSTRAINT `returnproduct_ibfk_3` FOREIGN KEY (`returnItemId`) REFERENCES `returnitems` (`returnItemId`) ON UPDATE NO ACTION,
-  ADD CONSTRAINT `returnproduct_ibfk_4` FOREIGN KEY (`stockId`) REFERENCES `stock` (`stockId`) ON UPDATE NO ACTION;
-
---
--- Constraints for table `stock`
---
-ALTER TABLE `stock`
-  ADD CONSTRAINT `fk_stock_category1` FOREIGN KEY (`category_categoryId`) REFERENCES `category` (`categoryId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_stock_products1` FOREIGN KEY (`products_productId`) REFERENCES `products` (`productId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_stock_store1` FOREIGN KEY (`store_storeId`) REFERENCES `store` (`storeId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_stock_supplier1` FOREIGN KEY (`supplier_supplierId`) REFERENCES `supplier` (`supplierId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `stockhistory`
---
-ALTER TABLE `stockhistory`
-  ADD CONSTRAINT `fk_stockHistory_products1` FOREIGN KEY (`products_productId`) REFERENCES `products` (`productId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_stockHistory_stock1` FOREIGN KEY (`stock_stockId`) REFERENCES `stock` (`stockId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `stockpayments`
---
-ALTER TABLE `stockpayments`
-  ADD CONSTRAINT `stockpayments_ibfk_1` FOREIGN KEY (`supplierId`) REFERENCES `supplier` (`supplierId`) ON DELETE NO ACTION ON UPDATE CASCADE;
-
---
--- Constraints for table `stock_payments`
---
-ALTER TABLE `stock_payments`
-  ADD CONSTRAINT `stock_payments_ibfk_1` FOREIGN KEY (`stockId`) REFERENCES `stock` (`stockId`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  ADD CONSTRAINT `stock_payments_ibfk_2` FOREIGN KEY (`supplieId`) REFERENCES `supplier` (`supplierId`);
-
---
--- Constraints for table `transaction`
---
-ALTER TABLE `transaction`
-  ADD CONSTRAINT `fk_transaction_invoice1` FOREIGN KEY (`invoice_invoiceId`) REFERENCES `invoice` (`invoiceId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`user_userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `user`
---
-ALTER TABLE `user`
-  ADD CONSTRAINT `fk_user_store1` FOREIGN KEY (`store_storeId`) REFERENCES `store` (`storeId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
