@@ -31,9 +31,9 @@ const NewSales = ({ invoice }) => {
     return { date: date.split('/').reverse().join('-'), time };
   };
 
- // const Columns = ["Customer Code", 'Customer Name', 'Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty', 'Product ID', 'Stock ID'];
+  // const Columns = ["Customer Code", 'Customer Name', 'Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty', 'Product ID', 'Stock ID'];
   const Columns = ['Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty', 'Product ID', 'Stock ID'];
-  
+
   const [formData, setFormData] = useState({
     cusName: '',
     cusNic: '',
@@ -604,7 +604,13 @@ const NewSales = ({ invoice }) => {
               <div className="customer">
                 <div className="subCaption">
                   <p><User />Customer Details</p>
-                  <button className='addCusBtn btn-primary' type="button"><Link to={'/customer/customer-list'}> <PlusCircle size={30} /> </Link></button>
+                  <button className="btn btn-success btn-sm mb-3" type="button">
+                    <Link to={'/customer/customer-list'} style={{ color: 'white', textDecoration: 'none' }}>
+                      Create Customer
+                    </Link>
+                  </button>
+
+
                 </div>
 
                 <div className="customer-details">
@@ -648,15 +654,18 @@ const NewSales = ({ invoice }) => {
               </div>
 
               <div className="product">
-                <div className="subCaption d-flex justify-content-between align-items-center">
+                <div className="subCaption d-flex justify-content-between  mb-3">
                   <p className="mb-0 d-flex align-items-center">
                     <ShoppingCart className="me-2" /> Product Details
                   </p>
-                  <CirclePlus
-                    className=" me-2"
+                  <button
+                    className="btn btn-success btn-sm me-2"
+                    type="button"
                     onClick={() => navigate('/product/create')}
-                    size={24} // Optional: Adjust the size of the icon
-                  />
+                  >
+                    Create Product
+                  </button>
+
                 </div>
 
                 <div className="row">
@@ -672,7 +681,7 @@ const NewSales = ({ invoice }) => {
                   <div className="product-details col-md-3 mb-2">
                     <input onChange={handleChange} value={formData.qty} type="number" onWheel={(e) => e.target.blur()} name="qty" className="form-control" id="qty" placeholder="Enter Quantity" />
                   </div>
-                  
+
                   {/* <div className="product-details col-md-3 mb-2">
                     <input onChange={handleChange} value={formData.discount} type="number" onWheel={(e) => e.target.blur()} name="discount" className="form-control" id="discount" placeholder="Product Discount %" />
                   </div>
@@ -680,53 +689,53 @@ const NewSales = ({ invoice }) => {
                     <input onChange={discount} value={formData.discountRs} type="number" onWheel={(e) => e.target.blur()} name="discountRs" className="form-control" id="discountRs" placeholder="Product Discount - Rs LKR" />
                   </div> */}
 
-                  
-<div className="product-details col-md-3 mb-2">
-  <label htmlFor="discountType">Discount Type</label>
-  <select
-    onChange={(e) => setFormData({ ...formData, discountType: e.target.value })}
-    value={formData.discountType || ''}
-    name="discountType"
-    className="form-control"
-    id="discountType"
-  >
-    <option value="">Select Type</option>
-    <option value="percentage">Percentage</option>
-    <option value="fixed">Fixed</option>
-  </select>
-</div>
 
-{formData.discountType === 'percentage' && (
-  <div className="product-details col-md-3 mb-2">
-    <label htmlFor="discount">Discount (%)</label>
-    <input
-      onChange={handleChange}
-      value={formData.discount}
-      type="number"
-      onWheel={(e) => e.target.blur()}
-      name="discount"
-      className="form-control"
-      id="discount"
-      placeholder="Product Discount %"
-    />
-  </div>
-)}
+                  <div className="product-details col-md-3 mb-2">
+                    <label htmlFor="discountType">Discount Type</label>
+                    <select
+                      onChange={(e) => setFormData({ ...formData, discountType: e.target.value })}
+                      value={formData.discountType || ''}
+                      name="discountType"
+                      className="form-control"
+                      id="discountType"
+                    >
+                      <option value="">Select Type</option>
+                      <option value="percentage">Percentage</option>
+                      <option value="fixed">Fixed</option>
+                    </select>
+                  </div>
 
-{formData.discountType === 'fixed' && (
-  <div className="product-details col-md-3 mb-2">
-    <label htmlFor="discountRs">Discount (LKR)</label>
-    <input
-      onChange={handleChange}
-      value={formData.discountRs}
-      type="number"
-      onWheel={(e) => e.target.blur()}
-      name="discountRs"
-      className="form-control"
-      id="discountRs"
-      placeholder="Product Discount - Rs LKR"
-    />
-  </div>
-)}
+                  {formData.discountType === 'percentage' && (
+                    <div className="product-details col-md-3 mb-2">
+                      <label htmlFor="discount">Discount (%)</label>
+                      <input
+                        onChange={handleChange}
+                        value={formData.discount}
+                        type="number"
+                        onWheel={(e) => e.target.blur()}
+                        name="discount"
+                        className="form-control"
+                        id="discount"
+                        placeholder="Product Discount %"
+                      />
+                    </div>
+                  )}
+
+                  {formData.discountType === 'fixed' && (
+                    <div className="product-details col-md-3 mb-2">
+                      <label htmlFor="discountRs">Discount (LKR)</label>
+                      <input
+                        onChange={handleChange}
+                        value={formData.discountRs}
+                        type="number"
+                        onWheel={(e) => e.target.blur()}
+                        name="discountRs"
+                        className="form-control"
+                        id="discountRs"
+                        placeholder="Product Discount - Rs LKR"
+                      />
+                    </div>
+                  )}
 
 
 
@@ -734,12 +743,12 @@ const NewSales = ({ invoice }) => {
                     <input onChange={handleChange} value={formData.totalPrice} type="number" onWheel={(e) => e.target.blur()} name="totalPrice" className="form-control" id="totalPrice" placeholder="Total Price" />
                   </div>
 
-                  
+
                   <div className="product-details col-md-6 mb-2">
                     <textarea onChange={handleChange} value={formData.productNote} name="productNote" className="form-control" id="productNote" placeholder="Warranty" rows="3"></textarea>
                   </div>
 
-                  
+
                 </div>
               </div>
             </div>
