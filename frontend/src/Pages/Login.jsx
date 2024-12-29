@@ -135,7 +135,7 @@ function Login() {
           </button>
         </form>
         <p className="text-center mt-3">
-          Don't have an account? <a href="#signup">Sign up</a>
+          Don't have an account? <a href="#">Contact Admin</a>
         </p>
       </div>
     </div>

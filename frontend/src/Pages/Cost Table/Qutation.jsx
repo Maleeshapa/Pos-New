@@ -29,12 +29,13 @@ function Qutation() {
           </tr>
         </thead>
         <tbody>
-          {/* Add rows dynamically here */}
+         
           <tr>
             <td colSpan={columns.length} style={{ textAlign: 'center' }}>
               No data available
             </td>
           </tr>
+          
         </tbody>
       </table>
     </div>
