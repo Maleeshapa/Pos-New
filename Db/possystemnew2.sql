@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 29, 2024 at 09:46 AM
+-- Generation Time: Dec 29, 2024 at 01:13 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `possystemnew`
+-- Database: `possystemnew2`
 --
 
 -- --------------------------------------------------------
@@ -64,29 +64,39 @@ CREATE TABLE `chequdata` (
 
 CREATE TABLE `costing_details` (
   `id` int(11) NOT NULL,
-  `header_id` int(11) DEFAULT NULL,
-  `product_code` varchar(50) DEFAULT NULL,
+  `costing_header_id` int(11) NOT NULL,
   `description_customer` varchar(255) DEFAULT NULL,
+  `product_code` varchar(100) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `warranty` varchar(100) DEFAULT NULL,
-  `supplier` varchar(100) DEFAULT NULL,
-  `unit_cost` decimal(10,2) DEFAULT NULL,
+  `supplier` varchar(255) DEFAULT NULL,
+  `unit_cost` decimal(15,2) DEFAULT NULL,
   `our_margin_percentage` decimal(5,2) DEFAULT NULL,
-  `our_margin_value` decimal(10,2) DEFAULT NULL,
+  `our_margin_value` decimal(15,2) DEFAULT NULL,
   `other_margin_percentage` decimal(5,2) DEFAULT NULL,
-  `other_margin_value` decimal(10,2) DEFAULT NULL,
-  `price_plus_margin` decimal(10,2) DEFAULT NULL,
-  `selling_rate` decimal(10,2) DEFAULT NULL,
-  `selling_rate_rounded` decimal(10,2) DEFAULT NULL,
-  `uom` varchar(20) DEFAULT NULL,
-  `qty` int(11) DEFAULT NULL,
-  `unit_price` decimal(10,2) DEFAULT NULL,
+  `other_margin_value` decimal(15,2) DEFAULT NULL,
+  `price_plus_margin` decimal(15,2) DEFAULT NULL,
+  `selling_rate` decimal(15,2) DEFAULT NULL,
+  `selling_rate_rounded` decimal(15,2) DEFAULT NULL,
+  `uom` varchar(50) DEFAULT NULL,
+  `qty` int(11) DEFAULT 1,
+  `unit_price` decimal(15,2) DEFAULT NULL,
   `discount_percentage` decimal(5,2) DEFAULT NULL,
-  `discount_value` decimal(10,2) DEFAULT NULL,
-  `discounted_price` decimal(10,2) DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL,
-  `profit` decimal(10,2) DEFAULT NULL
+  `discount_value` decimal(15,2) DEFAULT NULL,
+  `discounted_price` decimal(15,2) DEFAULT NULL,
+  `amount` decimal(15,2) DEFAULT NULL,
+  `profit` decimal(15,2) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `costing_details`
+--
+
+INSERT INTO `costing_details` (`id`, `costing_header_id`, `description_customer`, `product_code`, `description`, `warranty`, `supplier`, `unit_cost`, `our_margin_percentage`, `our_margin_value`, `other_margin_percentage`, `other_margin_value`, `price_plus_margin`, `selling_rate`, `selling_rate_rounded`, `uom`, `qty`, `unit_price`, `discount_percentage`, `discount_value`, `discounted_price`, `amount`, `profit`, `created_at`) VALUES
+(1, 1, 'A', '', '1', '1', '1', 10500.00, 42.00, 4410.00, 62.00, 6510.00, 10920.00, 12133.33, 12140.00, 'oo', 1, 12140.00, 10.00, 1214.00, 10926.00, 10926.00, 4472.00, '2024-12-29 12:10:38'),
+(2, 2, 'A', '', '1', '1', '1', 10500.00, 42.00, 4410.00, 62.00, 6510.00, 10920.00, 12133.33, 12140.00, 'oo', 1, 12140.00, 10.00, 1214.00, 10926.00, 10926.00, 4472.00, '2024-12-29 12:11:50'),
+(3, 2, 'b', '', 'hi', '1 Months', 'i', 1100.00, 35.00, 385.00, 12.00, 132.00, 517.00, 574.44, 580.00, 'io', 1, 580.00, 0.00, 0.00, 580.00, 580.00, 397.00, '2024-12-29 12:11:50');
 
 -- --------------------------------------------------------
 
@@ -97,9 +107,19 @@ CREATE TABLE `costing_details` (
 CREATE TABLE `costing_headers` (
   `id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `total_amount` decimal(10,2) DEFAULT NULL,
-  `total_profit` decimal(10,2) DEFAULT NULL
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `total_amount` decimal(15,2) NOT NULL,
+  `total_profit` decimal(15,2) NOT NULL,
+  `status` varchar(50) DEFAULT 'draft'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `costing_headers`
+--
+
+INSERT INTO `costing_headers` (`id`, `created_at`, `updated_at`, `total_amount`, `total_profit`, `status`) VALUES
+(1, '2024-12-29 12:10:38', '2024-12-29 12:10:38', 10926.00, 4472.00, 'draft'),
+(2, '2024-12-29 12:11:50', '2024-12-29 12:11:50', 11506.00, 4869.00, 'draft');
 
 -- --------------------------------------------------------
 
@@ -579,8 +599,7 @@ ALTER TABLE `chequdata`
 --
 ALTER TABLE `costing_details`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `header_id` (`header_id`),
-  ADD KEY `product_code` (`product_code`);
+  ADD KEY `fk_costing_header` (`costing_header_id`);
 
 --
 -- Indexes for table `costing_headers`
@@ -742,13 +761,13 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `costing_details`
 --
 ALTER TABLE `costing_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `costing_headers`
 --
 ALTER TABLE `costing_headers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `customer`
@@ -866,8 +885,7 @@ ALTER TABLE `user`
 -- Constraints for table `costing_details`
 --
 ALTER TABLE `costing_details`
-  ADD CONSTRAINT `costing_details_ibfk_1` FOREIGN KEY (`header_id`) REFERENCES `costing_headers` (`id`),
-  ADD CONSTRAINT `costing_details_ibfk_2` FOREIGN KEY (`product_code`) REFERENCES `products` (`productCode`);
+  ADD CONSTRAINT `fk_costing_header` FOREIGN KEY (`costing_header_id`) REFERENCES `costing_headers` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

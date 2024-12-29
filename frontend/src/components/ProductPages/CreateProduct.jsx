@@ -282,7 +282,7 @@ const CreateProduct = () => {
 
             <div className="sales-add btn d-grid d-md-flex me-md-2 justify-content-end px-5">
               <button type='reset' className="btn btn-danger btn-md mb-2" onReset={handleReset}>Clear</button>
-              <button className="btn btn-primary btn-md mb-2">{selectedProd ? 'Update Product' : 'Add Product'}</button>
+              <button className="btn btn-primary btn-md mb-2">{selectedProd ? 'Update Product' : 'Create Product'}</button>
             </div>
           </form>
 

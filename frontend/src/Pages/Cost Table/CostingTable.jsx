@@ -83,53 +83,82 @@ const CostingTable = () => {
         }), { totalAmount: 0, totalProfit: 0 });
     };
 
+    // const handleSaveToDatabase = async () => {
+    //     if (entries.length === 0) {
+    //         alert('Please add at least one entry');
+    //         return;
+    //     }
+
+    //     setIsSaving(true);
+    //     const totals = calculateTotals();
+
+    //     try {
+    //         // Save header first
+    //         const headerResponse = await axios.post(`${config.BASE_URL}/costing/header`, {
+    //             totalAmount: totals.totalAmount,
+    //             totalProfit: totals.totalProfit
+    //         });
+
+    //         const headerId = headerResponse.data.id;
+
+    //         // Save details
+    //         const detailsPromises = entries.map(entry => 
+    //             axios.post(`${config.BASE_URL}/costing/detail`, {
+    //                 headerId,
+    //                 productCode: entry.productCode,
+    //                 descriptionCustomer: entry.descriptionCustomer,
+    //                 description: entry.description,
+    //                 warranty: entry.warranty,
+    //                 supplier: entry.supplier,
+    //                 unitCost: entry.unitCost,
+    //                 ourMarginPercentage: entry.ourMarginPercentage,
+    //                 ourMarginValue: entry.ourMarginValue,
+    //                 otherMarginPercentage: entry.otherMarginPercentage,
+    //                 otherMarginValue: entry.otherMarginValue,
+    //                 pricePlusMargin: entry.pricePlusMargin,
+    //                 sellingRate: entry.sellingRate,
+    //                 sellingRateRounded: entry.sellingRateRounded,
+    //                 uom: entry.uom,
+    //                 qty: entry.qty,
+    //                 unitPrice: entry.unitPrice,
+    //                 discountPercentage: entry.discountPercentage,
+    //                 discountValue: entry.discountValue,
+    //                 discountedPrice: entry.discountedPrice,
+    //                 amount: entry.amount,
+    //                 profit: entry.profit
+    //             })
+    //         );
+
+    //         await Promise.all(detailsPromises);
+    //         alert('Costing data saved successfully');
+    //         setEntries([]);
+    //     } catch (error) {
+    //         console.error('Error saving costing data:', error);
+    //         alert('Error saving costing data');
+    //     } finally {
+    //         setIsSaving(false);
+    //     }
+    // };
+
     const handleSaveToDatabase = async () => {
         if (entries.length === 0) {
             alert('Please add at least one entry');
             return;
         }
-
+    
         setIsSaving(true);
         const totals = calculateTotals();
-
+    
         try {
-            // Save header first
-            const headerResponse = await axios.post(`${config.BASE_URL}/costing/header`, {
-                totalAmount: totals.totalAmount,
-                totalProfit: totals.totalProfit
+            const response = await axios.post(`${config.BASE_URL}/costing`, {
+                headerData: {
+                    totalAmount: totals.totalAmount,
+                    totalProfit: totals.totalProfit,
+                    status: 'draft'
+                },
+                detailsData: entries
             });
-
-            const headerId = headerResponse.data.id;
-
-            // Save details
-            const detailsPromises = entries.map(entry => 
-                axios.post(`${config.BASE_URL}/costing/detail`, {
-                    headerId,
-                    productCode: entry.productCode,
-                    descriptionCustomer: entry.descriptionCustomer,
-                    description: entry.description,
-                    warranty: entry.warranty,
-                    supplier: entry.supplier,
-                    unitCost: entry.unitCost,
-                    ourMarginPercentage: entry.ourMarginPercentage,
-                    ourMarginValue: entry.ourMarginValue,
-                    otherMarginPercentage: entry.otherMarginPercentage,
-                    otherMarginValue: entry.otherMarginValue,
-                    pricePlusMargin: entry.pricePlusMargin,
-                    sellingRate: entry.sellingRate,
-                    sellingRateRounded: entry.sellingRateRounded,
-                    uom: entry.uom,
-                    qty: entry.qty,
-                    unitPrice: entry.unitPrice,
-                    discountPercentage: entry.discountPercentage,
-                    discountValue: entry.discountValue,
-                    discountedPrice: entry.discountedPrice,
-                    amount: entry.amount,
-                    profit: entry.profit
-                })
-            );
-
-            await Promise.all(detailsPromises);
+    
             alert('Costing data saved successfully');
             setEntries([]);
         } catch (error) {
@@ -139,7 +168,7 @@ const CostingTable = () => {
             setIsSaving(false);
         }
     };
-
+    
     return (
         <div className="container-fluid mt-4">
             <div className="d-flex justify-content-between mb-3">
@@ -173,8 +202,8 @@ const CostingTable = () => {
                         <th  className="table-warning">Other Margin %</th>
                         <th  className="table-warning">Other Margin Value</th>
                         <th  className="table-warning">Price + Margin</th>
-                        <th  className="table-warning">Selling Rate</th>
-                        <th  className="table-warning">Selling Rate (Rounded)</th>
+                        <th  className="table-warning">Selling Rate Before Discount</th>
+                        <th  className="table-warning">Selling Rate (Rounded to Nearest 10)</th>
                         <th>UOM</th>
                         <th>Qty</th>
                         <th>Unit Price</th>

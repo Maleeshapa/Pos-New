@@ -69,11 +69,13 @@ const Form = ({ closeModal, onSave, cus }) => {
     const customerData = {
       cusName: formData.name,
       cusJob: formData.jobPosition,
-      cusOffice: formData.company,      
+      cusOffice: formData.company,
       cusAddress: formData.address,
       cusPhone: formData.phone,
-      cusStore:formData.cusStore,
+      cusEmail: formData.email,  
+      cusStore: formData.cusStore,
     };
+    
 
     console.log('Customer data:', customerData);
 
@@ -140,8 +142,23 @@ const Form = ({ closeModal, onSave, cus }) => {
           </div>
 
           <div className="form-group">
-            <label>Company</label>
+            <label>Company Name</label>
             <input type="text" name="company" value={formData.company} onChange={handleChange} placeholder="Enter Workplace" />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="address">Company Address <span>*</span></label>
+            <input
+              id="address"
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              placeholder="Enter Address"
+              required
+              aria-describedby={formErrors.address ? 'address-error' : undefined}
+            />
+            {formErrors.address && <span id="address-error" className="error-text">{formErrors.address}</span>}
           </div>
 
           <div className="form-group">
@@ -160,23 +177,25 @@ const Form = ({ closeModal, onSave, cus }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="address">Address <span>*</span></label>
+            <label htmlFor="email">Email </label>
             <input
-              id="address"
+              id="email"
               type="text"
-              name="address"
-              value={formData.address}
+              name="email"
+              value={formData.email}
               onChange={handleChange}
-              placeholder="Enter Address"
+              placeholder="Enter Email"
               required
-              aria-describedby={formErrors.address ? 'address-error' : undefined}
+              aria-describedby={formErrors.email ? 'phone-error' : undefined}
             />
-            {formErrors.address && <span id="address-error" className="error-text">{formErrors.address}</span>}
+            {formErrors.email && <span id="email-error" className="error-text">{formErrors.email}</span>}
           </div>
+
+          
           <div className="form-group">
-            <label htmlFor="cusStore">Store<span>*</span></label>
+            <label htmlFor="cusStore">Assign Company<span>*</span></label>
            <select name="cusStore" id="cusStore" value={formData.cusStore} onChange={handleChange}  >
-            <option value="">select store</option>
+            <option value="">select company</option>
             <option value="colkan">Colkan</option>
             <option value="haman">Haman</option>
             <option value="terra">Terra</option>

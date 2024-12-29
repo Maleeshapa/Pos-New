@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Header.css';
+import Back from './Back';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ const Header = () => {
   return (
     <header className="d-flex align-items-center justify-content-between p-3  text-light">
       <div className="d-flex align-items-center">
+        <Back/>
       </div>
       <div className="d-flex align-items-center">
         <span className="trial-message text-white me-3 d-none d-md-block">
