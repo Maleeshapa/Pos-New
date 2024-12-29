@@ -8,8 +8,8 @@ const CreateProductReturn = () => {
     const [stores, setStores] = useState([]);
     const [users, setUsers] = useState([]);
     const [data, setData] = useState([]);
-    const [returnDetails, setReturnDetails] = useState([]); // For dynamic fields
-    const Columns = ["id", "product", "Qty", "price"];
+    const [returnDetails, setReturnDetails] = useState([]);
+    const Columns = ["#", "product", "Qty", "price", "invoice Product", "Stock ID"];
 
     const getSriLankanTime = () => {
         const now = new Date();
@@ -66,6 +66,8 @@ const CreateProductReturn = () => {
                     inv.product?.productName,
                     inv.invoiceQty,
                     inv.product?.productSellingPrice,
+                    inv.id,
+                    inv.stock?.stockId,
                 ]);
                 setData(formattedData);
                 return invoiceData;
@@ -136,6 +138,11 @@ const CreateProductReturn = () => {
             return;
         }
 
+        if (returnDetails.length === 0) {
+            setError("Please provide return details for the products.");
+            return;
+        }
+
         try {
             const invoiceId = await fetchInvoiceId(formData.invoiceNo);
             if (!invoiceId) {
@@ -143,7 +150,8 @@ const CreateProductReturn = () => {
                 return;
             }
 
-            const response = await fetch(`${config.BASE_URL}/return`, {
+            // Create return entry
+            const returnResponse = await fetch(`${config.BASE_URL}/return`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -154,21 +162,69 @@ const CreateProductReturn = () => {
                 }),
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
+            if (!returnResponse.ok) {
+                const errorData = await returnResponse.json();
                 throw new Error(errorData.message || "Failed to create return.");
             }
 
-            await response.json();
+            const createdReturn = await returnResponse.json();
+
+            // Gather return items with proper type conversion
+            const returnItems = await Promise.all(returnDetails.map(async (detail) => {
+                const matchingRow = data.find(row => row[1] === detail.prodName);
+
+                if (!matchingRow) {
+                    throw new Error(`No matching row found for product: ${detail.prodName}`);
+                }
+
+                const [, , , , invoiceProductId, stockId] = matchingRow;
+
+                
+                const numericInvoiceProductId = parseInt(invoiceProductId, 10);
+                const numericStockId = parseInt(stockId, 10);
+                const numericReturnItemId = parseInt(createdReturn.returnItemId, 10);
+
+                if (isNaN(numericInvoiceProductId) || isNaN(numericStockId) || isNaN(numericReturnItemId)) {
+                    throw new Error(`Invalid ID values for product: ${detail.prodName}`);
+                }
+
+                return {
+                    returnQty: detail.returnQty,
+                    returnItemType: detail.returnType,
+                    returnNote: detail.returnNote || "",
+                    invoiceProductId: numericInvoiceProductId,
+                    stockId: numericStockId,
+                    returnItemId: numericReturnItemId,
+                };
+            }));
+
+            console.log("Return items to be sent:", returnItems);
+
+            const returnProductResponse = await fetch(`${config.BASE_URL}/returnProduct`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(returnItems),
+            });
+
+            if (!returnProductResponse.ok) {
+                const errorData = await returnProductResponse.json();
+                console.error("Failed to create return products:", errorData);
+                throw new Error(errorData.message || "Failed to create return products.");
+            }
+
+            const responseData = await returnProductResponse.json();
+            console.log("Success response from /returnProduct:", responseData);
+
             setSuccessMessage("Return created successfully.");
             setFormData(initialFormData);
             setData([]);
             setReturnDetails([]);
-
         } catch (error) {
+            console.error("Error in handleSubmit:", error);
             setError(error.message);
         }
     };
+
 
     const fetchStores = async () => {
         try {
@@ -265,7 +321,7 @@ const CreateProductReturn = () => {
                             <div className="col-md-3 mb-3">
                                 <label className="form-label">Return Quantity</label>
                                 <input
-                                    type="text"
+                                    type="number"
                                     className="form-control"
                                     name="returnQty"
                                     value={detail.returnQty}
