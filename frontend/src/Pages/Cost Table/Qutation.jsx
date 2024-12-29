@@ -85,18 +85,18 @@ function Qutation() {
                             <td>{detail.product_code}</td>
                             <td>{detail.warranty}</td>
                             <td>{detail.supplier}</td>
-                            <td>${detail.unit_cost}</td>
+                            <td>Rs. {detail.unit_cost}</td>
                             <td>{detail.our_margin_percentage}%</td>
-                            <td>${detail.our_margin_value}</td>
-                            <td>${detail.price_plus_margin}</td>
-                            <td>${detail.selling_rate}</td>
+                            <td>Rs. {detail.our_margin_value}</td>
+                            <td>Rs. {detail.price_plus_margin}</td>
+                            <td>Rs. {detail.selling_rate}</td>
                             <td>{detail.qty}</td>
-                            <td>${detail.unit_price}</td>
+                            <td>Rs. {detail.unit_price}</td>
                             <td>{detail.discount_percentage}%</td>
-                            <td>${detail.discount_value}</td>
-                            <td>${detail.discounted_price}</td>
-                            <td>${detail.amount}</td>
-                            <td>${detail.profit}</td>
+                            <td>Rs. {detail.discount_value}</td>
+                            <td>Rs. {detail.discounted_price}</td>
+                            <td>Rs. {detail.amount}</td>
+                            <td>Rs. {detail.profit}</td>
                           </tr>
                         ))}
                       </tbody>

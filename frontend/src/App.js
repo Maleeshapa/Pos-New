@@ -27,7 +27,7 @@ import InvoiceNote from './components/invoicePages/InvoiceNote';
 import DraftSales from './components/SalesPages/DraftSales';
 import Qutation from './Pages/Cost Table/Qutation';
 import QuotationInvoice from './Pages/Cost Table/QuotationInvoice';
-import InternetModal from './components/NoConnection/InternetModal';
+// import InternetModal from './components/NoConnection/InternetModal';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token');
@@ -46,7 +46,7 @@ function Layout() {
 
   return (
     <div className="laptop:origin-top-left">
-      <InternetModal />
+      {/* <InternetModal /> */}
       <div className='Header-show'>{!isLoginPage && <Header />}</div>
       <div className="d-flex flex-grow-1">
         {!isLoginPage && <SideBar />}
