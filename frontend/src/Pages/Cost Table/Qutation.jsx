@@ -28,7 +28,7 @@ function Qutation() {
       <table className="table table-bordered table-dark  table-striped ">
         <thead class="table-primary">
           <tr>
-            <th>ID</th>
+            <th>Quote No</th>
             <th>Total Amount</th>
             <th>Total Profit</th>
             <th>Action</th>
