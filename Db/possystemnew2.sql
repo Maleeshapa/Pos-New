@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 28, 2024 at 05:34 PM
+-- Generation Time: Dec 29, 2024 at 01:13 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -64,29 +64,39 @@ CREATE TABLE `chequdata` (
 
 CREATE TABLE `costing_details` (
   `id` int(11) NOT NULL,
-  `header_id` int(11) DEFAULT NULL,
-  `product_code` varchar(50) DEFAULT NULL,
+  `costing_header_id` int(11) NOT NULL,
   `description_customer` varchar(255) DEFAULT NULL,
+  `product_code` varchar(100) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `warranty` varchar(100) DEFAULT NULL,
-  `supplier` varchar(100) DEFAULT NULL,
-  `unit_cost` decimal(10,2) DEFAULT NULL,
+  `supplier` varchar(255) DEFAULT NULL,
+  `unit_cost` decimal(15,2) DEFAULT NULL,
   `our_margin_percentage` decimal(5,2) DEFAULT NULL,
-  `our_margin_value` decimal(10,2) DEFAULT NULL,
+  `our_margin_value` decimal(15,2) DEFAULT NULL,
   `other_margin_percentage` decimal(5,2) DEFAULT NULL,
-  `other_margin_value` decimal(10,2) DEFAULT NULL,
-  `price_plus_margin` decimal(10,2) DEFAULT NULL,
-  `selling_rate` decimal(10,2) DEFAULT NULL,
-  `selling_rate_rounded` decimal(10,2) DEFAULT NULL,
-  `uom` varchar(20) DEFAULT NULL,
-  `qty` int(11) DEFAULT NULL,
-  `unit_price` decimal(10,2) DEFAULT NULL,
+  `other_margin_value` decimal(15,2) DEFAULT NULL,
+  `price_plus_margin` decimal(15,2) DEFAULT NULL,
+  `selling_rate` decimal(15,2) DEFAULT NULL,
+  `selling_rate_rounded` decimal(15,2) DEFAULT NULL,
+  `uom` varchar(50) DEFAULT NULL,
+  `qty` int(11) DEFAULT 1,
+  `unit_price` decimal(15,2) DEFAULT NULL,
   `discount_percentage` decimal(5,2) DEFAULT NULL,
-  `discount_value` decimal(10,2) DEFAULT NULL,
-  `discounted_price` decimal(10,2) DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL,
-  `profit` decimal(10,2) DEFAULT NULL
+  `discount_value` decimal(15,2) DEFAULT NULL,
+  `discounted_price` decimal(15,2) DEFAULT NULL,
+  `amount` decimal(15,2) DEFAULT NULL,
+  `profit` decimal(15,2) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `costing_details`
+--
+
+INSERT INTO `costing_details` (`id`, `costing_header_id`, `description_customer`, `product_code`, `description`, `warranty`, `supplier`, `unit_cost`, `our_margin_percentage`, `our_margin_value`, `other_margin_percentage`, `other_margin_value`, `price_plus_margin`, `selling_rate`, `selling_rate_rounded`, `uom`, `qty`, `unit_price`, `discount_percentage`, `discount_value`, `discounted_price`, `amount`, `profit`, `created_at`) VALUES
+(1, 1, 'A', '', '1', '1', '1', 10500.00, 42.00, 4410.00, 62.00, 6510.00, 10920.00, 12133.33, 12140.00, 'oo', 1, 12140.00, 10.00, 1214.00, 10926.00, 10926.00, 4472.00, '2024-12-29 12:10:38'),
+(2, 2, 'A', '', '1', '1', '1', 10500.00, 42.00, 4410.00, 62.00, 6510.00, 10920.00, 12133.33, 12140.00, 'oo', 1, 12140.00, 10.00, 1214.00, 10926.00, 10926.00, 4472.00, '2024-12-29 12:11:50'),
+(3, 2, 'b', '', 'hi', '1 Months', 'i', 1100.00, 35.00, 385.00, 12.00, 132.00, 517.00, 574.44, 580.00, 'io', 1, 580.00, 0.00, 0.00, 580.00, 580.00, 397.00, '2024-12-29 12:11:50');
 
 -- --------------------------------------------------------
 
@@ -97,9 +107,19 @@ CREATE TABLE `costing_details` (
 CREATE TABLE `costing_headers` (
   `id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `total_amount` decimal(10,2) DEFAULT NULL,
-  `total_profit` decimal(10,2) DEFAULT NULL
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `total_amount` decimal(15,2) NOT NULL,
+  `total_profit` decimal(15,2) NOT NULL,
+  `status` varchar(50) DEFAULT 'draft'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `costing_headers`
+--
+
+INSERT INTO `costing_headers` (`id`, `created_at`, `updated_at`, `total_amount`, `total_profit`, `status`) VALUES
+(1, '2024-12-29 12:10:38', '2024-12-29 12:10:38', 10926.00, 4472.00, 'draft'),
+(2, '2024-12-29 12:11:50', '2024-12-29 12:11:50', 11506.00, 4869.00, 'draft');
 
 -- --------------------------------------------------------
 
@@ -143,9 +163,10 @@ CREATE TABLE `deliverynote` (
   `invoiceNo` varchar(255) NOT NULL,
   `productId` int(11) NOT NULL,
   `stockId` int(11) NOT NULL,
-  `invoiceQty` varchar(255) NOT NULL,
-  `sendQty` varchar(255) NOT NULL,
-  `totalAmount` varchar(255) NOT NULL,
+  `invoiceQty` int(255) NOT NULL,
+  `sendQty` int(255) NOT NULL,
+  `deliverdQty` int(11) NOT NULL,
+  `totalAmount` int(255) NOT NULL,
   `deliveryStatus` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -153,16 +174,10 @@ CREATE TABLE `deliverynote` (
 -- Dumping data for table `deliverynote`
 --
 
-INSERT INTO `deliverynote` (`id`, `invoiceId`, `invoiceNo`, `productId`, `stockId`, `invoiceQty`, `sendQty`, `totalAmount`, `deliveryStatus`) VALUES
-(7, 426, '1500', 1, 1, '5', '5', '500', 'notDelivered'),
-(8, 426, '1500', 2, 3, '10', '10', '1200', 'notDelivered'),
-(9, 426, '1500', 3, 4, '20', '20', '2000', 'notDelivered'),
-(10, 426, '1500', 6, 4, '30', '30', '2700', 'notDelivered'),
-(11, 427, '1501', 1, 1, '1', '1', '100', 'invoice'),
-(12, 428, '1502', 1, 1, '1', '1', '100', 'invoice'),
-(13, 429, '1503', 1, 1, '1', '1', '100', 'invoice'),
-(14, 430, '1504', 1, 1, '1', '1', '100', 'invoice'),
-(15, 431, '1505', 1, 1, '3', '3', '300', 'invoice');
+INSERT INTO `deliverynote` (`id`, `invoiceId`, `invoiceNo`, `productId`, `stockId`, `invoiceQty`, `sendQty`, `deliverdQty`, `totalAmount`, `deliveryStatus`) VALUES
+(16, 436, '1500', 1, 1, 1, 1, 0, 1, 'notDelivered'),
+(17, 436, '1500', 2, 3, 10, 10, 0, 100, 'notDelivered'),
+(18, 436, '1500', 3, 4, 15, 15, 0, 225, 'notDelivered');
 
 -- --------------------------------------------------------
 
@@ -215,12 +230,7 @@ CREATE TABLE `invoice` (
 --
 
 INSERT INTO `invoice` (`invoiceId`, `invoiceNo`, `invoiceDate`, `status`, `store`, `purchaseNo`, `image`, `cusId`) VALUES
-(426, '1500', '2024-12-27 08:06:32', 'delivery', 'haman', 'purchaseNo', 'http://localhost:5000/uploads/invoice/INV_1735286792586.pdf', 5),
-(427, '1501', '2024-12-27 14:48:07', 'Invoice', 'haman', '1', NULL, 5),
-(428, '1502', '2024-12-27 14:48:46', 'Invoice', 'colkan', '2', NULL, 8),
-(429, '1503', '2024-12-27 14:49:24', 'Invoice', 'haman', '3', NULL, 5),
-(430, '1504', '2024-12-27 14:49:56', 'Invoice', 'colkan', '6', NULL, 8),
-(431, '1505', '2024-12-27 14:50:16', 'Invoice', 'haman', '7', NULL, 5);
+(436, '1500', '2024-12-29 08:45:49', 'delivery', 'haman', 'purchaseNo', NULL, 5);
 
 -- --------------------------------------------------------
 
@@ -244,15 +254,9 @@ CREATE TABLE `invoiceproduct` (
 --
 
 INSERT INTO `invoiceproduct` (`id`, `invoiceId`, `invoiceNo`, `productId`, `stockId`, `invoiceQty`, `totalAmount`, `invoiceProductStatus`) VALUES
-(362, 426, '1500', 1, 1, '5', '500', 'notDelivered'),
-(363, 426, '1500', 2, 3, '10', '1200', 'notDelivered'),
-(364, 426, '1500', 3, 4, '20', '2000', 'notDelivered'),
-(365, 426, '1500', 6, 4, '30', '2700', 'notDelivered'),
-(366, 427, '1501', 1, 1, '1', '100', 'invoice'),
-(367, 428, '1502', 1, 1, '1', '100', 'invoice'),
-(368, 429, '1503', 1, 1, '1', '100', 'invoice'),
-(369, 430, '1504', 1, 1, '1', '100', 'invoice'),
-(370, 431, '1505', 1, 1, '3', '300', 'invoice');
+(374, 436, '1500', 1, 1, '1', '1', 'notDelivered'),
+(375, 436, '1500', 2, 3, '10', '100', 'notDelivered'),
+(376, 436, '1500', 3, 4, '15', '225', 'notDelivered');
 
 -- --------------------------------------------------------
 
@@ -351,9 +355,9 @@ CREATE TABLE `stock` (
 --
 
 INSERT INTO `stock` (`stockId`, `stockName`, `stockdate`, `billImage`, `stockPrice`, `stockQty`, `mfd`, `exp`, `stockDescription`, `stockStatus`, `products_productId`, `supplier_supplierId`, `store_storeId`, `category_categoryId`) VALUES
-(1, 'stock1', '2024-10-16 17:09:18', NULL, 100, 2147483635, '2024-10-16', '2024-10-31', 'note', '', 1, 1, 1, 1),
-(3, 'stock 2', '2024-10-17 01:28:56', NULL, 100, 99654055, '2024-10-17', '2024-10-31', 'booo', '', 2, 1, 1, 1),
-(4, '5', '2024-10-18 09:01:00', NULL, 10000, 2147483597, '2024-10-18', '2024-10-17', NULL, 'In stock', 3, 1, 1, 1),
+(1, 'stock1', '2024-10-16 17:09:18', NULL, 100, 2147483646, '2024-10-16', '2024-10-31', 'note', '', 1, 1, 1, 1),
+(3, 'stock 2', '2024-10-17 01:28:56', NULL, 100, 996540531, '2024-10-17', '2024-10-31', 'booo', '', 2, 1, 1, 1),
+(4, '5', '2024-10-18 09:01:00', NULL, 10000, 2147483582, '2024-10-18', '2024-10-17', NULL, 'In stock', 3, 1, 1, 1),
 (5, '1', '2024-12-19 07:42:00', 'http://localhost:5000/uploads/stock/1_1733663580933.png', 500, 5, '2024-12-26', '2024-12-18', '5', 'In stock', 3, 1, 1, 1),
 (6, '5', '2024-12-10 07:09:00', 'http://localhost:5000/uploads/stock/5_1733747989746.png', 200, 2, '2024-12-10', '2024-12-16', NULL, 'In stock', 1, 2, 1, 1),
 (7, 'ww', '2024-12-10 07:14:00', NULL, 500, 5, '2024-12-12', '2024-12-11', NULL, 'In stock', 1, 1, 1, 1),
@@ -536,7 +540,8 @@ INSERT INTO `transaction` (`transactionId`, `transactionType`, `price`, `discoun
 (305, 'credit', '100', 0, '2024-12-27 14:48:46', '', 0, 0, 428, 4),
 (306, 'credit', '100', 0, '2024-12-27 14:49:24', '', 0, 100, 429, 4),
 (307, 'credit', '100', 0, '2024-12-27 14:49:56', '', 0, 100, 430, 4),
-(308, 'credit', '300', 0, '2024-12-27 14:50:16', '', 0, 300, 431, 4);
+(308, 'credit', '300', 0, '2024-12-27 14:50:16', '', 0, 300, 431, 4),
+(311, 'cash', '2800', 0, '2024-12-29 08:45:50', '', 2800, 0, 436, 1);
 
 -- --------------------------------------------------------
 
@@ -594,8 +599,7 @@ ALTER TABLE `chequdata`
 --
 ALTER TABLE `costing_details`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `header_id` (`header_id`),
-  ADD KEY `product_code` (`product_code`);
+  ADD KEY `fk_costing_header` (`costing_header_id`);
 
 --
 -- Indexes for table `costing_headers`
@@ -757,13 +761,13 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `costing_details`
 --
 ALTER TABLE `costing_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `costing_headers`
 --
 ALTER TABLE `costing_headers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `customer`
@@ -775,7 +779,7 @@ ALTER TABLE `customer`
 -- AUTO_INCREMENT for table `deliverynote`
 --
 ALTER TABLE `deliverynote`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -793,13 +797,13 @@ ALTER TABLE `expensescat`
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `invoiceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=432;
+  MODIFY `invoiceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=437;
 
 --
 -- AUTO_INCREMENT for table `invoiceproduct`
 --
 ALTER TABLE `invoiceproduct`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=371;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=377;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -865,7 +869,7 @@ ALTER TABLE `switch`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transactionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=309;
+  MODIFY `transactionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=312;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -881,8 +885,7 @@ ALTER TABLE `user`
 -- Constraints for table `costing_details`
 --
 ALTER TABLE `costing_details`
-  ADD CONSTRAINT `costing_details_ibfk_1` FOREIGN KEY (`header_id`) REFERENCES `costing_headers` (`id`),
-  ADD CONSTRAINT `costing_details_ibfk_2` FOREIGN KEY (`product_code`) REFERENCES `products` (`productCode`);
+  ADD CONSTRAINT `fk_costing_header` FOREIGN KEY (`costing_header_id`) REFERENCES `costing_headers` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
