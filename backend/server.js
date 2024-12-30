@@ -25,7 +25,7 @@ const ReportController = require("./controller/Reports/ReportController");
 const ProductNStockController = require("./controller/Reports/ProductStockController");
 const InvoiceProductController = require('./controller/InvoiceProduct');
 const CustomerController = require('./controller/CustomerController');
-const DeliveryNoteController=require('./controller/DeliveryNoteController');
+const DeliveryNoteController = require('./controller/DeliveryNoteController');
 // const CostingController = require("./controller/CostingController");
 // const CostingController = require("./controller/");
 
@@ -168,6 +168,12 @@ app.delete("/expensesCat/:id", ExpensesCatController.deleteExpensesCat);
 app.get("/getReports", ReportController.getReports);
 app.get("/productStock", ProductNStockController.getStockReports);
 
+// //Costing routes
+// app.post("/costing", CostingController.createCosting);
+// app.get("/costings", CostingController.getAllCostings);
+// app.get("/costing/:id", CostingController.getCostingById);
+// app.put("/costing/:id", CostingController.updateCosting);
+
 // Sync the database
 sequelize
     .sync()
@@ -193,12 +199,6 @@ app.get('/download/invoice/:filename', (req, res) => {
         res.status(404).json({ error: "File not found" });
     }
 });
-
-
-app.post("/costing", CostingController.createCosting);
-app.get("/costings", CostingController.getAllCostings);
-app.get("/costing/:id", CostingController.getCostingById);
-app.put("/costing/:id", CostingController.updateCosting);
 
 // Start the server
 app.listen(PORT, () => {

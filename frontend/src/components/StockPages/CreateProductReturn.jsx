@@ -179,7 +179,7 @@ const CreateProductReturn = () => {
 
                 const [, , , , invoiceProductId, stockId] = matchingRow;
 
-                
+
                 const numericInvoiceProductId = parseInt(invoiceProductId, 10);
                 const numericStockId = parseInt(stockId, 10);
                 const numericReturnItemId = parseInt(createdReturn.returnItemId, 10);
@@ -254,6 +254,20 @@ const CreateProductReturn = () => {
             setError(err.message);
         }
     };
+
+    const resetForm = () => {
+        setFormData((prev) => ({
+            ...prev,
+            invoiceNo: '',
+            prodName: '',
+            returnQty: '',
+            returnType: '',
+            returnNote: '',
+        }));
+        setData([]);
+        setReturnDetails([]);
+        window.location.reload();
+    }
 
     return (
         <div className="scrolling-container">
@@ -339,7 +353,6 @@ const CreateProductReturn = () => {
                                     <option value=" ">Select Options</option>
                                     <option value="Refund">Refund</option>
                                     <option value="Damage">Damage</option>
-                                    <option value="Exchange">Exchange</option>
                                     <option value="Warranty">Warranty Claim</option>
                                 </select>
                             </div>
@@ -358,10 +371,7 @@ const CreateProductReturn = () => {
             </form>
 
             <div className="d-grid d-md-flex me-md-2 justify-content-end px-5">
-                <button className="btn btn-danger btn-md mb-2" type="button" onClick={() => {
-                    setFormData(initialFormData);
-                    setData([]);
-                }}>Clear</button>
+                <button className="btn btn-danger btn-md mb-2" type="button" onClick={resetForm}>Clear</button>
                 <button className="btn btn-primary btn-md mb-2" type="submit" onClick={handleSubmit}>Proceed</button>
             </div>
         </div>
