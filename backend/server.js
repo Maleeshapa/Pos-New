@@ -26,6 +26,7 @@ const ProductNStockController = require("./controller/Reports/ProductStockContro
 const InvoiceProductController = require('./controller/InvoiceProduct');
 const CustomerController = require('./controller/CustomerController');
 const DeliveryNoteController=require('./controller/DeliveryNoteController');
+const CostingController=require('./controller/CostingController');
 // const CostingController = require("./controller/CostingController");
 // const CostingController = require("./controller/");
 
@@ -169,10 +170,10 @@ app.get("/getReports", ReportController.getReports);
 app.get("/productStock", ProductNStockController.getStockReports);
 
 // //Costing routes
-// app.post("/costing", CostingController.createCosting);
-// app.get("/costings", CostingController.getAllCostings);
-// app.get("/costing/:id", CostingController.getCostingById);
-// app.put("/costing/:id", CostingController.updateCosting);
+app.post("/costing", CostingController.createCosting);
+app.get("/costings", CostingController.getAllCostings);
+app.get("/costing/:id", CostingController.getCostingById);
+app.put("/costing/:id", CostingController.updateCosting);
 
 // Sync the database
 sequelize
