@@ -44,6 +44,8 @@ const InvoiceNote = () => {
                     cusName: invoiceData.customer.cusName,
                     cusJob: invoiceData.customer.cusJob,
                     cusAddress: invoiceData.customer.cusAddress,
+                    cusPhone: invoiceData.customer.cusPhone,
+                    cusEmail: invoiceData.customer.cusEmail,
                     PurchaseOrder: invoiceData.purchaseNo,
                     cusOffice: invoiceData.customer.cusOffice,
                 });
@@ -126,6 +128,8 @@ const InvoiceNote = () => {
 
     const [showAddress, setShowAddress] = useState(true)
     const [showBank, setShowBank] = useState(false)
+    const [showPhone, setShowPhone] = useState(false)
+    const [showEmail, setShowEmail] = useState(false)
 
     const handleAddress = (e) => {
         setShowAddress(e.target.checked);
@@ -133,6 +137,15 @@ const InvoiceNote = () => {
     const handleBank = (e) => {
         setShowBank(e.target.checked);
     };
+    const handlePhone = (e) => {
+        setShowPhone(e.target.checked);
+    };
+    const handleEmail = (e) => {
+        setShowEmail(e.target.checked);
+    };
+
+    const [note, setNote] = useState('Note:');
+
 
     return (
         <div>
@@ -183,6 +196,16 @@ const InvoiceNote = () => {
                                                     value={formData.cusAddress}
                                                 ></textarea>
                                             </div>
+                                        </div>
+                                    )}
+                                    {showPhone && (
+                                        <div className="details mb-2">
+                                            <input type="text" className="form-input" name="cusPhone" value={formData.cusPhone} />
+                                        </div>
+                                    )}
+                                    {showEmail && (
+                                        <div className="details mb-2">
+                                            <input type="text" className="form-input" name="cusEmail" value={formData.cusEmail} />
                                         </div>
                                     )}
                                 </div>
@@ -390,6 +413,11 @@ const InvoiceNote = () => {
                                     )}
                                 </>)} */}
 
+
+                            <div className="delivery-note mt-2">
+                                <textarea value={note} name="note" rows={3} id="deliveryNote" onChange={(e) => setNote(e.target.value)}></textarea>
+                            </div>
+
                             <footer className="invoice-footer ">
                                 <p className='font-weight-bold'>I / We hereby acknowledge the receipt of the above goods are received in damages.</p>
 
@@ -416,6 +444,25 @@ const InvoiceNote = () => {
                                 <br />
                                 <label className='invoice-type-label' htmlFor="">Bank</label>
                                 <input type="checkbox" name="bank" value="bank" checked={showBank} onChange={handleBank} />
+
+                                <br />
+                                <label className='invoice-type-label' htmlFor="">Phone</label>
+                                <input
+                                    type="checkbox"
+                                    name="phone"
+                                    value="phone"
+                                    checked={showPhone}
+                                    onChange={handlePhone}
+                                />
+                                <br />
+                                <label className='invoice-type-label' htmlFor="">Email</label>
+                                <input
+                                    type="checkbox"
+                                    name="email"
+                                    value="email"
+                                    checked={showEmail}
+                                    onChange={handleEmail}
+                                />
                             </form>
                         </div>
                         <button onClick={handlePrint} className='btn btn-success'>Print Invoice</button>

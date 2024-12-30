@@ -128,6 +128,7 @@ const JobDuePayment = () => {
             ])}
             columns={columns}
             showButton={false}
+            showActions={false}
           />
         </div>
       </div>

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import './ProformaInvoice.css';
 import one from '../../assets/1.jpg';
@@ -49,6 +48,8 @@ const ProformaInvoice = () => {
                     cusJob: invoiceData.customer.cusJob,
                     cusOffice: invoiceData.customer.cusOffice,
                     cusAddress: invoiceData.customer.cusAddress,
+                    cusPhone: invoiceData.customer.cusPhone,
+                    cusEmail: invoiceData.customer.cusEmail,
                     proforma: generatedProformaNo,
                     PurchaseOrder: invoiceData.purchaseNo,
                 });
@@ -131,6 +132,8 @@ const ProformaInvoice = () => {
 
     const [showAddress, setShowAddress] = useState(true)
     const [showBank, setShowBank] = useState(false)
+    const [showPhone, setShowPhone] = useState(false)
+    const [showEmail, setShowEmail] = useState(false)
 
     const handleAddress = (e) => {
         setShowAddress(e.target.checked);
@@ -138,6 +141,15 @@ const ProformaInvoice = () => {
     const handleBank = (e) => {
         setShowBank(e.target.checked);
     };
+    const handlePhone = (e) => {
+        setShowPhone(e.target.checked);
+    };
+    const handleEmail = (e) => {
+        setShowEmail(e.target.checked);
+    };
+
+    const [note, setNote] = useState('Note:');
+
 
     return (
         <div>
@@ -193,6 +205,16 @@ const ProformaInvoice = () => {
                                                     value={formData.cusAddress}
                                                 ></textarea>
                                             </div>
+                                        </div>
+                                    )}
+                                    {showPhone && (
+                                        <div className="details mb-2">
+                                            <input type="text" className="form-input" name="cusPhone" value={formData.cusPhone} />
+                                        </div>
+                                    )}
+                                    {showEmail && (
+                                        <div className="details mb-2">
+                                            <input type="text" className="form-input" name="cusEmail" value={formData.cusEmail} />
                                         </div>
                                     )}
                                 </div>
@@ -271,8 +293,8 @@ const ProformaInvoice = () => {
                                 </tbody>
                                 <tbody>
                                     <tr>
-                                    <td id="table-content" colSpan={3} rowSpan={3}>
-                                        {showBank && (
+                                        <td id="table-content" colSpan={3} rowSpan={3}>
+                                            {showBank && (
                                                 <>
                                                     Payment mode : Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c<br></br>
                                                     {colkan && (
@@ -426,6 +448,10 @@ const ProformaInvoice = () => {
                                     )}
                                 </>)} */}
 
+                            <div className="delivery-note mt-2">
+                                <textarea value={note} name="note" rows={3} id="deliveryNote" onChange={(e) => setNote(e.target.value)}></textarea>
+                            </div>
+
                             <footer className="invoice-footer ">
                                 {/* <p className='text-danger font-weight-bold'>Payment mode :  Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c.</p> */}
 
@@ -460,7 +486,7 @@ const ProformaInvoice = () => {
                                     type="checkbox"
                                     name="address"
                                     value="address"
-                                    checked={showAddress} 
+                                    checked={showAddress}
                                     onChange={handleAddress}
                                 />
                                 <br />
@@ -469,8 +495,27 @@ const ProformaInvoice = () => {
                                     type="checkbox"
                                     name="bank"
                                     value="bank"
-                                    checked={showBank} 
+                                    checked={showBank}
                                     onChange={handleBank}
+                                />
+                                
+                                <br />
+                                <label className='invoice-type-label' htmlFor="">Phone</label>
+                                <input
+                                    type="checkbox"
+                                    name="phone"
+                                    value="phone"
+                                    checked={showPhone}
+                                    onChange={handlePhone}
+                                />
+                                <br />
+                                <label className='invoice-type-label' htmlFor="">Email</label>
+                                <input
+                                    type="checkbox"
+                                    name="email"
+                                    value="email"
+                                    checked={showEmail}
+                                    onChange={handleEmail}
                                 />
                             </form>
                         </div>

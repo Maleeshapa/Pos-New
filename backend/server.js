@@ -25,7 +25,7 @@ const ReportController = require("./controller/Reports/ReportController");
 const ProductNStockController = require("./controller/Reports/ProductStockController");
 const InvoiceProductController = require('./controller/InvoiceProduct');
 const CustomerController = require('./controller/CustomerController');
-const DeliveryNoteController = require('./controller/DeliveryNoteController');
+const DeliveryNoteController=require('./controller/DeliveryNoteController');
 // const CostingController = require("./controller/CostingController");
 // const CostingController = require("./controller/");
 
