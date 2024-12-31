@@ -107,27 +107,28 @@
   -webkit-backdrop-filter: blur(2px);
 }
 
-.error-text{
+.error-text {
   color: red;
 }
 /* Responsive styles */
 @media (max-width: 1920px) {
   .ReactModal__Content {
-    height: 70% !important;
+    height: 80% !important;
+    width: 40% !important;
   }
 }
 
 @media (max-width: 1750px) {
   .ReactModal__Content {
-    width: 70% !important;
-    height: 70% !important;
+    width: 40% !important;
+    height: 80% !important;
   }
 }
 
 @media (max-width: 1530px) {
   .ReactModal__Content {
-    width: 80% !important;
-    height: 70% !important;
+    width: 40% !important;
+    height: 90% !important;
   }
 }
 
@@ -137,10 +138,9 @@
   }
 
   .ReactModal__Content {
-    width: 80% !important;
-    height: 80% !important;
+    width: 40% !important;
+    height: 90% !important;
   }
-
 }
 
 @media (max-width: 1100px) {
@@ -179,7 +179,6 @@
     flex-direction: column;
   }
 
-
   .form-actions button {
     margin-left: 0;
     margin-bottom: 10px;
@@ -203,7 +202,6 @@
   .form-container {
     padding: 10px 0px;
   }
-
 
   .ReactModal__Content {
     width: 90% !important;

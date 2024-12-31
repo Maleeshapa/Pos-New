@@ -29,7 +29,7 @@ async function createCustomer(req, res) {
             cusJob,
             cusOffice,
             cusStore,
-            cusEmail, // Include email
+            cusEmail,
         });
 
         // Return success response
@@ -81,13 +81,12 @@ async function updateCustomer(req, res) {
         const { id } = req.params;
         const {
             cusName,
-            cusCode,
             cusAddress,
             cusPhone,
             cusJob,
             cusOffice,
             cusStore,
-            cusEmail // Include email
+            cusEmail
         } = req.body;
 
         const customer = await Customer.findByPk(id);
@@ -97,13 +96,12 @@ async function updateCustomer(req, res) {
 
         await customer.update({
             cusName,
-            cusCode,
             cusAddress,
             cusPhone,
             cusJob,
             cusOffice,
             cusStore,
-            cusEmail // Include email
+            cusEmail
         });
 
         res.status(200).json(customer);
