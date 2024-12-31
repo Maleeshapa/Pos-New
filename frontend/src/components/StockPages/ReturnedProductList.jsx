@@ -11,10 +11,8 @@ const ReturnedProductList = () => {
     const Columns = [
         "id",
         'Invoice id',
-        'Return Type',
         'Return Date',
         'store',
-        'Product',
         'Handle By',
         'Credit Note'
     ];
@@ -28,7 +26,7 @@ const ReturnedProductList = () => {
 
     useEffect(() => {
         fetchReturn();
-    }, []);
+    });
 
     const fetchReturn = async () => {
         try {
@@ -44,10 +42,8 @@ const ReturnedProductList = () => {
                 return [
                     returnItem.returnItemId,
                     returnItem.invoice?.invoiceNo,
-                    returnItem.returnItemType,
                     returnDate,
                     returnItem.invoice.store,
-                    returnItem.products?.productName,
                     returnItem.user?.userName,
                     // Adding the Proforma Invoice button
                     (

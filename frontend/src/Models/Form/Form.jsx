@@ -11,7 +11,7 @@ const Form = ({ closeModal, onSave, cus }) => {
     company: '',
     phone: '',
     email: '',
-    cusStore:'',
+    cusStore: '',
   });
 
   // UseEffect to populate the form with customer data if editing
@@ -22,8 +22,9 @@ const Form = ({ closeModal, onSave, cus }) => {
         jobPosition: cus.cusJob || '',
         company: cus.cusOffice || '',
         phone: cus.cusPhone || '',
-        email: cus.cusEmail || '', 
-        cusStore:cus.cusStore || '',
+        email: cus.cusEmail || '',
+        cusStore: cus.cusStore || '',
+        address: cus.cusAddress || '',
       });
     }
   }, [cus]);
@@ -72,10 +73,10 @@ const Form = ({ closeModal, onSave, cus }) => {
       cusOffice: formData.company,
       cusAddress: formData.address,
       cusPhone: formData.phone,
-      cusEmail: formData.email,  
+      cusEmail: formData.email,
       cusStore: formData.cusStore,
     };
-    
+
 
     console.log('Customer data:', customerData);
 
@@ -121,7 +122,7 @@ const Form = ({ closeModal, onSave, cus }) => {
       <form onSubmit={handleSubmitCus} className="form-container">
         <div className="form-group-1">
 
-          <div className="form-group">            
+          <div className="form-group">
             <label htmlFor="name">Name <span>*</span></label>
             <input
               id="name"
@@ -147,7 +148,7 @@ const Form = ({ closeModal, onSave, cus }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="address">Company Address <span>*</span></label>
+            <label htmlFor="address">Address <span>*</span></label>
             <input
               id="address"
               type="text"
@@ -191,19 +192,19 @@ const Form = ({ closeModal, onSave, cus }) => {
             {formErrors.email && <span id="email-error" className="error-text">{formErrors.email}</span>}
           </div>
 
-          
+
           <div className="form-group">
             <label htmlFor="cusStore">Assign Company<span>*</span></label>
-           <select name="cusStore" id="cusStore" value={formData.cusStore} onChange={handleChange}  >
-            <option value="">select company</option>
-            <option value="colkan">Colkan</option>
-            <option value="haman">Haman</option>
-            <option value="terra">Terra</option>
-           </select>
+            <select name="cusStore" id="cusStore" value={formData.cusStore} onChange={handleChange}  >
+              <option value="">select company</option>
+              <option value="colkan">Colkan</option>
+              <option value="haman">Haman</option>
+              <option value="terra">Terra</option>
+            </select>
             {formErrors.cusStore && <span id="cusStore-error" className="error-text">{formErrors.cusStore}</span>}
           </div>
-         
-         
+
+
 
           <div className="form-actions">
             <button type="button" onClick={closeModal}>Close</button>

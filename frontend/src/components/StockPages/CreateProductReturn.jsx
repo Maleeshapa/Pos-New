@@ -9,7 +9,7 @@ const CreateProductReturn = () => {
     const [users, setUsers] = useState([]);
     const [data, setData] = useState([]);
     const [returnDetails, setReturnDetails] = useState([]);
-    const Columns = ["#", "product", "Qty", "price", "invoice Product", "Stock ID"];
+    const Columns = ["#", "product", "Qty", "price", "Warranty", "invoice Products #", "Stock #"];
 
     const getSriLankanTime = () => {
         const now = new Date();
@@ -66,6 +66,7 @@ const CreateProductReturn = () => {
                     inv.product?.productName,
                     inv.invoiceQty,
                     inv.product?.productSellingPrice,
+                    inv.product?.productWarranty || " - ",
                     inv.id,
                     inv.stock?.stockId,
                 ]);
@@ -177,8 +178,7 @@ const CreateProductReturn = () => {
                     throw new Error(`No matching row found for product: ${detail.prodName}`);
                 }
 
-                const [, , , , invoiceProductId, stockId] = matchingRow;
-
+                const [, , , productSellingPrice, invoiceProductId, stockId] = matchingRow;
 
                 const numericInvoiceProductId = parseInt(invoiceProductId, 10);
                 const numericStockId = parseInt(stockId, 10);
@@ -188,6 +188,9 @@ const CreateProductReturn = () => {
                     throw new Error(`Invalid ID values for product: ${detail.prodName}`);
                 }
 
+                // Assuming `productSellingPrice` is available and using it for calculation
+                const returnAmount = productSellingPrice * detail.returnQty;
+
                 return {
                     returnQty: detail.returnQty,
                     returnItemType: detail.returnType,
@@ -195,6 +198,8 @@ const CreateProductReturn = () => {
                     invoiceProductId: numericInvoiceProductId,
                     stockId: numericStockId,
                     returnItemId: numericReturnItemId,
+                    returnAmount,
+                    returnDate: formData.returnDate,
                 };
             }));
 
@@ -353,6 +358,7 @@ const CreateProductReturn = () => {
                                     <option value=" ">Select Options</option>
                                     <option value="Refund">Refund</option>
                                     <option value="Damage">Damage</option>
+                                    <option value="Exchange ">Exchange </option>
                                     <option value="Warranty">Warranty Claim</option>
                                 </select>
                             </div>
