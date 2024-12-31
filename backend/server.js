@@ -118,6 +118,7 @@ app.get('/invoiceProducts/:invoiceId', InvoiceProductController.getInvoiceById)
 app.delete('/invoiceProduct/:invoiceId', InvoiceProductController.deleteInvoiceProduct)
 app.get('/invoiceProduct/:num', InvoiceProductController.getInvoiceProductsByNo);
 app.put('/invoiceProducts/:id', InvoiceProductController.updateInvoiceProductStatus);
+app.put('/invoiceProductsQty/:id', InvoiceProductController.updateInvoiceProductQty);
 
 //Delivery note Route
 app.post('/deliveryNote', DeliveryNoteController.createDeliveryNote);
@@ -126,6 +127,7 @@ app.get('/deliveryNotes/:invoiceId', DeliveryNoteController.getDeliveryNoteById)
 app.delete('/deliveryNote/:invoiceId', DeliveryNoteController.deleteDeliveryNote)
 app.get('/deliveryNote/:num', DeliveryNoteController.getDeliveryNoteByNo);
 app.put('/deliveryNotes/:id', DeliveryNoteController.updateDeliveryNoteStatus);
+app.put('/deliveryNotesStatus/:id', DeliveryNoteController.updateStatus);
 
 //transaction routes
 app.post("/transaction", TransactionController.createTransaction);

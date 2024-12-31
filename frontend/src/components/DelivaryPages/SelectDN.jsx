@@ -146,6 +146,7 @@ const SelectDN = () => {
           const deliveryData = {
             sendQty:product.sendQty-updatedQty,
             deliverdQty: updatedQty,
+            deliveryStatus:"delivered"
           };
 
           const response = await fetch(`${config.BASE_URL}/deliveryNotes/${product.id}`, {
