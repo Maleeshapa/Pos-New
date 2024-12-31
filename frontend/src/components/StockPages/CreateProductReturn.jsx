@@ -358,6 +358,7 @@ const CreateProductReturn = () => {
                                     <option value=" ">Select Options</option>
                                     <option value="Refund">Refund</option>
                                     <option value="Damage">Damage</option>
+                                    <option value="Exchange ">Exchange </option>
                                     <option value="Warranty">Warranty Claim</option>
                                 </select>
                             </div>
