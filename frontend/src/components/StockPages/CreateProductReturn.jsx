@@ -9,7 +9,7 @@ const CreateProductReturn = () => {
     const [users, setUsers] = useState([]);
     const [data, setData] = useState([]);
     const [returnDetails, setReturnDetails] = useState([]);
-    const Columns = ["#", "product", "Qty", "price", "Warranty", "invoice Products", "Stock ID"];
+    const Columns = ["#", "product", "Qty", "price", "Warranty", "invoice Products #", "Stock #"];
 
     const getSriLankanTime = () => {
         const now = new Date();
