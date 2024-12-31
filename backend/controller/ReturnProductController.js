@@ -15,7 +15,7 @@ async function createReturnProduct(req, res) {
         const createdReturns = [];
 
         for (const returnItem of returns) {
-            const { returnQty, returnItemType, returnNote, invoiceProductId, stockId, returnItemId } = returnItem;
+            const { returnQty, returnAmount, returnItemType, returnNote, returnDate, invoiceProductId, stockId, returnItemId } = returnItem;
 
             // Validate required fields
             if (!returnQty || !returnItemType || !invoiceProductId || !stockId || !returnItemId) {
@@ -43,8 +43,10 @@ async function createReturnProduct(req, res) {
             // Create return product
             const newReturnProduct = await ReturnProduct.create({
                 returnQty,
+                returnAmount,
                 returnItemType,
                 returnNote,
+                returnDate,
                 invoiceProductId,
                 stockId,
                 returnItemId,

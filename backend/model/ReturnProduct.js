@@ -16,8 +16,16 @@ const ReturnProduct = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
+        returnAmount: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+        },
         returnItemType: {
             type: DataTypes.STRING,
+            allowNull: false,
+        },
+        returnDate: {
+            type: DataTypes.DATE,
             allowNull: false,
         },
         returnNote: {
