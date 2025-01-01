@@ -39,11 +39,15 @@ const NewStock = () => {
 
     totalQty: '',
     total: '',
-    vat: '0',
+    vat: '',
     cashAmount: '',
     chequeAmount: '',
     due: '',
     vatWithTotal: '',
+
+    chequeNumber: '',
+    chequeAmounts: '',
+    chequeDate: '',
   });
 
   const initialFormState = {
@@ -218,6 +222,7 @@ const NewStock = () => {
     setPreview('');
     setProductSearch('');
     setSupplierSearch('');
+    setChequeDetails([]);
   };
 
   const navigate = useNavigate();
