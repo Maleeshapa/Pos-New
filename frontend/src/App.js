@@ -27,6 +27,7 @@ import InvoiceNote from './components/invoicePages/InvoiceNote';
 import DraftSales from './components/SalesPages/DraftSales';
 import Qutation from './Pages/Cost Table/Qutation';
 import QuotationInvoice from './Pages/Cost Table/QuotationInvoice';
+import Return from './Pages/Return/Return';
 // import InternetModal from './components/NoConnection/InternetModal';
 
 const ProtectedRoute = ({ children }) => {
@@ -56,6 +57,7 @@ function Layout() {
             <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/sales/*" element={<ProtectedRoute><Sales /></ProtectedRoute>} />
             <Route path="/rental/*" element={<ProtectedRoute><Rental /></ProtectedRoute>} />
+            <Route path="/return/*" element={<ProtectedRoute><Return /></ProtectedRoute>} />
             <Route path="/customer/*" element={<ProtectedRoute><Customer /></ProtectedRoute>} />
             <Route path="/product/*" element={<ProtectedRoute><Product /></ProtectedRoute>} />
             <Route path="/grn/*" element={<ProtectedRoute><GRN /></ProtectedRoute>} />

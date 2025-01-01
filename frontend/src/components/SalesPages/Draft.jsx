@@ -3,7 +3,7 @@ import Table from '../Table/Table';
 import config from '../../config';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye } from 'lucide-react';
+import { Download, Eye } from 'lucide-react';
 
 const Draft = () => {
   const [data, setData] = useState([]);
@@ -64,7 +64,7 @@ const Draft = () => {
           </div>,
           filename ? (
             <a href={`${config.BASE_URL}/download/invoice/${filename}`} download>
-                <button className="btn btn-success">Download</button>
+                <button className="btn btn-success"><Download/></button>
             </a>
         ) : (
             "No Image"
@@ -107,6 +107,13 @@ const Draft = () => {
         });
         if (!invoiceResponse.ok) {
           throw new Error('Failed to delete the invoice');
+        }
+
+        const deliveryResponse = await fetch(`${config.BASE_URL}/deliveryNote/${invoiceId}`, {
+          method: 'DELETE',
+        });
+        if (!deliveryResponse.ok) {
+          throw new Error('Failed to delete the delivery data');
         }
 
         setData((prevData) => prevData.filter(item => item[0] !== rowIndex));

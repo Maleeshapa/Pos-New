@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, ShoppingCart, Package, Users, Boxes, Truck, FileText, Menu, FileUp, Sheet, User } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Package, Users, Boxes, Truck, FileText, Menu, FileUp, Sheet, User, AlignCenter } from 'lucide-react';
 import './SideBar.css';
 
 const Sidebar = () => {
@@ -73,7 +73,7 @@ const Sidebar = () => {
             path: '/sales',
             submenus: [
                 { title: 'Create Sale Invoice', path: '/sales/new' },
-                // { title: 'Sales History', path: '/sales/history' },
+                { title: 'Sales History', path: '/sales/history' },
                 { title: 'Invoice', path: '/sales/invoice' },
                 { title: 'Delivery', path: '/sales/delivery' },
                 { title: 'Draft', path: '/sales/draft' },
@@ -126,6 +126,16 @@ const Sidebar = () => {
                 { title: 'Product List', path: '/product/product-list' }
             ]
         },
+        
+        {
+            title: 'Return Product',
+            icon: <AlignCenter size={20} />,
+            path: '/return',
+            submenus: [
+                { title: 'Create Product Return', path: '/return/create' },
+                { title: 'Returned Product List', path: '/return/list' },
+            ]
+        },
         // {
         //     title: 'GRN',
         //     icon: <File size={20} />,
@@ -142,8 +152,7 @@ const Sidebar = () => {
             path: '/stock',
             submenus: [
                 { title: 'New Stock Purchase', path: '/stock/new-stock' },
-                { title: 'Create Product Return', path: '/stock/create' },
-                { title: 'Returned Product List', path: '/stock/list' },
+            
             ]
         },
         {

@@ -97,6 +97,13 @@ const SalesHistory = () => {
           throw new Error('Failed to delete the invoice');
         }
 
+        const deliveryResponse = await fetch(`${config.BASE_URL}/deliveryNote/${invoiceId}`, {
+          method: 'DELETE',
+        });
+        if (!deliveryResponse.ok) {
+          throw new Error('Failed to delete the delivery data');
+        }
+
         setData((prevData) => prevData.filter(item => item[0] !== rowIndex));
         fetchSalesHistory();
       } catch (err) {
