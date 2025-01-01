@@ -63,7 +63,7 @@ const Invoice = () => {
           transactionPrice,
           transactionDue,
           <div>
-            <Link to={`/invoice/${invoice.store}/${invoice.invoiceNo}`}>
+            <Link to={`/createInvoice/${invoice.store}/${invoice.invoiceNo}`}>
               <button className="btn btn-primary">Invoice</button>
             </Link>
             <Link to={`/salesDetails/${invoice.store}/${invoice.invoiceNo}`}>

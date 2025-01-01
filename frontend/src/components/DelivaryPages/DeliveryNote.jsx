@@ -84,7 +84,7 @@ const DeliveryNote = () => {
             const response = await fetch(`${config.BASE_URL}/deliveryNotes/${invoiceId}`);
             if (response.ok) {
                 const data = await response.json();
-                const filteredProducts = data.filter(product => product.deliveryStatus !== 'Delivered');
+                const filteredProducts = data.filter(product => product.deliveryStatus === 'delivered');
                 setInvoiceProducts(filteredProducts);
             } else {
                 alert('No invoice products found');
@@ -126,10 +126,75 @@ const DeliveryNote = () => {
         setInvoiceProducts(prevProducts => prevProducts.filter((_, i) => i !== index));
     };
 
+    const updateDeliveryNote = async () => {
+        try {
+            const updatePromises = invoiceProducts.map(async (product, index) => {
+
+                const deliveryData = {
+                    deliveryStatus: "notDelivered"
+                };
+
+                const response = await fetch(`${config.BASE_URL}/deliveryNotesStatus/${product.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(deliveryData),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to update product ${product.id}`);
+                }
+
+                return response.json();
+            });
+        } catch (error) {
+            console.error('Error updating product statuses:', error);
+            alert('An error occurred while updating product statuses.');
+        }
+    };
+
+    const cancelDeliveryNote = async () => {
+        try {
+            const updatePromises = invoiceProducts.map(async (product, index) => {
+                const qtyCell = document.querySelector(`#table-sn-${index}`);
+                const updatedQty = qtyCell ? parseInt(qtyCell.textContent.trim()) : product.invoiceQty;
+
+                const deliveryData = {
+                    sendQty: product.sendQty + updatedQty,
+                    deliverdQty: updatedQty,
+                    deliveryStatus: "notDelivered"
+                };
+
+                const response = await fetch(`${config.BASE_URL}/deliveryNotes/${product.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(deliveryData),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to update product ${product.id}`);
+                }
+
+                return response.json();
+            });
+        } catch (error) {
+            console.error('Error updating product statuses:', error);
+            alert('An error occurred while updating product statuses.');
+        }
+    };
+
+    const handleCancel = async () => {
+        await cancelDeliveryNote();
+    }
+
     const handlePrint = async () => {
         const printContent = document.getElementById('invoice-card');
 
         if (printContent) {
+            await updateDeliveryNote();
             const doc = new jsPDF();
 
             doc.html(printContent, {
@@ -294,7 +359,7 @@ const DeliveryNote = () => {
                                             >
                                                 <td id='table-sn'>{index + 1}</td>
                                                 <td colSpan={2} id='tableDes'>{invoiceProduct.product.productName}</td>
-                                                <td id='table-sn'>{invoiceProduct.deliverdQty}</td>
+                                                <td id={`table-sn-${index}`}>{invoiceProduct.deliverdQty}</td>
                                                 {/* <td>{invoiceProduct.invoiceProductStatus}</td> */}
                                             </tr>
                                         ))
@@ -411,6 +476,7 @@ const DeliveryNote = () => {
                                 />
                             </form>
                         </div>
+                        <button onClick={handleCancel} type='button' className='btn btn-success'>Cancel Invoice</button>
                         <button onClick={handlePrint} className='btn btn-success'>Print Invoice</button>
 
                     </div>
