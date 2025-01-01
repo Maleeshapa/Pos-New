@@ -18,9 +18,9 @@ const NewStock = () => {
   const [supplierSearch, setSupplierSearch] = useState('');
   const [supplierSuggestions, setSupplierSuggestions] = useState([]);
   const [tableData, setTableData] = useState(data || []);
+  const [chequeDetails, setChequeDetails] = useState([]);
 
-
-  const columns = ['Stock Name', 'Supplier Name', 'Store', 'Product Name', 'Category', 'Mfd Date', 'Exp Date', 'Unit Price', 'Quantity', 'Description', 'Total Price'];
+  const columns = ['Stock Name', 'Supplier Name', 'Store', 'Product Name', 'Category', 'Unit Price', 'Quantity', 'Description', 'Total Price'];
 
   const [formData, setFormData] = useState({
     stockName: '',
@@ -39,7 +39,7 @@ const NewStock = () => {
 
     totalQty: '',
     total: '',
-    vat: '',
+    vat: '0',
     cashAmount: '',
     chequeAmount: '',
     due: '',
@@ -60,14 +60,16 @@ const NewStock = () => {
     qty: '',
     description: '',
 
-    totalPrice: '',
-    totalQty: '',
     total: '',
     vat: '',
     cashAmount: '',
     chequeAmount: '',
     due: '',
     vatWithTotal: '',
+
+    chequeNumber: '',
+    chequeAmounts: '',
+    chequeDate: '',
   };
 
   useEffect(() => {
@@ -256,6 +258,15 @@ const NewStock = () => {
     });
   };
 
+  const handleDynamicFieldChange = (index, name, value) => {
+    const updatedDetails = [...chequeDetails];
+    updatedDetails[index][name] = value;
+    setChequeDetails(updatedDetails);
+  };
+
+  const handleClickChequeAmount = (chequeAmount) => {
+    setChequeDetails((prevDetails) => [...prevDetails, { chequeAmount }]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -267,8 +278,8 @@ const NewStock = () => {
         store_storeId: row[2],
         products_productId: row[3],
         category_categoryId: row[4],
-        stockPrice: parseFloat(row[7]),
-        stockQty: parseInt(row[8], 10),
+        stockPrice: parseFloat(row[8]),
+        stockQty: parseInt(row[6], 10),
         stockDescription: row[9],
         stockStatus: 'In Stock',
       }));
@@ -333,6 +344,39 @@ const NewStock = () => {
       const stockPaymentResult = await stockPaymentResponse.json();
       console.log('Stock payment created:', stockPaymentResult);
 
+
+      if (!stockPaymentResult || !stockPaymentResult.payment) {
+        throw new Error('Invalid stock payment response structure');
+      }
+
+      const { payment } = stockPaymentResult;
+
+      if (!payment.stockPaymentId) {
+        throw new Error('Stock payment response missing stockPaymentId');
+      }
+
+      // 5. Handle cheque details if present
+      if (chequeDetails.length > 0) {
+        const chequeData = chequeDetails.map(detail => ({
+          chequeNumber: detail.chequeNumber,
+          chequeAmount: parseFloat(detail.chequeAmounts) || 0,
+          chequeDate: detail.chequeDate,
+          supplierId: stock[0].supplier_supplierId,
+          stockPaymentId: payment.stockPaymentId,
+        }));
+
+        const chequeResponse = await fetch(`${config.BASE_URL}/cheque`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(chequeData),
+        });
+
+        if (!chequeResponse.ok) {
+          const chequeError = await chequeResponse.json();
+          throw new Error(`Cheque creation failed: ${chequeError.message || chequeResponse.statusText}`);
+        }
+      }
+
       setSuccessMessage('Stock data submitted successfully!');
       setError(null);
       resetForm();
@@ -357,8 +401,6 @@ const NewStock = () => {
       formData.store,
       formData.product,
       formData.category,
-      formData.mfd || 'N/A',
-      formData.exp || 'N/A',
       formData.price,
       formData.qty,
       formData.description,
@@ -370,8 +412,8 @@ const NewStock = () => {
   };
 
   useEffect(() => {
-    const totalQuantity = tableData.reduce((sum, row) => sum + parseInt(row[8] || 0, 10), 0);
-    const totalAmount = tableData.reduce((sum, row) => sum + parseFloat(row[10] || 0), 0);
+    const totalQuantity = tableData.reduce((sum, row) => sum + parseInt(row[6] || 0, 10), 0);
+    const totalAmount = tableData.reduce((sum, row) => sum + parseFloat(row[8] || 0), 0);
 
     setFormData((prevData) => ({
       ...prevData,
@@ -383,6 +425,7 @@ const NewStock = () => {
   const handleDelete = (rowIndex) => {
     setTableData(prevData => prevData.filter((_, index) => index !== rowIndex));
   };
+
 
   return (
     <div className="scrolling-container">
@@ -496,7 +539,7 @@ const NewStock = () => {
                     readOnly
                   />
                 </div>
-{/* 
+                {/* 
                 <div className="col-md-6 mb-3">
                   <label htmlFor="" className='mb-1'>Manufacture Date </label>
                   <input onChange={handleChange} type="date" name='mfd' id='' onWheel={(e) => e.target.blur()} value={formData.mfd} className='form-control' />
@@ -569,13 +612,48 @@ const NewStock = () => {
             </div>
             <div className="col-md-3 mb-3">
               <label htmlFor="qty" className="form-label">Cheque Amount</label>
-              <input type="number" name="chequeAmount" value={formData.chequeAmount} required className="form-control" onChange={handleChange} placeholder='0.00' />
+              <input type="number" name="chequeAmount" value={formData.chequeAmount} required className="form-control" onChange={handleChange} placeholder='0.00' onClick={handleClickChequeAmount} />
             </div>
             <div className="col-md-2 mb-3">
               <label htmlFor="qty" className="form-label">due</label>
               <input type="number" name="due" value={formData.due} required className="form-control" onChange={handleChange} readOnly placeholder='0.00' />
             </div>
           </div>
+
+          {chequeDetails.map((detail, index) => (
+            <div className='row' key={index}>
+              <div className="col-md-3 mb-3">
+                <label className="form-label">Cheque Number</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="chequeNumber"
+                  value={detail.chequeNumber}
+                  onChange={(e) => handleDynamicFieldChange(index, 'chequeNumber', e.target.value)}
+                />
+              </div>
+              <div className="col-md-3 mb-3">
+                <label className="form-label">Cheque Amount</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  name="chequeAmounts"
+                  value={detail.chequeAmounts}
+                  onChange={(e) => handleDynamicFieldChange(index, 'chequeAmounts', e.target.value)}
+                />
+              </div>
+              <div className="col-md-3 mb-3">
+                <label className="form-label">Cheque Date</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  name="chequeDate"
+                  value={detail.chequeDate}
+                  onChange={(e) => handleDynamicFieldChange(index, 'chequeDate', e.target.value)}
+                />
+              </div>
+            </div>
+          ))}
 
           {/* Footer Buttons */}
           <div className="d-flex justify-content-end mt-4">

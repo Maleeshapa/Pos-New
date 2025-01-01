@@ -25,8 +25,9 @@ const ReportController = require("./controller/Reports/ReportController");
 const ProductNStockController = require("./controller/Reports/ProductStockController");
 const InvoiceProductController = require('./controller/InvoiceProduct');
 const CustomerController = require('./controller/CustomerController');
-const DeliveryNoteController=require('./controller/DeliveryNoteController');
-const CostingController=require('./controller/CostingController');
+const DeliveryNoteController = require('./controller/DeliveryNoteController');
+const CostingController = require('./controller/CostingController');
+const ChequeController = require('./controller/ChequeController');
 // const CostingController = require("./controller/CostingController");
 // const CostingController = require("./controller/");
 
@@ -97,6 +98,9 @@ app.post("/stockPayment", StockPaymentController.createStockPayment);
 app.get("/stockPayments", StockPaymentController.getAllStockPayments);
 app.get("/stockPayment/:id", StockPaymentController.getStockPaymentById);
 app.put("/stockPayment/:id", StockPaymentController.updateStockPayment);
+
+//cheque routes
+app.post("/cheque", ChequeController.addCheque);
 
 //Stock History routes
 app.get('/stockHistory', StockHistoryController.getAllStockHistory);
