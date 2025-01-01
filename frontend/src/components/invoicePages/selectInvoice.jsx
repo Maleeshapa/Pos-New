@@ -197,16 +197,6 @@ const SelectInvoice = () => {
     await updateDeliveryNote();
   };
 
-  const [showAddress, setShowAddress] = useState(true)
-  const [showBank, setShowBank] = useState(false)
-
-  const handleAddress = (e) => {
-    setShowAddress(e.target.checked);
-  };
-  const handleBank = (e) => {
-    setShowBank(e.target.checked);
-  };
-
   return (
     <div>
       <div className="scrolling-container">
@@ -242,33 +232,9 @@ const SelectInvoice = () => {
                     <label htmlFor="">Customer Company</label>
                     <input type="text" className="form-input" name="cusOffice" value={formData.cusOffice} />
                   </div>
-                  {showAddress && (
-                    <div className="details mb-2">
-                      <label htmlFor="">Customer Address</label>
-                      <div className="details-box w-100">
-                        <textarea
-                          className="form-input"
-                          name="cusAddress"
-                          rows="2"
-                          style={{ resize: "both" }}
-                          value={formData.cusAddress}
-                        ></textarea>
-                      </div>
-                    </div>
-                  )}
 
                 </div>
                 <div className="invoice-info">
-                  <div className="details mb-2">
-                    <label htmlFor="">Delivary No</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      name="delivaryNo"
-                      onChange={handleInputChange}
-                      value={formData.delivaryNo}
-                    />
-                  </div>
                   <div className="details mb-2">
                     <label htmlFor="">Invoice No</label>
                     <input
@@ -341,7 +307,7 @@ const SelectInvoice = () => {
                           onMouseLeave={() => setShowRemove(null)}
                           onClick={() => removeProduct(index)}
                           className={`table-row ${ShowRemove === index ? 'row-hover' : ''}`}>
-                          <button className='btn btn-danger'>Remove</button></td>
+                          <button className='btn btn-danger'>Delete</button></td>
                       </tr>
                     ))
                   )}
@@ -349,37 +315,6 @@ const SelectInvoice = () => {
                 <tbody>
                   <tr>
                     <td colSpan={2}>
-                      {showBank && (
-                        <>
-                          Payment mode : Cash or cheque. All cheques are to be drawn in favour of "Colkan" and crossed a/c<br></br>
-                          {colkan && (
-                            <>
-                              Bank:HNB<br></br>
-                              Account Number : 250010032342<br></br>
-                              Account Name : Colkan Holdings (Pvt) LTD<br></br>
-                              Branch Name : Colkan
-                            </>
-                          )}
-
-                          {haman && (
-                            <>
-                              Bank:BOC<br></br>
-                              Account Number : 93829087<br></br>
-                              Account Name : Haman<br></br>
-                              Branch Name : Wellewathe
-                            </>
-                          )}
-
-                          {terra && (
-                            <>
-                              Bank:Sampath Bank<br></br>
-                              Account Number : 0117 1000 1407<br></br>
-                              Account Name : Terra walkers<br></br>
-                              Branch Name : Kirulapona
-                            </>
-                          )}
-                        </>
-                      )}
                     </td>
                     <td>Total Quantity</td>
                     <td className='text-center'>

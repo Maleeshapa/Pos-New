@@ -397,7 +397,7 @@ const NewSales = ({ invoice }) => {
         stockId: row[8],
         invoiceId: invoiceResult.invoiceId,
         invoiceNo: invoiceResult.invoiceNo,
-        totalAmount: row[3] * row[3],
+        totalAmount: row[2] * row[3],
         invoiceQty: row[3],
         invoiceProductStatus: delivary,
       }));
@@ -417,7 +417,7 @@ const NewSales = ({ invoice }) => {
         stockId: row[8],
         invoiceId: invoiceResult.invoiceId,
         invoiceNo: invoiceResult.invoiceNo,
-        totalAmount: row[3] * row[3],
+        totalAmount: row[2] * row[3],
         invoiceQty: row[3],
         sendQty: row[3],
         deliveryStatus: delivary,
