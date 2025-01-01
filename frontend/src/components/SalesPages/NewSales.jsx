@@ -503,18 +503,18 @@ const NewSales = ({ invoice }) => {
 
       alert('sales created successfully!');
 
-      if (invoiceStatus === 'draft') {
-        navigate('/sales/new')
-      }
-      else if (delivary === 'notDelivered') {
-        navigate(`/delivery/${selectedStore}/${invoiceResult.invoiceNo}`)
-      }
-      else if (!selectedStore) {
-        alert('Select Department')
-      }
-      else {
-        navigate(`/invoice/${selectedStore}/${invoiceResult.invoiceNo}`)
-      }
+      // if (invoiceStatus === 'draft') {
+      //   navigate('/sales/new')
+      // }
+      // else if (delivary === 'notDelivered') {
+      //   navigate(`/delivery/${selectedStore}/${invoiceResult.invoiceNo}`)
+      // }
+      // else if (!selectedStore) {
+      //   alert('Select Department')
+      // }
+      // else {
+      //   navigate(`/invoice/${selectedStore}/${invoiceResult.invoiceNo}`)
+      // }
       setTableData([]);
       resetForm();
       resetSalesPerson();

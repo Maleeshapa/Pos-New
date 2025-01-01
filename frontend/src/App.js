@@ -28,6 +28,8 @@ import DraftSales from './components/SalesPages/DraftSales';
 import Qutation from './Pages/Cost Table/Qutation';
 import QuotationInvoice from './Pages/Cost Table/QuotationInvoice';
 import Return from './Pages/Return/Return';
+import SelectPF from './components/PerformaInvoice/SelectPF';
+import SelectCR from './components/StockPages/Credit Note/SelectCR';
 // import InternetModal from './components/NoConnection/InternetModal';
 
 const ProtectedRoute = ({ children }) => {
@@ -67,12 +69,16 @@ function Layout() {
             <Route path="/stock-reports/*" element={<ProtectedRoute><StockReports /></ProtectedRoute>} />
             <Route path="/staff/*" element={<ProtectedRoute><Staff /></ProtectedRoute>} />
 
-            <Route path="/proformaInvoice/:store/:invoiceNo" element={<ProtectedRoute><ProformaInvoice /></ProtectedRoute>} />
-            <Route path="/invoice/:store/:invoiceNo" element={<ProtectedRoute><InvoiceNote /></ProtectedRoute>} />
             <Route path="/createDelivery/:store/:invoiceNo" element={<ProtectedRoute><SelectDN /></ProtectedRoute>} />
             <Route path="/createInvoice/:store/:invoiceNo" element={<ProtectedRoute><SelectInvoice /></ProtectedRoute>} />
+            <Route path="/createPF/:store/:invoiceNo" element={<ProtectedRoute><SelectPF /></ProtectedRoute>} />
+            <Route path="/createCR/:store/:invoiceNo" element={<ProtectedRoute><SelectCR /></ProtectedRoute>} />
+
             <Route path="/delivery/:store/:invoiceNo" element={<ProtectedRoute><DeliveryNote /></ProtectedRoute>} />
+            <Route path="/proformaInvoice/:store/:invoiceNo" element={<ProtectedRoute><ProformaInvoice /></ProtectedRoute>} />
+            <Route path="/invoice/:store/:invoiceNo" element={<ProtectedRoute><InvoiceNote /></ProtectedRoute>} />
             <Route path="/creditNote/:store/:invoiceNo" element={<ProtectedRoute><CreditNote /></ProtectedRoute>} />
+
             <Route path="/salesDetails/:store/:invoiceNo" element={<ProtectedRoute><SalesDetails /></ProtectedRoute>} />
 
             <Route path="/DraftSales/:invoiceId/:invoiceNo" element={<ProtectedRoute><DraftSales /></ProtectedRoute>} />

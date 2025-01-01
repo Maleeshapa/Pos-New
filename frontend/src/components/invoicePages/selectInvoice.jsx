@@ -200,7 +200,7 @@ const SelectInvoice = () => {
   return (
     <div>
       <div className="scrolling-container">
-        <h4>Create Delivery Note</h4>
+        <h4>Create Invoice Note</h4>
         {error && (
           <div className="alert alert-danger" role="alert">
             {error}

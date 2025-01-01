@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import config from '../../../config';
+import config from '../../config';
 import { useNavigate, useParams } from 'react-router';
 
-const SelectCR = () => {
+const SelectPF = () => {
   const { store, invoiceNo } = useParams();
   const [colkan, setColkan] = useState(false)
   const [haman, setHaman] = useState(false)
@@ -190,7 +190,7 @@ const SelectCR = () => {
   const navigate = useNavigate();
 
   const handlePrint = async () => {
-    navigate(`/creditNote/${store}/${invoiceNo}`);
+    navigate(`/proformaInvoice/${store}/${invoiceNo}`);
     await updateDeliveryNote();
   };
   const handleUpdate = async () => {
@@ -200,7 +200,7 @@ const SelectCR = () => {
   return (
     <div>
       <div className="scrolling-container">
-        <h4>Create Credit Note</h4>
+        <h4>Create Performa Invoice</h4>
         {error && (
           <div className="alert alert-danger" role="alert">
             {error}
@@ -331,4 +331,4 @@ const SelectCR = () => {
   );
 };
 
-export default SelectCR;
+export default SelectPF;

@@ -63,7 +63,7 @@ const Credit = () => {
           transactionPaid,
           transactiondue,
           <div>
-            <Link to={`/proformaInvoice/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-primary">proforma Invoice</button></Link>
+            <Link to={`/createPF/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-primary">proforma Invoice</button></Link>
             <Link to={`/salesDetails/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye/></button></Link>
           </div>,
           filename ? (
