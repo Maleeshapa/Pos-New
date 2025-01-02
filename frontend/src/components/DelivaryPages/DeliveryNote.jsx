@@ -12,6 +12,8 @@ const DeliveryNote = () => {
     const [colkan, setColkan] = useState(false)
     const [haman, setHaman] = useState(false)
     const [terra, setTerra] = useState(false)
+    const [invoiceId, setInvoiceId] = useState(null);
+    const [invoiceTime, setInvoiceTime] = useState(null);
     const [formData, setFormData] = useState({
         invoiceNo: '',
         invoiceDate: '',
@@ -43,7 +45,8 @@ const DeliveryNote = () => {
             const response = await fetch(`${config.BASE_URL}/invoice/invoiceNo/${invoiceNo}`);
             if (response.ok) {
                 const invoiceData = await response.json();
-
+                setInvoiceId(invoiceData.invoiceId);
+                setInvoiceTime(invoiceData.invoiceTime);
                 setFormData({
                     invoiceNo: invoiceData.invoiceNo,
                     invoiceDate: new Date(invoiceData.invoiceDate).toISOString().slice(0, 16),
@@ -98,8 +101,8 @@ const DeliveryNote = () => {
 
     const generateDeliveryNo = () => {
         const currentYear = new Date().getFullYear().toString().slice(-2);
-        const rowCount = invoiceProducts.length;
-        const deliveryNo = `DN-${formData.invoiceNo}-${rowCount}-${currentYear}`;
+        const time = invoiceTime
+        const deliveryNo = `DN-${formData.invoiceNo}-${time}-${currentYear}`;
 
         setFormData((prev) => ({
             ...prev,
@@ -147,6 +150,17 @@ const DeliveryNote = () => {
                 }
 
                 return response.json();
+            });
+
+            const timeData = {
+                invoiceTime: invoiceTime + 1
+            }
+            const timeResponse = await fetch(`${config.BASE_URL}/invoiceTime/${invoiceId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(timeData),
             });
         } catch (error) {
             console.error('Error updating product statuses:', error);

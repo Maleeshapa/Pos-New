@@ -110,6 +110,7 @@ app.post("/invoice", InvoiceController.createInvoice);
 app.get("/invoices", InvoiceController.getAllInvoice);
 app.get("/invoice/:id", InvoiceController.getInvoiceById);
 app.put("/invoice/:id", InvoiceController.updateInvoice);
+app.put("/invoiceTime/:id", InvoiceController.updateInvoicetime);
 app.delete("/invoice/:id", InvoiceController.deleteInvoice);
 app.get('/invoice/invoiceNo/:num', InvoiceController.getInvoiceByNo);
 app.get('/invoice/last', InvoiceController.getLastInvoiceNumber);

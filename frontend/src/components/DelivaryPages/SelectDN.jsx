@@ -12,6 +12,7 @@ const SelectDN = () => {
   const [colkan, setColkan] = useState(false)
   const [haman, setHaman] = useState(false)
   const [terra, setTerra] = useState(false)
+  const[invoiceTime,setInvoiceTime]=useState('')
   const [formData, setFormData] = useState({
     invoiceNo: '',
     invoiceDate: '',
@@ -51,7 +52,7 @@ const SelectDN = () => {
       const response = await fetch(`${config.BASE_URL}/invoice/invoiceNo/${invoiceNo}`);
       if (response.ok) {
         const invoiceData = await response.json();
-
+        setInvoiceTime(invoiceData.invoiceTime)
         setFormData({
           invoiceNo: invoiceData.invoiceNo,
           invoiceDate: new Date(invoiceData.invoiceDate).toISOString().slice(0, 16),
@@ -103,8 +104,8 @@ const SelectDN = () => {
 
   const generateDeliveryNo = () => {
     const currentYear = new Date().getFullYear().toString().slice(-2);
-    const rowCount = invoiceProducts.length;
-    const deliveryNo = `DN-${formData.invoiceNo}-1-${currentYear}`;
+    const time = invoiceTime;
+    const deliveryNo = `DN-${formData.invoiceNo}-${time}-${currentYear}`;
 
     setFormData((prev) => ({
       ...prev,
