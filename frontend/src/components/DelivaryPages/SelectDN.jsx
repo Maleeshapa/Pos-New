@@ -78,7 +78,7 @@ const SelectDN = () => {
           setTerra(true)
         }
       } else {
-        alert('Invoice not found');
+        // alert('Invoice not found');
       }
     } catch (error) {
       console.error('Error fetching invoice data:', error);
@@ -94,7 +94,7 @@ const SelectDN = () => {
         // const filteredProducts = data.filter(product => product.deliveryStatus !== 'Delivered');
         setInvoiceProducts(data);
       } else {
-        alert('No invoice products found');
+        // alert('No invoice products found');
       }
     } catch (error) {
       console.error('Error fetching invoice products:', error);
@@ -121,7 +121,7 @@ const SelectDN = () => {
         setTransaction(transactionData);
         console.log(transactionData);
       } else {
-        alert('No Transaction found');
+        // alert('No Transaction found');
       }
     } catch (error) {
       console.error('Error fetching Transaction:', error);
@@ -203,6 +203,16 @@ const SelectDN = () => {
     setShowBank(e.target.checked);
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Fetch data dynamically when `invoiceNo` changes
+    if (name === 'invoiceNo' && value) {
+      fetchInvoiceData(value);
+    }
+  };
+
   return (
     <div>
       <div className="scrolling-container">
@@ -261,6 +271,7 @@ const SelectDN = () => {
                       className="form-input"
                       name="invoiceNo"
                       value={formData.invoiceNo}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="details mb-2">
@@ -286,26 +297,6 @@ const SelectDN = () => {
 
                 <div className="options">
                   <div className="invoice-type">
-                    <form action="">
-                      <br />
-                      <label className='invoice-type-label' htmlFor="">Address</label>
-                      <input
-                        type="checkbox"
-                        name="address"
-                        value="address"
-                        checked={showAddress}
-                        onChange={handleAddress}
-                      />
-                      <br />
-                      <label className='invoice-type-label' htmlFor="">Bank</label>
-                      <input
-                        type="checkbox"
-                        name="bank"
-                        value="bank"
-                        checked={showBank}
-                        onChange={handleBank}
-                      />
-                    </form>
                   </div>
                   <button onClick={handlePrint} className='btn btn-success'>Print Invoice</button>
                 </div>

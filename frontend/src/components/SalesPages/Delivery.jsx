@@ -9,7 +9,7 @@ const Delivery = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const columns = ["ID", "Invoice No","Type", "Customer","store", 'address',"Purchase Order No", "Date/time", "Transaction Type", "Total Amount", "Due", "invoice","View","Purchase Order img/pdf"];
+  const columns = ["ID", "Invoice No", "Type", "Customer", "store", 'address', "Purchase Order No", "Date/time", "Transaction Type", "Total Amount", "Due", "invoice", "View", "Purchase Order img/pdf"];
 
   useEffect(() => {
     fetchSalesHistory();
@@ -60,18 +60,18 @@ const Delivery = () => {
           transactionPrice,
           transactiondue,
           <div>
-            <Link to={`/createDelivery/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-primary">Delivery Note</button></Link>
-            </div>,
-            <div>
-            <Link to={`/salesDetails/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye/></button></Link>
+            <Link to={`/createDelivery/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-warning">Create Delivery Note</button></Link>
+          </div>,
+          <div>
+            <Link to={`/salesDetails/${invoice.store}/${invoice.invoiceNo}`}><button className="btn btn-warning"><Eye /></button></Link>
           </div>,
           filename ? (
             <a href={`${config.BASE_URL}/download/invoice/${filename}`} download>
-                <button className="btn btn-success"><Download/></button>
+              <button className="btn btn-success"><Download /></button>
             </a>
-        ) : (
+          ) : (
             "No Image"
-        ),
+          ),
         ];
       });
 
@@ -111,7 +111,7 @@ const Delivery = () => {
         if (!invoiceResponse.ok) {
           throw new Error('Failed to delete the invoice');
         }
-        
+
 
         const deliveryResponse = await fetch(`${config.BASE_URL}/deliveryNote/${invoiceId}`, {
           method: 'DELETE',
@@ -139,6 +139,9 @@ const Delivery = () => {
           ) : error ? (
             <p>Error: {error}</p>
           ) : (<p></p>)}
+          <div className="payment-form-button d-grid d-md-flex me-md-2 justify-content-center px-5">
+            <Link to={`/createDelivery/${invoice.store}/${invoice.invoiceNo}`}> <button className="btn btn-warning">Create Delivery Note</button></Link>
+          </div>
           <Table
             data={data}
             columns={columns}
