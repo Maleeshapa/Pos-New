@@ -204,18 +204,33 @@ const DeliveryNote = () => {
         await cancelDeliveryNote();
     }
 
-    const handlePrint = async () => {
+    const handlePrint = () => {
         const printContent = document.getElementById('invoice-card');
-
+    
         if (printContent) {
-            await updateDeliveryNote();
             const doc = new jsPDF();
-
+    
             doc.html(printContent, {
-                callback: async function (doc) {
+                callback: function (doc) {
+                    const totalPages = doc.internal.getNumberOfPages();
+    
+                    // Loop through each page to add a footer with page number
+                    for (let i = 1; i <= totalPages; i++) {
+                        doc.setPage(i);
+                        doc.setFontSize(10);
+                        const pageWidth = doc.internal.pageSize.width;
+                        const pageHeight = doc.internal.pageSize.height;
+    
+                        const footerText = `Page ${i} of ${totalPages}`;
+                        const textWidth = doc.getTextWidth(footerText);
+    
+                        // Center the footer text at the bottom of each page
+                        doc.text(footerText, (pageWidth - textWidth) / 2, pageHeight - 10);
+                    }
+    
                     doc.autoPrint();
                     window.open(doc.output('bloburl'), '_blank');
-                    doc.save('Delivery.pdf');
+                    doc.save('invoice.pdf');
                 },
                 x: 10,
                 y: 10,
@@ -225,7 +240,7 @@ const DeliveryNote = () => {
         } else {
             console.error('Invoice card not found!');
         }
-    };
+    };    
 
     const [showAddress, setShowAddress] = useState(true)
     const [showBank, setShowBank] = useState(false)
