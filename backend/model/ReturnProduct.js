@@ -58,7 +58,7 @@ const ReturnProduct = sequelize.define(
         },
     },
     {
-        tableName: 'returnProducts',
+        tableName: 'returnproducts',
         timestamps: false,
     }
 );

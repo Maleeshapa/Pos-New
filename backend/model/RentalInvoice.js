@@ -37,7 +37,7 @@ const RentalInvoice = sequelize.define(
         },
     },
     {
-        tableName: "rentalInvoice",
+        tableName: "rentalinvoice",
         timestamps: false,
     }
 );
