@@ -40,8 +40,8 @@ function Qutation() {
               {/* Costing Header Row */}
               <tr>
                 <td>{header.id}</td>
-                <td>${header.total_amount}</td>
-                <td>${header.total_profit}</td>
+                <td>Rs. {header.total_amount}</td>
+                <td>Rs. {header.total_profit}</td>
                 <td>
                   <button
                     className="btn btn-primary btn-sm"

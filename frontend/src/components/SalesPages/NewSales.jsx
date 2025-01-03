@@ -661,7 +661,7 @@ const NewSales = ({ invoice }) => {
                   <button
                     className="btn btn-success btn-sm me-2"
                     type="button"
-                    onClick={() => navigate('/product/create')}
+                    onClick={() => navigate('/product/product-list')}
                   >
                     Create Product
                   </button>
