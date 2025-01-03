@@ -314,7 +314,7 @@ const SelectDN = () => {
                     <th className='text-center'>Current Delivery Quantity</th>
                     {/* <th>Unit Price</th>
                     <th>Total LKR</th> */}
-                    {/* <th>Status</th> */}
+                    <th>Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -337,7 +337,7 @@ const SelectDN = () => {
                           suppressContentEditableWarning
                         >  
                         </td>
-                        {/* <td className={invoiceProduct.deliveryStatus === 'notDelivered' ? 'not-delivery' : 'delivery'} >{invoiceProduct.deliveryStatus}</td> */}
+                        <td className={invoiceProduct.deliveryStatus === 'notDelivered' ? 'not-delivery' : 'delivery'} >{invoiceProduct.deliveryStatus}</td>
                         <td onMouseEnter={() => setShowRemove(index)}
                           onMouseLeave={() => setShowRemove(null)}
                           onClick={() => removeProduct(index)}

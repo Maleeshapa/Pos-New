@@ -125,7 +125,7 @@ const SalesDetails = () => {
                 <div className="invoice-page">
                     <div className="invoice-details-page">
                         <div id="invoice-card">
-                            {colkan && (
+                            {/* {colkan && (
                                 <section className="invoice-header">
                                     <img src={one} alt="" className="header-img-details-page" />
                                 </section>
@@ -140,7 +140,7 @@ const SalesDetails = () => {
                                 <section className="invoice-header">
                                     <img src={three} alt="" className="header-img-details-page" />
                                 </section>
-                            )}
+                            )} */}
                             <section className="billing-details">
                                 <div className="invoice-info">
                                     <div className="details mb-2">

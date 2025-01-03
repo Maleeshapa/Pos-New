@@ -49,7 +49,7 @@ const ReturnedProductList = () => {
                     (
                         <button
                             className="btn btn-warning"
-                            onClick={() => navigate(`/SelectCR/${returnItem.invoice.store}/${returnItem.invoice?.invoiceNo}`)}
+                            onClick={() => navigate(`/createCR/${returnItem.invoice.store}/${returnItem.invoice?.invoiceNo}`)}
                         >
                             Credit Note
                         </button>

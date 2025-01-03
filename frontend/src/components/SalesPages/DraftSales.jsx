@@ -13,7 +13,7 @@ const DraftSales = ({ invoice }) => {
   const [invoiceStatus, setInvoiceStatus] = useState('Invoice');
   const [cusId, setCusId] = useState('');
   const [file, setFile] = useState(null);
-  const { invoiceId, invoiceNo } = useParams();
+  const { cusName,invoiceId, invoiceNo } = useParams();
 
   const DateTime = () => {
     const now = new Date();
@@ -32,7 +32,7 @@ const DraftSales = ({ invoice }) => {
     return { date: date.split('/').reverse().join('-'), time };
   };
 
-  const Columns = ["Customer Code", 'Customer Name', 'Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty', 'Product ID', 'Stock ID',"Image"];
+  const Columns = [ 'Product Code', 'Product Name', 'Product Price', 'Quantity', 'Discount', 'Total Price', 'Warranty', 'Product ID', 'Stock ID',"Image"];
   const [formData, setFormData] = useState({
     cusName: '',
     cusNic: '',
@@ -76,12 +76,12 @@ const DraftSales = ({ invoice }) => {
         }
         const invoiceData = await response.json();
         
-        setFormData(prevData => ({
-          ...prevData,
-          invoiceNo: invoiceData.invoiceNo,
-          cusName: invoiceData.customer.cusName,
-          purchaseNo: invoiceData.purchaseNo,
-        }));
+        // setFormData(prevData => ({
+        //   ...prevData,
+        //   invoiceNo: invoiceData.invoiceNo,
+        //   cusName: invoiceData.customer.cusName,
+        //   purchaseNo: invoiceData.purchaseNo,
+        // }));
 
         // Fetch transactions
         const transactionResponse = await fetch(`${config.BASE_URL}/transaction/invoice/${invoiceId}`);
@@ -100,8 +100,6 @@ const DraftSales = ({ invoice }) => {
         // Populate the table data
         const tableRows = products.map((product) => {
           return [
-            invoiceData.customer.cusName,
-            invoiceData.customer.cusAddress,
             product.product.productCode,
             product.product.productName,
             product.product.productSellingPrice,
@@ -135,7 +133,7 @@ const DraftSales = ({ invoice }) => {
     };
 
     fetchInvoiceData();
-  }, [invoiceId, invoiceNo]);
+  }, [invoiceId,invoiceNo]);
 
   const fetchUserId = async () => {
     const userName = localStorage.getItem('userName');
@@ -187,7 +185,7 @@ const DraftSales = ({ invoice }) => {
     setFormData({ ...formData, [name]: value });
 
     if (name === 'cusName') {
-      fetchCustomerData(value);
+      fetchCustomerData(cusName);
     }
 
     if (name === 'productNo' || name === 'productName') {

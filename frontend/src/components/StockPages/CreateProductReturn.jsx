@@ -277,11 +277,11 @@ const CreateProductReturn = () => {
     return (
         <div className="scrolling-container">
             <h4>Create Product Return</h4>
-            {error && (
+            {/* {error && (
                 <div className="alert alert-danger" role="alert">
                     {error}
                 </div>
-            )}
+            )} */}
             {successMessage && (
                 <div className="alert alert-success" role="alert">
                     {successMessage}
