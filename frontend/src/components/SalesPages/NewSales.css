@@ -178,3 +178,15 @@
         width: 100%;
     }
 }
+
+.z-50 {
+    z-index: 50;
+  }
+  
+  .cursor-pointer {
+    cursor: pointer;
+  }
+  
+  .hover\:bg-gray-100:hover {
+    background-color: #f3f4f6;
+  }

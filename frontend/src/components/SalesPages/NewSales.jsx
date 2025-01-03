@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import './NewSales.css';
 import Table from '../Table/Table'
 import config from '../../config';
+import CustomerSearch from './CustomerSearch';
 
 const NewSales = ({ invoice }) => {
   const [tableData, setTableData] = useState([]);
@@ -614,8 +615,17 @@ const NewSales = ({ invoice }) => {
                 </div>
 
                 <div className="customer-details">
-                  <input onChange={handleChange} value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" />
-                </div>
+                  {/* <input onChange={handleChange} value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name" /> */}
+                  <CustomerSearch
+  value={formData.cusName} type="text" className="form-control" name="cusName" id="cusName" placeholder="Customer Name"
+  onChange={handleChange}
+  onCustomerSelect={(customer) => {
+    fetchCustomerData(customer.cusName);
+  }}
+/>
+</div>
+                
+               
                 <div className="customer-details">
                   <input onChange={handleChange} value={formData.cusJob} type="text" className="form-control" name="cusJob" id="cusJob" placeholder="Customer Job Position" />
                 </div>
